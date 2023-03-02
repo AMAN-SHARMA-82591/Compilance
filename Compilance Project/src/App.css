@@ -1,0 +1,683 @@
+body {
+  background-color: #4b56cb;
+}
+.App {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 75% 25%;
+  width: 100%;
+  height: 660px;
+}
+/*------------------------Section-1------------------------*/
+.overdue-items-section {
+  text-decoration: none;
+}
+.week-table-container-items {
+  margin: 0px auto;
+  background-color: #6572f5;
+  display: grid;
+  grid-template-columns: 8% 84% 8%;
+  width: 80%;
+  height: 100px;
+  border-bottom-right-radius: 50px;
+  border-bottom-left-radius: 50px;
+  align-items: center;
+  padding: 0px 30px;
+}
+.date-section {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  text-align: center;
+  border-radius: 70%;
+  align-items: center;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  transition-property: background-color;
+}
+
+.date-logo-item {
+  color: white;
+  padding: 0px 0px 1px 7px;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+}
+.date-section:hover {
+  background-color: rgba(255, 255, 255, 0.226);
+}
+.calender-section {
+  transition: background 0.5s ease;
+  width: 50px;
+  height: 50px;
+  margin: -8px 0px 0px 10px;
+  border-radius: 10px;
+}
+.calender-section:hover {
+  background: rgba(255, 255, 255, 0.226);
+}
+
+.calender-logo-item {
+  color: white;
+  margin-top: 7px;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.week-section {
+  display: flex;
+  justify-content: space-between;
+}
+.week-section .week-items {
+  color: white;
+  margin: 0px 15px;
+  width: 70px;
+  border-radius: 15px;
+  text-align: center;
+  transition: background 0.5s ease;
+  cursor: pointer;
+}
+.week-items h1 {
+  font-size: 18px;
+  letter-spacing: 1px;
+  font-weight: lighter;
+}
+.week-items p {
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+.week-section .week-items:hover {
+  background: rgba(255, 255, 255, 0.226);
+}
+/*-----------------Main Menu Section------------------*/
+
+.main-menu-section {
+  z-index: 9999;
+  position: absolute;
+  left: 0;
+  bottom: 0px;
+  max-height: 80%;
+  height: 100%;
+  width: 6.5%;
+  border-top-right-radius: 40px;
+  background-color: #6572f5;
+  display: grid;
+  grid-template-rows: 90% 10%;
+}
+.dashboard-logo-contents {
+  width: 100%;
+  padding-top: 30px;
+}
+.unordered-list-items,
+.dashboard-settings {
+  padding: 0px;
+}
+.dashboard-main-logo {
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  list-style: none;
+  margin: 0px 0px 50px 0px;
+}
+.dashboard-main-logo-settings {
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  list-style: none;
+}
+
+.list-item {
+  color: white;
+  display: flex;
+  justify-content: center;
+}
+
+/*--------------------Home section--------------------*/
+.home {
+  position: relative;
+  width: 100%;
+  max-width: 70%;
+  margin: 0px auto;
+}
+.home-section {
+  position: absolute;
+  top: 50px;
+}
+.home-section-1 {
+  display: flex;
+  width: 800px;
+  justify-content: space-between;
+}
+.home-sec-item-1 {
+  text-align: center;
+  width: 180px;
+  border-radius: 25px;
+  height: 150px;
+  cursor: pointer;
+}
+.home-sec-item-1 h1 {
+  font-size: 68px;
+  margin: 10px 0px 0px 0px;
+  color: white;
+  padding: 10px 0px 0px 0px;
+}
+.home-sec-item-1 p {
+  font-size: 20px;
+  color: white;
+  margin: 10px 0px 0px 0px;
+}
+.home-section-2.active {
+  margin-top: 40px;
+}
+.home-sec-2-item-1 {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.home-sec-2-item-1 h1 {
+  letter-spacing: 1px;
+}
+.home-sec-viewall-sec h1 {
+  font-size: 17px;
+  font-weight: lighter;
+  padding: 4px 8px;
+  background: #6572f5;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.compilance-small-item-sec {
+  display: flex;
+  background: #eff4fa;
+  padding: 4px 10px 0px 10px;
+  align-items: center;
+  border-radius: 5px;
+  margin: 20px 0px;
+  position: relative;
+}
+.comp-more-push {
+  margin-left: auto;
+}
+.comp-text h1 {
+  margin: 0px;
+  font-size: 19px;
+  font-weight: lighter;
+  letter-spacing: 1px;
+  margin-left: 10px;
+}
+.compilance-container-small {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.comp-more-items-logo {
+  cursor: pointer;
+}
+/*--------------------Compilance Drop Down Menu Section -------------------------------*/
+.compilance-dropDown-section {
+  position: absolute;
+  z-index: 111;
+  width: 300px;
+  height: 190px;
+  border: 1px solid #6572f5;
+  border-radius: 20px;
+  background: #6572f5;
+}
+.compilance-dropdown-main-sec-cont-1 {
+  height: 78%;
+  width: 100%;
+  z-index: 2;
+  border-bottom: 1px solid #6572f5;
+  background: white;
+  border-radius: 20px;
+  padding-top: 5px;
+}
+.compilance-dropdown-main-sec-cont-1 > p {
+  margin: 0px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding-left: 10px;
+  color: #111975;
+  text-decoration: underline;
+}
+.compilance-dropdown-pending-button {
+  margin: 0px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 10px;
+}
+.compilance-dropdown-pending-button > p {
+  margin: 0px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.compilance-dropdown-pending-button > button {
+  padding: 3px 15px;
+  border-radius: 10px;
+  border: none;
+  background: rgb(255, 156, 25);
+  color: white;
+  font-size: 13px;
+  letter-spacing: 1px;
+  cursor: default;
+}
+.compilance-dropdown-process-section {
+  display: flex;
+  justify-content: space-between;
+}
+.compilance-dropdown-process-section p {
+  margin-top: 15px;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 0px 10px;
+  color: #0d1457;
+}
+.compilance-dropdown-high-cont {
+  width: 30%;
+
+  margin: 15px auto 0px auto;
+}
+.compilance-dropdown-high-cont > button {
+  padding: 4px 30px;
+  background-color: rgb(204, 37, 7);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+.compilance-dropdown-main-sec-cont-2 div {
+  display: flex;
+}
+.compilance-dropdown-main-sec-cont-2 h1 {
+  font-size: 18px;
+}
+.compilance-dropdown-main-sec-cont-2 {
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 10px;
+}
+.compilance-dropdown-logo-cont-2 > p {
+  margin-top: 10px;
+  color: white;
+}
+.compilance-dropdown-logo-cont-2 > h1 {
+  margin: 5px 0px 14px 10px;
+  padding: 3px 10px 0px 10px;
+  font-size: 15px;
+  background: white;
+  color: black;
+  border-radius: 10px;
+}
+
+.compilance-dropdown-logo-cont-3 {
+  width: 85px;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 2px;
+  color: white;
+}
+
+/*----------------Overdue Section------------------*/
+.main-login-admin-weektable-section {
+  display: flex;
+  justify-content: space-between;
+}
+.overdue-weektable-section {
+  max-width: 900px;
+  margin: 0px 0px 0px -60px;
+  padding: 0px;
+}
+.overdue-login-admin {
+  border: 1px solid rgba(128, 128, 128, 0.562);
+  border-bottom-left-radius: 10px;
+  box-shadow: 10px 5px 6px grey;
+  height: 70px;
+  padding: 10px 10px 0px 0px;
+}
+.overdue-arrowback-logo Button {
+  margin: 20px;
+  border-radius: 25px;
+}
+
+.practice-section {
+  width: 100%;
+  margin: 40px auto;
+  text-align: center;
+}
+.overdue-filter-component {
+}
+
+/*------------Section-2------------------*/
+.section-2 {
+  padding: 3px 5px;
+}
+.admin-section {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+.admin-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.432);
+  margin: 1px 5px 0px 0px;
+  cursor: pointer;
+}
+.admin-sec-info {
+  display: flex;
+  padding-right: 5px;
+}
+.admin-sec-info h1 {
+  margin: 0px;
+  font-size: 13px;
+  letter-spacing: 1px;
+  margin: 8px 0px 0px 0px;
+}
+.admin-sec-info p {
+  margin: 5px 0px 0px 0px;
+  font-size: 14px;
+  display: flex;
+  cursor: pointer;
+}
+.admin-sec-logo {
+  margin-right: 20px;
+}
+.admin-images-item-1 {
+  color: #383f8aec;
+  margin: 7px 5px 0px 3px;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+.admin-images-item-1:hover {
+  background: #6571f51c;
+}
+.admin-drop-down {
+  margin-top: -7px;
+  padding-right: 15px;
+}
+.pie-chart-section {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+}
+
+/*------------admin-drop-down-menu----------------*/
+.admin-drop-down-menu {
+  width: 350px;
+  position: absolute;
+  top: 60px;
+  right: 30px;
+  height: 200px;
+  z-index: 8999;
+  box-shadow: 1px 1px 5px 1px grey;
+  border-radius: 8px;
+  background: white;
+  border: 2px solid grey;
+}
+.admin-drop-down-menu::after {
+  content: "";
+  z-index: 8899;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: -8px;
+  right: 10px;
+  border-top: 2px solid grey;
+  background: white;
+  border-left: 2px solid grey;
+  transform: rotate(45deg);
+}
+.drop-down-menu-admin-items {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+}
+.drop-down-sec-logo-cont1 {
+  width: 40px;
+  height: 40px;
+  background: grey;
+  border-radius: 50%;
+  margin: 2px 0px 0px 2px;
+}
+.drop-down-sec-logo-cont2 p {
+  font-size: 10px;
+  font-weight: bold;
+  color: #111975;
+  margin: 0px;
+}
+.drop-down-sec-logo-cont2 {
+  margin: 6px auto 0px 5px;
+}
+.drop-down-sec-logo-cont2 h1 {
+  font-size: 12px;
+  letter-spacing: 1px;
+  margin: 0px;
+  font-weight: 800;
+  color: #151b55d7;
+}
+.drop-down-sec-help-cont3 {
+  z-index: 9999;
+  display: flex;
+}
+.drop-down-sec-help-cont3 p {
+  font-weight: bold;
+}
+.drop-down-menu-admin-text-items p {
+  font-size: 23px;
+  margin: 15px 0px 0px 20px;
+  color: rgb(51, 47, 47);
+}
+.drop-down-menu-admin-button-items {
+  width: 45%;
+  margin: 15px auto 10px auto;
+}
+.drop-down-menu-admin-button-items button {
+  padding: 5px 15px;
+  font-weight: bold;
+  background: none;
+  border: 2px solid grey;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.drop-down-menu-admin-add-comp-items {
+  display: flex;
+  border-top: 2px solid grey;
+  padding: 10px 0px 0px 20px;
+}
+.drop-down-menu-admin-add-comp-items p {
+  margin: 3px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/*-------people-section-------*/
+.people-tags-section,
+.today-compilance-section {
+  margin: 27px 0px 0px 0px;
+}
+.people-tags-items-1,
+.today-tags-items-1 {
+  display: flex;
+  justify-content: space-between;
+}
+.people-tags-items-1 h1,
+.today-tags-items-1 h1 {
+  letter-spacing: 1px;
+  margin: 0px;
+  font-size: 22px;
+}
+.people-tags-items-1 p,
+.today-tags-items-1 p {
+  margin: 0px;
+  letter-spacing: 1px;
+  font-size: 15px;
+  padding: 4px;
+  height: 17px;
+  border-radius: 3px;
+  background: #6572f5;
+  color: white;
+  cursor: pointer;
+}
+.people-tags-items-2,
+.today-tags-items-2 {
+  display: flex;
+  margin: 30px 0px 0px 0px;
+  position: relative;
+}
+.people-tags-image-1 {
+  background: rgba(0, 0, 0, 0.699);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+.people-img-2 {
+  background: rgb(122, 120, 120);
+  position: absolute;
+  left: 20px;
+  z-index: 1;
+}
+.people-img-3 {
+  background: rgb(196, 193, 193);
+  position: absolute;
+  left: 45px;
+  z-index: 2;
+}
+.people-img-3 p {
+  color: rgb(65, 61, 61);
+  letter-spacing: 1px;
+  padding-left: 12px;
+  font-weight: 600;
+}
+.today-tags-items-2 {
+  display: block;
+}
+.filter-text-item h1 {
+  margin: 5px 0px 0px 0px;
+  font-size: 22px;
+  color: #6572f5;
+}
+.filter-overdue-section {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1100px;
+  width: 100%;
+  align-items: center;
+  text-align: center;
+  margin: 0px auto;
+}
+.overdue-filter-component {
+  width: 330px;
+  display: flex;
+  justify-content: space-between;
+}
+.filter-search-section Button {
+  height: 55px;
+  border: 2px solid #6572f5;
+}
+
+/*------------Overdue Table Section--------------*/
+.overdue-table-section {
+  margin-top: 50px;
+}
+.overdue-table-cont {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  text-align: center;
+  color: #2c39c4d8;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+.overdue-table-cont tr {
+  border-bottom: 2px solid #6571f581;
+}
+.overdue-table-cont tr th {
+  background: #8089e41f;
+  color: #6572f5;
+  padding: 20px;
+}
+
+.overdue-table-cont tr th:first-child,
+.overdue-table-items-cont tr td:first-child {
+  width: 500px;
+}
+.overdue-table-cont tr th:nth-child(2),
+.overdue-table-items-cont tr td:nth-child(2) {
+  width: 200px;
+}
+.overdue-table-cont-items td {
+  padding: 10px;
+  background-color: #8089e41f;
+}
+.table-data-cont-1 {
+  display: flex;
+  justify-content: center;
+}
+.table-data-cont-1 p {
+  margin: 10px 0px 0px 5px;
+}
+
+/*---------------------Community Section---------------------------------------*/
+
+.community-main-message-section {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  bottom: 10px;
+  left: 120px;
+  width: 60%;
+  height: 60px;
+  border-radius: 5px;
+  color: white;
+  background: #6572f5;
+  padding: 0px 20px;
+  align-items: center;
+}
+.community-image-message {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: white;
+  margin-right: 10px;
+}
+.community-text-input {
+  width: 70%;
+  height: 60%;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  border: none;
+  outline: none;
+  padding: 0px 20px;
+  font-size: 17px;
+  letter-spacing: 1px;
+
+  margin-right: auto;
+}
+.community-text-message-logo {
+  display: flex;
+  width: 181px;
+  height: 61%;
+  background: white;
+  color: rgba(128, 128, 128, 0.856);
+  justify-content: space-between;
+  padding-right: 10px;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  align-items: center;
+}
+.community-text-message-logo > div {
+  padding-top: 2px;
+  margin-right: auto;
+  cursor: pointer;
+}
+.com-list-items-logo-message {
+  padding: 0px 3px;
+  cursor: pointer;
+}
