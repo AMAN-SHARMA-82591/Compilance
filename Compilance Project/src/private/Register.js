@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import * as PropTypes from 'prop-types';
 import { compose } from 'ramda';
-import { withStyles } from '@material-ui/core/styles';
-import { Link, withRouter } from 'react-router-dom';
+import withStyles from '@mui/styles/withStyles';
+import { Link, withRouter, useHistory } from 'react-router-dom';
 import {
     Button,
     FormControl,
@@ -11,7 +11,7 @@ import {
     InputBase,
     Typography,
     Grid,
-} from '@material-ui/core';
+} from '@mui/material';
 
 const styles = () => ({
     container: {
@@ -30,11 +30,11 @@ const styles = () => ({
     },
 });
 
-function Register({ classes }) {
+function Register({ classes, history }) {
     const [textInput, setTextInput] = useState({ name: '', email: '', password: '' });
     const [error, setError] = useState(false);
 
-    function handleLoginSubmit() {
+    async function handleRegisterSubmit() {
         const { name, email, password } = textInput;
         if (!(/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/).test(textInput.email)) {
             setError(true);
@@ -42,16 +42,22 @@ function Register({ classes }) {
         if (!textInput.email || !textInput.password || !textInput.name) {
             alert('Name, Email & Password is REQUIRED!')
         }
-        // const res = await fetch('/register', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({
-        //         name, email, password,
-        //     }),
-        // });
-        setTextInput({ name: '', email: '', password: '' });
+        try {
+            const res = await fetch('/compilance/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name, email, password,
+                }),
+            }).then(resp => resp.json());
+            localStorage.setItem('token', res.token);
+            history.push('/dashboard');
+            setTextInput({ name: '', email: '', password: '' });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     function handleNameInputChange(event) {
@@ -70,7 +76,7 @@ function Register({ classes }) {
     }
 
     return (
-        <Paper classes={{ root: classes.container }} elevation={2}>
+        <Paper classes={{ root: classes.container }} sx={{ backgroundColor: '#1f2842' }} variant='outlined' elevation={2}>
             <Grid container={true} spacing={3}>
                 <Grid item={true} xs={12}>
                     <Typography variant='h2' className={classes.typography}>
@@ -132,7 +138,7 @@ function Register({ classes }) {
                         style={{ height: '50px' }}
                         color="primary"
                         fullWidth={true}
-                        onClick={() => handleLoginSubmit()}
+                        onClick={() => handleRegisterSubmit()}
                     >
                         Submit
                     </Button>
@@ -152,6 +158,7 @@ function Register({ classes }) {
 
 Register.propTypes = {
     classes: PropTypes.object,
+    history: PropTypes.object,
 };
 
 export default compose(withStyles(styles), withRouter)(Register)

@@ -1,7 +1,7 @@
 import React from 'react'
-import WatchLaterIcon from '@material-ui/icons/WatchLater';
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import '../App.css'
+import WatchLaterIcon from '@mui/icons-material/WatchLater';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import '../../App.css'
 function WeekTable() {
     return (
         <div className="week-table-container">

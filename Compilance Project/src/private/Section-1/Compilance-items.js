@@ -1,8 +1,8 @@
 import React,{useState,useEffect,useRef} from 'react'
-import '../App.css'
+import '../../App.css'
 
-import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CompilanceDropDownMenu from './CompilanceDropDownMenu';
 function Compilance_items(props) {
     const [drop,setDrop] = useState(false)

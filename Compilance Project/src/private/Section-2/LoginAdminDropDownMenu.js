@@ -1,7 +1,13 @@
 import React from 'react'
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { Button } from '@mui/material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 function LoginAdminDropDownMenu() {
+
+    function handleLogout() {
+        localStorage.removeItem('token');
+        window.location.reload(false);
+    }
     return (
         <>
             <div className="admin-drop-down-menu">
@@ -19,14 +25,9 @@ function LoginAdminDropDownMenu() {
                 <div className="drop-down-menu-admin-text-items">
                     <p>Delhi Land & Finance Ltd.</p>
                 </div>
-                <div className="drop-down-menu-admin-button-items">
-                    <button>Manage Account</button>
-                </div>
-                <div className="drop-down-menu-admin-add-comp-items">
-                    <AddCircleOutlineIcon />
-                    <p> Add Another
-                        Company</p>
-                </div>
+                <Button onClick={handleLogout} style={{ margin: '20px 0px' }} size='small' variant='outlined'>
+                    Logout
+                </Button>
             </div>
         </>
     )

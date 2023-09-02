@@ -1,39 +1,32 @@
+/* eslint-disable react/jsx-pascal-case */
 import React from 'react'
-import HouseIcon from '@material-ui/icons/House';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import PublishIcon from '@material-ui/icons/Publish';
-import SettingsIcon from '@material-ui/icons/Settings';
-import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
-import {NavLink} from 'react-router-dom';
+import * as PropTypes from 'prop-types';
+import { compose } from 'ramda'
+import withStyles from '@mui/styles/withStyles';
+import "../../App.css"
+import ProgressOverview from './ProgressOverview';
+import RecentlyMissed from './RecentlyMissed';
+import PlanMeeting from './PlanMeeting';
 
-function MainMenu() {
-    return (
-        <div className="main-menu-section">
-                <div className="dashboard-logo-contents">
-                       <ul className="unordered-list-items">
-                            <li className="dashboard-main-logo">
-                                    <NavLink className="list-item" to="/"><HouseIcon fontSize="large" /></NavLink>
-                            </li>
-                            <li className="dashboard-main-logo">
-                                    <NavLink className="list-item" to="/community"><QuestionAnswerIcon  fontSize="large"/></NavLink>
-                            </li>
-                            <li className="dashboard-main-logo">
-                                    <NavLink className="list-item" to="/people"><PeopleAltIcon fontSize="large" /></NavLink>
-                            </li>
-                            <li className="dashboard-main-logo">
-                                    <NavLink className="list-item" to="/publish"><PublishIcon  fontSize="large"/></NavLink>
-                            </li>
-                       </ul>
-                      
+const styles = () => ({
+  mainMenu: {
+    margin: '90px 0px 0px 90px',
+    padding: '0px 50px',
+  },
+});
 
-                </div>
-                <div className="dashboard-settings">
-                            <li className="dashboard-main-logo-settings">
-                                    <NavLink className="list-item" to="/settings"><SettingsIcon fontSize="large" /></NavLink>
-                            </li>
-                </div>
-        </div>
-    )
+function MainMenu({ classes }) {
+  return (
+    <div className={classes.mainMenu}>
+      <ProgressOverview />
+      <RecentlyMissed />
+      <PlanMeeting />
+    </div>
+  )
 }
 
-export default MainMenu
+MainMenu.propTypes = {
+  classes: PropTypes.object,
+};
+
+export default compose(withStyles(styles))(MainMenu)

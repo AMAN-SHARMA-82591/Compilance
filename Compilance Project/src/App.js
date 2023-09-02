@@ -7,18 +7,22 @@ import RootPrivate from './private/Root';
 function App() {
   const [login, setLogin] = useState(false);
   useEffect(() => {
-    if (localStorage.token) {
+    if (localStorage.getItem('token')) {
       setLogin(true);
     }
-  }, [])
-  if (!login) {
-    return (
-      <Switch>
-        <Redirect exact from="/" to='/login'></Redirect>
-        <Route component={RootPrivate} />
-      </Switch>
-    );
-  }
+  }, [login]);
+  return (
+    <Switch>
+      {!localStorage.getItem('token') && (
+        <>
+          <Redirect exact from="/" to='/login'></Redirect>
+          <Route component={RootPrivate} />
+        </>
+      )}
+      <Redirect exact from='/' to='/dashboard'></Redirect>
+      <Route component={RootPrivate} />
+    </Switch>
+  )
 }
 
 export default App;

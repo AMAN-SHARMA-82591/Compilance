@@ -1,5 +1,5 @@
 import React from 'react'
-import DescriptionIcon from '@material-ui/icons/Description';
+import DescriptionIcon from '@mui/icons-material/Description';
 function OverdueTableContent(props) {
     return (
         <>

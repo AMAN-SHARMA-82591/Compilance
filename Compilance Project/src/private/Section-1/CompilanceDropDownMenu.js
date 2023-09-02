@@ -1,7 +1,7 @@
 import React from 'react'
-import Progress from '@material-ui/core/LinearProgress'
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import SendIcon from '@material-ui/icons/Send';
+import Progress from '@mui/material/LinearProgress'
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import SendIcon from '@mui/icons-material/Send';
 function CompilanceDropDownMenu(props) {
     return (
         <div style={{top:props.top,right:props.right}} className="compilance-dropDown-section">

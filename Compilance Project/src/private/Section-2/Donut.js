@@ -15,7 +15,6 @@ class Donut extends Component {
   }
 
   render() {
-
     return (
       <div className="donut">
         <Chart options={this.state.options} series={this.state.series} type="donut" width="310" />

@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import MicIcon from '@material-ui/icons/Mic';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
-import SpellcheckIcon from '@material-ui/icons/Spellcheck';
-import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
-import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
-import "../App.css"
+import MicIcon from '@mui/icons-material/Mic';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import SpellcheckIcon from '@mui/icons-material/Spellcheck';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import "../../App.css"
 
 
 function CommunityMainMessgeSec(){
