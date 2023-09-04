@@ -25,9 +25,6 @@ function LeftBar() {
             <li className="dashboard-main-logo">
               <NavLink className="list-item" to="/people"><PeopleAltIcon fontSize="large" /></NavLink>
             </li>
-            <li className="dashboard-main-logo">
-              <NavLink className="list-item" to="/publish"><PublishIcon fontSize="large" /></NavLink>
-            </li>
           </ul>
         </div>
         <div className="dashboard-settings">

@@ -25,7 +25,7 @@ function RecentlyMissed({ classes }) {
         <div className={classes.recentlyMissedMain}>
             <div className={classes.heading}>
                 <Typography variant='h4'>
-                    Recently Missed
+                    Today's Tasks
                 </Typography>
                 <Button variant='contained' color='secondary' endIcon={<ChevronRightIcon />}>
                     View All
