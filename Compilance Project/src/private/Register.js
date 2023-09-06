@@ -43,7 +43,7 @@ function Register({ classes, history }) {
             alert('Name, Email & Password is REQUIRED!')
         }
         try {
-            const res = await fetch('/compilance/auth/register', {
+            const res = await fetch('/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
