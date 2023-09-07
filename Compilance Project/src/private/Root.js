@@ -1,28 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { Redirect, Switch, Route } from 'react-router-dom'
-import Login from './Login';
-import Register from './Register';
-import RootSection1 from './Section-1/Root';
-import RootSection2 from './Section-2/Root';
-import TopBar from './TopBar';
-import LeftBar from './LeftBar';
+import React, { } from 'react';
+import { Switch, Route } from 'react-router-dom'
+import IndexHome from './components/home/Index';
+import IndexPeople from './components/people/Index';
+import IndexCommunity from './components/community/Index';
+import TopBar from './components/TopBar';
+import LeftBar from './components/LeftBar';
 
 function Root() {
     return (
-        <Switch>
-            <Route exact path="/login" component={Login}></Route>
-            <Route exact path="/register" component={Register}></Route>
-            <Route exact path="/dashboard" render={() =>
-                <>
-                    <TopBar />
-                    <LeftBar />
-                    <div className="App">
-                        <RootSection1 />
-                        <RootSection2 />
-                    </div>
-                </>
-            }></Route>
-        </Switch>
+        <>
+            <TopBar />
+            <LeftBar />
+            <div style={{ margin: '75px 0 0 83px' }}>
+                <Switch>
+                    <Route exact path="/home" component={IndexHome}></Route>
+                    <Route exact path="/people" component={IndexPeople}></Route>
+                    <Route exact path="/community" component={IndexCommunity}></Route>
+                </Switch>
+            </div>
+        </>
     )
 }
 
