@@ -7,11 +7,10 @@ const connectDB = require('./db/connect');
 const app = express();
 
 //To get data in json format!
-app.use(express.json());
+app.use(express.json({ extended: false }));
 
-
-app.use('/compilance/auth', authRouter);
-app.use('/compilance/user', dataRouter);
+app.use('/auth', authRouter);
+app.use('/users', dataRouter);
 
 const start = async () => {
     try {

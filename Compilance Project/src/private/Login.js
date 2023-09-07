@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import * as PropTypes from 'prop-types';
 import { compose } from 'ramda';
 import withStyles from '@mui/styles/withStyles';
-import { Link, withRouter, useHistory } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import {
     Button,
-    FormControl,
     Paper,
     TextField,
-    InputBase,
     Typography,
     Grid,
 } from '@mui/material';
@@ -40,7 +38,7 @@ function Login({ classes, history }) {
             alert('Email & Password is REQUIRED!')
         }
         try {
-            const res = await fetch('/compilance/auth/login', {
+            const res = await fetch('/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -48,10 +46,11 @@ function Login({ classes, history }) {
                 body: JSON.stringify({ email: textInput.email, password: textInput.password }),
             }).then(resp => resp.json());
             localStorage.setItem('token', res.token);
-            history.push('/dashboard');
+            history.push('/home');
+            window.location.reload();
             setTextInput({ email: '', password: '' });
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
