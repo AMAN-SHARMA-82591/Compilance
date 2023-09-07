@@ -1,9 +1,9 @@
 import React from 'react'
-import FilterOverdue from './FilterOverdue'
+import FilterOverdue from '../../../Section-1/FilterOverdue'
 import OverdueLinkAdmin from './OverdueLinkAdmin'
 import OverdueTable from './OverdueTable'
 
-function InProgress() {
+function Index() {
     return (
         <div>
             <OverdueLinkAdmin />
@@ -13,4 +13,4 @@ function InProgress() {
     )
 }
 
-export default InProgress
+export default Index

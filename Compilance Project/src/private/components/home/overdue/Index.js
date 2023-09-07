@@ -1,17 +1,17 @@
 import React from 'react'
 import '../../App.css'
-import FilterOverdue from './FilterOverdue'
+import FilterOverdue from '../../../Section-1/FilterOverdue'
 import OverdueLinkAdmin from './OverdueLinkAdmin'
 import OverdueTable from './OverdueTable'
 
-function Overdue() {
+function Index() {
     return (
         <div className="overdue-section">
             <OverdueLinkAdmin />
-            <FilterOverdue background="rgb(233, 82, 63)" width="250px" h1="8" title="Overdue" />
+            <FilterOverdue background="rgb(233, 82, 63)" width="250px" h1="8" title="Index" />
             <OverdueTable />
         </div>
     )
 }
 
-export default Overdue
+export default Index

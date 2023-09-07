@@ -53,10 +53,11 @@ function Register({ classes, history }) {
                 }),
             }).then(resp => resp.json());
             localStorage.setItem('token', res.token);
-            history.push('/dashboard');
+            history.push('/home');
+            window.location.reload();
             setTextInput({ name: '', email: '', password: '' });
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 

@@ -9,8 +9,8 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { AppBar, Avatar, Popover } from '@mui/material';
-import LoginAdminDropDownMenu from './Section-2/LoginAdminDropDownMenu';
-import '../App.css'
+import LoginAdminDropDownMenu from '../Common/LoginAdminDropDownMenu';
+import '../../App.css'
 
 const styles = () => ({
     appBar: {

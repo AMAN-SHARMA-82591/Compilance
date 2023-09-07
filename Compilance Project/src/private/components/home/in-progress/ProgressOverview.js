@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types';
 import { compose } from 'ramda'
 import withStyles from '@mui/styles/withStyles';
 import { Typography } from '@mui/material'
-import "../../App.css"
+import "../../../../App.css"
 
 const styles = () => ({
     progressMain: {

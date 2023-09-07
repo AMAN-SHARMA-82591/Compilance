@@ -1,11 +1,11 @@
 import React from 'react'
 
-function Upload() {
+function Index() {
     return (
         <div>
-            
+            Hello world
         </div>
     )
 }
 
-export default Upload
+export default Index

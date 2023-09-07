@@ -4,7 +4,7 @@ import { compose } from 'ramda';
 import withStyles from '@mui/styles/withStyles';
 import { Typography, Button, Grid } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import RecentlyMissedField from '../Common/RecentlyMissedField';
+import RecentlyMissedField from '../../../Common/RecentlyMissedField';
 
 const styles = () => ({
   recentMain: {

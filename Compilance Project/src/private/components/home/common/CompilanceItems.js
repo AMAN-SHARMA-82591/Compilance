@@ -4,7 +4,7 @@ import '../../App.css'
 import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CompilanceDropDownMenu from './CompilanceDropDownMenu';
-function Compilance_items(props) {
+function CompilanceItems(props) {
     const [drop,setDrop] = useState(false)
 
     let compilanceDropDown= useRef(null)
@@ -40,4 +40,4 @@ function Compilance_items(props) {
     )
 }
 
-export default Compilance_items
+export default CompilanceItems

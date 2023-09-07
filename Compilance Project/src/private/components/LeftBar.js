@@ -14,21 +14,21 @@ function LeftBar() {
       anchor="left"
     >
       <div className="main-menu-section">
-        <div className="dashboard-logo-contents">
+        <div className="home-logo-contents">
           <ul className="unordered-list-items">
-            <li className="dashboard-main-logo">
+            <li className="home-main-logo">
               <NavLink className="list-item" to="/home"><HouseIcon fontSize="large" /></NavLink>
             </li>
-            <li className="dashboard-main-logo">
+            <li className="home-main-logo">
               <NavLink className="list-item" to="/community"><QuestionAnswerIcon fontSize="large" /></NavLink>
             </li>
-            <li className="dashboard-main-logo">
+            <li className="home-main-logo">
               <NavLink className="list-item" to="/people"><PeopleAltIcon fontSize="large" /></NavLink>
             </li>
           </ul>
         </div>
-        <div className="dashboard-settings">
-          <li className="dashboard-main-logo-settings">
+        <div className="home-settings">
+          <li className="home-main-logo-settings">
             <NavLink className="list-item" to="/settings"><SettingsIcon fontSize="large" /></NavLink>
           </li>
         </div>

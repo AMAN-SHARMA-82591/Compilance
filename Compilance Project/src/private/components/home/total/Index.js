@@ -1,15 +1,16 @@
 import React from 'react'
-import FilterOverdue from './FilterOverdue'
+import FilterOverdue from '../overdue/FilterOverdue'
 import OverdueLinkAdmin from './OverdueLinkAdmin'
 import OverdueTable from './OverdueTable'
-function Upcoming() {
+
+function Index() {
     return (
         <div>
             <OverdueLinkAdmin />
-            <FilterOverdue background="#6773fd" h1="5" title="Upcoming" width="250px" />
+            <FilterOverdue background="#1da193" h1="15" title="Total"  width="250px"/>
             <OverdueTable />
         </div>
     )
 }
 
-export default Upcoming
+export default Index

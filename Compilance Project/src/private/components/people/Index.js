@@ -1,11 +1,11 @@
 import React from 'react'
 
-function Settings() {
+function Index() {
     return (
         <div>
-            
+            People section
         </div>
     )
 }
 
-export default Settings
+export default Index

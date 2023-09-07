@@ -6,8 +6,8 @@ import { Button, Grid, IconButton, Typography } from '@mui/material'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Description from '@mui/icons-material/Description'
 import MoreVert from '@mui/icons-material/MoreVert';
-import RecentlyMissedField from '../Common/RecentlyMissedField';
-import "../../App.css"
+import RecentlyMissedField from '../../../Common/RecentlyMissedField';
+import "../../../../App.css"
 
 const styles = () => ({
     recentlyMissedMain: {

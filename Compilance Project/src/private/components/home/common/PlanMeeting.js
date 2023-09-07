@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types';
 import { compose } from 'ramda'
 import withStyles from '@mui/styles/withStyles';
 import { Box, MenuItem, Select, Typography } from '@mui/material'
-import "../../App.css"
+import "../../../../App.css"
 
 const styles = () => ({
     recentlyMissedMain: {
