@@ -43,7 +43,7 @@ function Register({ classes, history }) {
             alert('Name, Email & Password is REQUIRED!')
         }
         try {
-            const res = await fetch('/compilance/auth/register', {
+            const res = await fetch('/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -53,10 +53,11 @@ function Register({ classes, history }) {
                 }),
             }).then(resp => resp.json());
             localStorage.setItem('token', res.token);
-            history.push('/dashboard');
+            history.push('/home');
+            window.location.reload();
             setTextInput({ name: '', email: '', password: '' });
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
