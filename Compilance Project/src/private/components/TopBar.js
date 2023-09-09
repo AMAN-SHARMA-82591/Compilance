@@ -78,19 +78,20 @@ function TopBar({ classes }) {
                         <SettingsIcon className="admin-images-item-1" />
                         <AlarmIcon className="admin-images-item-1" />
                     </div>
-                    <div className="admin-sec-info">
+                    <div className="admin-sec-info"
+                    onClick={handleOpenPopover}>
                         <Avatar style={{ marginRight: '10px' }}>A</Avatar>
                         <div>
                             <h1 className="admin-name">Vicky Kaushal</h1>
                             <p>
                                 Admin
-                                <ArrowDropDownIcon
-                                    style={{ fontSize: '30px' }}
-                                    onClick={handleOpenPopover}
-                                    className="admin-drop-down"
-                                />
                             </p>
-                            <Popover
+                           
+
+                        </div>
+                    </div>
+
+                    <Popover
                                 id='simple-popover'
                                 anchorEl={show}
                                 open={show}
@@ -105,11 +106,10 @@ function TopBar({ classes }) {
                                 }}
                                 sx={{ borderRadius: '20px' }}
                             >
-                                <LoginAdminDropDownMenu />
+                                <LoginAdminDropDownMenu
+                                handleClosePopover={handleClosePopover} />
                             </Popover>
 
-                        </div>
-                    </div>
                 </div>
             </div>
         </AppBar>

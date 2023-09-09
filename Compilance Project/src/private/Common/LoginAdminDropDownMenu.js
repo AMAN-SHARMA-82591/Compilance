@@ -1,8 +1,10 @@
 import React from 'react'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { Button } from '@mui/material';
+import { Button, List, ListItem } from '@mui/material';
+import { Link } from 'react-router-dom';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-function LoginAdminDropDownMenu() {
+function LoginAdminDropDownMenu({handleClosePopover}) {
+
 
     function handleLogout() {
         localStorage.removeItem('token');
@@ -25,9 +27,12 @@ function LoginAdminDropDownMenu() {
                 <div className="drop-down-menu-admin-text-items">
                     <p>Delhi Land & Finance Ltd.</p>
                 </div>
-                <Button onClick={handleLogout} style={{ margin: '20px 0px' }} size='small' variant='outlined'>
-                    Logout
-                </Button>
+                <List>
+                    <ListItem onClick={handleClosePopover} button={true} component={Link} to='/home'>Home</ListItem>
+                    <ListItem onClick={handleClosePopover} button={true} component={Link} to='/profile'>Profile</ListItem>
+                    <ListItem onClick={handleLogout} button={true} style={{color: 'red' , fontWeight: 'bold'}}>Logout</ListItem>
+                </List>
+                
             </div>
         </>
     )
