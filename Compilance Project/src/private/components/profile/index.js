@@ -1,6 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@mui/styles'
 import "../../../App.css"
+import ProfileInfo from './common/profileinfo'
 
 
 const styles = makeStyles(() => ({
@@ -21,8 +22,9 @@ function Index() {
   const classes = styles();
   return (
    <div>
-    Profile
+    <ProfileInfo />
    </div>
+   
   )
 }
 
