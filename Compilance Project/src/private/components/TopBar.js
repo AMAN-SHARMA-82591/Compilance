@@ -79,36 +79,36 @@ function TopBar({ classes }) {
                         <AlarmIcon className="admin-images-item-1" />
                     </div>
                     <div className="admin-sec-info"
-                    onClick={handleOpenPopover}>
+                        onClick={handleOpenPopover}>
                         <Avatar style={{ marginRight: '10px' }}>A</Avatar>
                         <div>
                             <h1 className="admin-name">Vicky Kaushal</h1>
                             <p>
                                 Admin
                             </p>
-                           
+
 
                         </div>
                     </div>
 
                     <Popover
-                                id='simple-popover'
-                                anchorEl={show}
-                                open={show}
-                                onClose={handleClosePopover}
-                                anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'center',
-                                }}
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'center',
-                                }}
-                                sx={{ borderRadius: '20px' }}
-                            >
-                                <LoginAdminDropDownMenu
-                                handleClosePopover={handleClosePopover} />
-                            </Popover>
+                        id='simple-popover'
+                        anchorEl={show}
+                        open={show}
+                        onClose={handleClosePopover}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'center',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',
+                        }}
+                        sx={{ borderRadius: '20px' }}
+                    >
+                        <LoginAdminDropDownMenu
+                            handleClosePopover={handleClosePopover} />
+                    </Popover>
 
                 </div>
             </div>

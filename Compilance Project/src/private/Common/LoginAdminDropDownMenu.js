@@ -3,7 +3,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { Button, List, ListItem } from '@mui/material';
 import { Link } from 'react-router-dom';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-function LoginAdminDropDownMenu({handleClosePopover}) {
+function LoginAdminDropDownMenu({ handleClosePopover }) {
 
 
     function handleLogout() {
@@ -30,9 +30,9 @@ function LoginAdminDropDownMenu({handleClosePopover}) {
                 <List>
                     <ListItem onClick={handleClosePopover} button={true} component={Link} to='/home'>Home</ListItem>
                     <ListItem onClick={handleClosePopover} button={true} component={Link} to='/profile'>Profile</ListItem>
-                    <ListItem onClick={handleLogout} button={true} style={{color: 'red' , fontWeight: 'bold'}}>Logout</ListItem>
+                    <ListItem onClick={handleLogout} button={true} style={{ color: 'red', fontWeight: 'bold' }}>Logout</ListItem>
                 </List>
-                
+
             </div>
         </>
     )

@@ -91,20 +91,27 @@
 /*-----------------Main Menu Section------------------*/
 
 .main-menu-section {
-  height: 100%;
   width: 80px;
+  height: 100%;
+  position: relative;
   background-color: #6572f5;
-  display: grid;
-  grid-template-rows: 90% 10%;
 }
 .home-logo-contents {
   width: 100%;
   margin-top: 100px;
 }
-.unordered-list-items,
-.home-settings {
+
+.unordered-list-items {
   padding: 0px;
 }
+
+.home-settings {
+  padding: 0px;
+  position: absolute;
+  bottom: 30px;
+  width: 80px;
+}
+
 .home-main-logo {
   display: block;
   width: 100%;
@@ -405,7 +412,7 @@
 }
 
 /*------------admin-drop-down-menu----------------*/
-.admin-drop-down-menu{
+.admin-drop-down-menu {
   padding: 0px 10px;
 }
 
