@@ -15,11 +15,11 @@ const styles = () => ({
         border: '1px solid #c6c4c4',
         display: 'flex',
         justifyContent: 'space-between',
-        padding: '10px',
+        padding: '6px',
     }
 });
 
-function RecentlyMissedField({ classes }) {
+function TaskField({ classes, data }) {
     const [anchorEl, setAnchorEl] = useState(null);
 
     function handleOpenPopover(event) {
@@ -29,7 +29,6 @@ function RecentlyMissedField({ classes }) {
     function handleClosePopover() {
         setAnchorEl(null);
     }
-
     return (
         <>
             <div className={classes.recentItem}>
@@ -38,7 +37,7 @@ function RecentlyMissedField({ classes }) {
                         <Description />
                     </IconButton>
                     <Typography variant='h6'>
-                        Compilance Item
+                        {data.title && data.title}
                     </Typography>
                 </div>
                 <IconButton ref={anchorEl} onClick={handleOpenPopover} style={{ color: 'black' }} size='small'>
@@ -67,10 +66,10 @@ function RecentlyMissedField({ classes }) {
                                         June 1, 2020
                                     </Typography>
                                     <Typography variant='h6'>
-                                        Compilance
+                                        {data.title && data.title}
                                     </Typography>
                                 </div>
-                                <span>Pending</span>
+                                <span>{data.status && data.status}</span>
                             </div>
                             <div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px' }}>
@@ -81,7 +80,7 @@ function RecentlyMissedField({ classes }) {
                                         0%
                                     </Typography>
                                 </div>
-                                <LinearProgress value={50} variant='determined' />
+                                <LinearProgress value={50} variant='determinate' />
                             </div>
                             <Divider variant='fullWidth' orientation='horizontal' />
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', alignItems: 'center' }}>
@@ -113,9 +112,10 @@ function RecentlyMissedField({ classes }) {
     )
 }
 
-RecentlyMissedField.propTypes = {
+TaskField.propTypes = {
+    data: PropTypes.object,
     classes: PropTypes.object,
 };
 
 
-export default compose(withStyles(styles))(RecentlyMissedField);
+export default compose(withStyles(styles))(TaskField);

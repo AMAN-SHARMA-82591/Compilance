@@ -5,7 +5,7 @@ import People from './common/People'
 import RecentlyAdded from './common/RecentlyAdded'
 import "../../../App.css"
 import ProgressOverview from './in-progress/ProgressOverview'
-import RecentlyMissed from './common/RecentlyMissed'
+import Tasks from './common/Tasks'
 import PlanMeeting from './common/PlanMeeting'
 
 const styles = makeStyles(() => ({
@@ -28,7 +28,7 @@ function Index() {
     <div className={classes.mainMenu}>
       <div className={classes.section1}>
         <ProgressOverview />
-        <RecentlyMissed />
+        <Tasks />
         <PlanMeeting />
       </div>
       <div className={classes.section2}>

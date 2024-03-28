@@ -582,7 +582,11 @@
   padding: 20px;
 }
 
-.overdue-table-cont tr th:first-child,
+.overdue-table-cont tr td {
+  padding: 10px;
+}
+
+/* .overdue-table-cont tr th:first-child,
 .overdue-table-items-cont tr td:first-child {
   width: 500px;
 }
@@ -593,7 +597,7 @@
 .overdue-table-cont-items td {
   padding: 10px;
   background-color: #8089e41f;
-}
+} */
 .table-data-cont-1 {
   display: flex;
   justify-content: center;
@@ -658,4 +662,76 @@
 .com-list-items-logo-message {
   padding: 0px 3px;
   cursor: pointer;
+}
+
+/* Tasks Component */
+.task-header {
+  max-width: 100%;
+  width: 1800px;
+  display: flex;
+  align-items: center;
+  margin: 100px auto 40px auto;
+  justify-content: space-between;
+}
+
+.task-header-title {
+  font-size: 30px;
+  margin: 0px;
+  display: flex;
+  align-items: center;
+}
+
+.task-filter-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 70px;
+  background-color: #78798377;
+}
+
+.filter-main {
+  width: 550px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter-main p {
+  font-weight: bold;
+  font-size: 20px;
+  margin-right: 20px;
+}
+
+.search-main {
+  display: flex;
+  align-items: center;
+}
+
+.search-main p {
+  margin-right: 20px;
+}
+
+form {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
 }

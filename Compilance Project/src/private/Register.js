@@ -52,7 +52,7 @@ function Register({ classes, history }) {
                     name, email, password,
                 }),
             }).then(resp => resp.json());
-            localStorage.setItem('token', res.token);
+            localStorage.setItem('token', `Bearer ${res.token}`);
             history.push('/home');
             window.location.reload();
             setTextInput({ name: '', email: '', password: '' });

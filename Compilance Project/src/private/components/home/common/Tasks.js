@@ -1,16 +1,18 @@
 import React from 'react'
 import * as PropTypes from 'prop-types';
-import { compose } from 'ramda'
+import { compose } from 'ramda';
+import { isEmpty } from 'lodash';
 import withStyles from '@mui/styles/withStyles';
-import { Button, Grid, IconButton, Typography } from '@mui/material'
+import { Button, CircularProgress, Grid, IconButton, Typography } from '@mui/material'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Description from '@mui/icons-material/Description'
 import MoreVert from '@mui/icons-material/MoreVert';
-import RecentlyMissedField from '../../../Common/RecentlyMissedField';
+import TaskField from '../../../Common/TaskField';
 import "../../../../App.css"
+import { useSelector } from 'react-redux';
 
 const styles = () => ({
-    recentlyMissedMain: {
+    TasksMain: {
         marginBottom: '50px',
     },
     heading: {
@@ -20,39 +22,39 @@ const styles = () => ({
     },
 });
 
-function RecentlyMissed({ classes }) {
+function Tasks({ classes }) {
+    const { data, isLoading } = useSelector((state) => state.taskList);
     return (
-        <div className={classes.recentlyMissedMain}>
+        <div className={classes.TasksMain}>
             <div className={classes.heading}>
                 <Typography variant='h4'>
-                    Today's Tasks
+                    Tasks
                 </Typography>
                 <Button variant='contained' color='secondary' endIcon={<ChevronRightIcon />}>
                     View All
                 </Button>
             </div>
             <Grid container spacing={3}>
-                <Grid item xs={6}>
-                    <RecentlyMissedField />
-                </Grid>
-                <Grid item xs={6}>
-                    <RecentlyMissedField />
-                </Grid>
-                <Grid item xs={6}>
-                    <RecentlyMissedField />
-                </Grid>
-                <Grid item xs={6}>
-                    <RecentlyMissedField />
-                </Grid>
+                {isLoading ? (
+                    <CircularProgress />
+                ) : (
+                    <>
+                        {data.slice(0, 4).map((task, i) => (
+                            <Grid key={i} item xs={6}>
+                                <TaskField data={task} />
+                            </Grid>
+                        ))}
+                    </>
+                )}
             </Grid>
 
         </div>
     )
 }
 
-RecentlyMissed.propTypes = {
+Tasks.propTypes = {
     classes: PropTypes.object,
 };
 
 
-export default compose(withStyles(styles))(RecentlyMissed);
+export default compose(withStyles(styles))(Tasks);

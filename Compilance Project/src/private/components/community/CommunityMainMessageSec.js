@@ -9,9 +9,6 @@ import "../../App.css"
 
 function CommunityMainMessgeSec(){
     let[inputText,setInputText] = useState("")
-    // useEffect((e) =>{
-    //     console.log(e)
-    // })
     return(
         <>
             {inputText}

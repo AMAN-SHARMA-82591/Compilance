@@ -1,9 +1,12 @@
 import React from 'react'
 import * as PropTypes from 'prop-types';
 import { compose } from 'ramda'
+import { withRouter } from 'react-router-dom';
 import withStyles from '@mui/styles/withStyles';
 import { Typography } from '@mui/material'
 import "../../../../App.css"
+import { useDispatch, useSelector } from 'react-redux';
+import { taskFilterAction } from '../../../../store/actions';
 
 const styles = () => ({
     progressMain: {
@@ -23,13 +26,22 @@ const styles = () => ({
         alignItems: 'center',
         borderRadius: '20px',
         color: 'white',
+        cursor: 'pointer',
     },
 });
 
-function ProgressOverview({ classes }) {
+function ProgressOverview({ classes, history }) {
+    const dispatch = useDispatch();
+    const data = useSelector((state) => state.taskFilterType);
+
+    const handleChange = (type) => {
+        dispatch(taskFilterAction(type));
+        history.push('/tasks');
+    }
+
     return (
         <div className={classes.progressMain}>
-            <div className={classes.progressbox} style={{ background: '#e9523f'}}>
+            <div onClick={() => handleChange('overdue')} className={classes.progressbox} style={{ background: '#e9523f' }}>
                 <Typography variant='h1'>
                     8
                 </Typography>
@@ -37,7 +49,7 @@ function ProgressOverview({ classes }) {
                     Overdue
                 </Typography>
             </div>
-            <div className={classes.progressbox} style={{ background: '#6773fd'}}>
+            <div onClick={() => handleChange('upcoming')} className={classes.progressbox} style={{ background: '#6773fd' }}>
                 <Typography variant='h1'>
                     8
                 </Typography>
@@ -45,7 +57,7 @@ function ProgressOverview({ classes }) {
                     Upcoming
                 </Typography>
             </div>
-            <div className={classes.progressbox} style={{ background: '#f8b84a'}}>
+            <div onClick={() => handleChange('in-progress')} className={classes.progressbox} style={{ background: '#f8b84a' }}>
                 <Typography variant='h1'>
                     8
                 </Typography>
@@ -53,7 +65,7 @@ function ProgressOverview({ classes }) {
                     In Progress
                 </Typography>
             </div>
-            <div className={classes.progressbox} style={{ background: '#1da193'}}>
+            <div onClick={() => handleChange('total')} className={classes.progressbox} style={{ background: '#1da193' }}>
                 <Typography variant='h1'>
                     8
                 </Typography>
@@ -70,4 +82,4 @@ ProgressOverview.propTypes = {
 };
 
 
-export default compose(withStyles(styles))(ProgressOverview);
+export default compose(withStyles(styles), withRouter)(ProgressOverview);

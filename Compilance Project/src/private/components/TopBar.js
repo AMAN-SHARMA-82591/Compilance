@@ -91,10 +91,11 @@ function TopBar({ classes }) {
                         </div>
                     </div>
 
-                    <Popover
+                    {/* <Popover
                         id='simple-popover'
                         anchorEl={show}
                         open={show}
+                        keepMounted={false}
                         onClose={handleClosePopover}
                         anchorOrigin={{
                             vertical: 'bottom',
@@ -108,7 +109,7 @@ function TopBar({ classes }) {
                     >
                         <LoginAdminDropDownMenu
                             handleClosePopover={handleClosePopover} />
-                    </Popover>
+                    </Popover> */}
 
                 </div>
             </div>
