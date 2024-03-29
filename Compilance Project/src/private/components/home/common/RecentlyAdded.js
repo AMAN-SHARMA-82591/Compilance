@@ -21,7 +21,7 @@ const styles = () => ({
 function RecentlyAdded({ classes }) {
   const dispatch = useDispatch();
 
-  const { data, isLoading } = useSelector((state) => state.taskList);
+  const {  data, isLoading } = useSelector((state) => state.taskList);
   return (
     <div className={classes.recentMain}>
       <div className={classes.heading}>
@@ -37,7 +37,7 @@ function RecentlyAdded({ classes }) {
           <CircularProgress />
         ) : (
           <>
-            {data.slice(0, 4).map((task, i) => (
+            {data.taskList.slice(0, 4).map((task, i) => (
               <Grid key={i} item xs={12}>
                 <TaskField data={task} />
               </Grid>

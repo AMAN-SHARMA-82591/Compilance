@@ -4,7 +4,10 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  DialogActions
+  DialogActions,
+  TextField,
+  Grid,
+  MenuItem,
 } from '@mui/material';
 import { createTask } from '../../../../store/store';
 import { useFormik } from 'formik';
@@ -15,6 +18,7 @@ const initialValues = {
   title: '',
   description: '',
   type: '',
+  priority: '',
 }
 
 function CreateTaskDialog() {
@@ -42,31 +46,104 @@ function CreateTaskDialog() {
       >
         Create New Task
       </Button>
-      <Dialog open={open}>
+      <Dialog open={open} maxWidth='md' fullWidth>
         <DialogTitle>Create Task</DialogTitle>
         <DialogContent>
-          <form>
-            <div>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
               <label htmlFor='status'>Status</label>
-              <input name='status' placeholder='Status' value={values.status} onChange={handleChange} />
-            </div>
-            <div>
+              <TextField
+                select
+                fullWidth
+                size='small'
+                name='status'
+                label='Type'
+                value={values.status}
+                onChange={handleChange}
+              >
+                <MenuItem value='overdue'>
+                  Overdue
+                </MenuItem>
+                <MenuItem value='in-progress'>
+                  In Progress
+                </MenuItem>
+                <MenuItem value='upcoming'>
+                  Upcoming
+                </MenuItem>
+                <MenuItem value='not-started'>
+                  Not Started
+                </MenuItem>
+                {/* <MenuItem value='closed'>
+                  Closed
+                </MenuItem>
+                <MenuItem value='pending'>
+                  Pending
+                </MenuItem> */}
+              </TextField>
+            </Grid>
+            <Grid item xs={12}>
               <label htmlFor="title">Title</label>
-              <input name='title' placeholder='Title' value={values.title} onChange={handleChange} />
-            </div>
-            <div>
+              <TextField fullWidth size='small' name='title' value={values.title} placeholder='Title' onChange={handleChange} />
+            </Grid>
+            <Grid item xs={12}>
               <label htmlFor="description">Description</label>
-              <input name='description' placeholder='Description' value={values.description} onChange={handleChange} />
-            </div>
-            <div>
+              <TextField fullWidth size='small' name='description' value={values.description} placeholder='Description' onChange={handleChange} />
+            </Grid>
+            <Grid item xs={12}>
               <label htmlFor="type">Type</label>
-              <input name='type' placeholder='Type' value={values.type} onChange={handleChange} />
-            </div>
-          </form>
+              <TextField
+                select
+                fullWidth
+                size='small'
+                name='type'
+                label='Type'
+                value={values.type}
+                onChange={handleChange}
+              >
+                <MenuItem value='enhancement'>
+                  Enhancement
+                </MenuItem>
+                <MenuItem value='task'>
+                  Task
+                </MenuItem>
+                <MenuItem value='bug'>
+                  Bug
+                </MenuItem>
+                <MenuItem value='epic'>
+                  Epic
+                </MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item xs={12}>
+              <label htmlFor="priority">Priority</label>
+              <TextField
+                select
+                fullWidth
+                size='small'
+                name='priority'
+                label='Priority'
+                value={values.priority}
+                onChange={handleChange}
+              >
+                <MenuItem value='major'>
+                  Major
+                </MenuItem>
+                <MenuItem value='blocker'>
+                  Blocker
+                </MenuItem>
+                <MenuItem value='critical'>
+                  Critical
+                </MenuItem>
+                <MenuItem value='minor'>
+                  Minor
+                </MenuItem>
+              </TextField>
+            </Grid>
+          </Grid>
         </DialogContent>
-        <DialogActions>
-          <Button size='small' variant='outlined' onClick={handleCloseCreateTask}>Close</Button>
-          <Button size='small' variant='contained' onClick={handleSubmit}>Submit</Button>
+        <DialogActions style={{ margin: '10px 0 20px 20px', justifyContent: 'flex-start' }}>
+          <Button variant='outlined' onClick={handleCloseCreateTask}>Close</Button>
+          <Button variant='contained' onClick={handleSubmit}>Submit</Button>
         </DialogActions>
       </Dialog>
     </>

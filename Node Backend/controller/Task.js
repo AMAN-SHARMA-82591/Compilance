@@ -4,23 +4,28 @@ const Task = require('../model/Task');
 
 const taskList = async (req, res) => {
     try {
-        const taskList = await Task.find();
-        res.json(taskList);
+        const page = parseInt(req.query.page) - 1 || 0;
+        const limit = parseInt(req.query.limit) || 5;
+        const search = req.query.search || '';
+        const filter = req.query.filter || '';
+        const taskList = await Task.find({ title: { $regex: search, $options: 'i' } })
+            .find({ type: { $regex: filter, $options: 'i' } })
+            .limit(limit);
+        res.json({ pageInfo: {}, taskList });
     } catch (error) {
         console.error(error.message);
-        res.json({ message: 'Success' });
+        res.json({ message: 'Error', error: error.message });
     }
 };
 
 const createTask = async (req, res) => {
     try {
         const taskDetails = req.body;
-        console.log('TasksData', req.body);
-        await Task.create(taskDetails);
-        res.status(200).json(taskDetails);
+        const newTask = await Task.create(taskDetails);
+        res.status(200).json(newTask);
     } catch (error) {
         console.error(error.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 }
 

@@ -39,7 +39,7 @@ function Tasks({ classes }) {
                     <CircularProgress />
                 ) : (
                     <>
-                        {data.slice(0, 4).map((task, i) => (
+                        {data.taskList.slice(0, 4).map((task, i) => (
                             <Grid key={i} item xs={6}>
                                 <TaskField data={task} />
                             </Grid>
