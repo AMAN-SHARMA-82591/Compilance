@@ -51,8 +51,6 @@ function CounterPage() {
         })
     };
 
-    console.log('CountPage', state);
-
     return (
         <div>
             <h1>{state.count}</h1>

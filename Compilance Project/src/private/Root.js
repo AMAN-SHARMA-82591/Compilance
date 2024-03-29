@@ -1,14 +1,21 @@
-import React, { } from 'react';
+import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom'
 import IndexHome from './components/home/Index';
 import IndexPeople from './components/people/Index';
 import IndexCommunity from './components/community/Index';
 import TopBar from './components/TopBar';
 import LeftBar from './components/LeftBar';
-import IndexProfile from './components/profile/index';
-import IndexTasks from './components/tasks/index';
+import IndexProfile from './components/profile/Index';
+import IndexTasks from './components/tasks/Index';
+import { useDispatch } from 'react-redux';
+import { fetchTaskList } from '../store/store';
+
 
 function Root() {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(fetchTaskList());
+    }, [dispatch]);
     return (
         <>
             <TopBar />
