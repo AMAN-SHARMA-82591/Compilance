@@ -21,16 +21,16 @@ function LeftBar() {
         </div>
         <div className="home-logo-contents">
           <ul className="unordered-list-items">
-            <li className="home-main-logo">
+            <li className="home-main-logo" title="Home">
               <NavLink className="list-item" to="/home"><HouseIcon fontSize="large" /></NavLink>
             </li>
-            <li className="home-main-logo">
+            <li className="home-main-logo" title="Community">
               <NavLink className="list-item" to="/community"><QuestionAnswerIcon fontSize="large" /></NavLink>
             </li>
-            <li className="home-main-logo">
+            <li className="home-main-logo" title="People">
               <NavLink className="list-item" to="/people"><PeopleAltIcon fontSize="large" /></NavLink>
             </li>
-            <li className="home-main-logo">
+            <li className="home-main-logo" title="Tasks">
               <NavLink className="list-item" to="/tasks"><List fontSize="large" /></NavLink>
             </li>
           </ul>
