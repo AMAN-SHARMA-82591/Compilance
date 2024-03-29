@@ -8,6 +8,7 @@ import List from '@mui/icons-material/List';
 import { NavLink } from 'react-router-dom';
 import { Drawer } from '@mui/material';
 import reactIcon from '../../images/react-icon-original.svg';
+import leftbarstyle from '../../assets/css/Leftbar.css';
 
 function LeftBar() {
   return (
