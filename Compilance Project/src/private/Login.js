@@ -45,7 +45,7 @@ function Login({ classes, history }) {
                 },
                 body: JSON.stringify({ email: textInput.email, password: textInput.password }),
             }).then(resp => resp.json());
-            localStorage.setItem('token', res.token);
+            localStorage.setItem('token', `Bearer ${res.token}`);
             history.push('/home');
             window.location.reload();
             setTextInput({ email: '', password: '' });

@@ -5,6 +5,7 @@ import { Switch, Redirect, Route } from 'react-router-dom';
 import RootPrivate from './private/Root';
 import Login from './private/Login';
 import Register from './private/Register';
+// import CounterPage from './private/components/CounterPage';
 
 function App() {
   const [login, setLogin] = useState(false);
@@ -14,6 +15,9 @@ function App() {
     }
   }, [login]);
   return (
+    // <>
+    //   <CounterPage />
+    // </>
     <Switch>
       {!localStorage.getItem('token') && (
         <>

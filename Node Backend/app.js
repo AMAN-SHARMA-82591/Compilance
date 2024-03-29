@@ -3,6 +3,7 @@ require('express-async-errors');
 const express = require('express');
 const authRouter = require('./Routes/Authentication');
 const dataRouter = require('./Routes/Data');
+const taskRouter = require('./Routes/Tasks');
 const connectDB = require('./db/connect');
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json({ extended: false }));
 
 app.use('/auth', authRouter);
 app.use('/users', dataRouter);
+app.use('/tasks', taskRouter);
 
 const start = async () => {
     try {
