@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as PropTypes from 'prop-types';
-import { compose } from 'ramda';
+import { compose, isEmpty } from 'ramda';
 import withStyles from '@mui/styles/withStyles';
 import { Link, withRouter } from 'react-router-dom';
 import {
@@ -37,20 +37,22 @@ function Login({ classes, history }) {
         if (!textInput.email || !textInput.password) {
             alert('Email & Password is REQUIRED!')
         }
-        try {
-            const res = await fetch('/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email: textInput.email, password: textInput.password }),
-            }).then(resp => resp.json());
+        const res = await fetch('/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: textInput.email, password: textInput.password }),
+        })
+            .then(resp => resp.json())
+            .catch((error) => console.error(error));
+        if (res.token) {
             localStorage.setItem('token', `Bearer ${res.token}`);
             history.push('/home');
             window.location.reload();
             setTextInput({ email: '', password: '' });
-        } catch (error) {
-            console.error(error);
+        } else {
+            alert('Invalid Credentials');
         }
     }
 
