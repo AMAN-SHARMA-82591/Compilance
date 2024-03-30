@@ -4,8 +4,9 @@ import { compose } from 'ramda';
 import withStyles from '@mui/styles/withStyles';
 import { Typography, Button, Grid, CircularProgress } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { withRouter } from 'react-router-dom';
 import TaskField from '../../../Common/TaskField';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const styles = () => ({
   recentMain: {
@@ -18,8 +19,7 @@ const styles = () => ({
   },
 });
 
-function RecentlyAdded({ classes }) {
-  const dispatch = useDispatch();
+function RecentlyAdded({ classes, history }) {
 
   const { data, isLoading } = useSelector((state) => state.taskList);
   return (
@@ -28,7 +28,13 @@ function RecentlyAdded({ classes }) {
         <Typography variant='h6'>
           Today
         </Typography>
-        <Button size='small' variant='contained' color='secondary' endIcon={<ChevronRightIcon />}>
+        <Button
+          size='small'
+          color='secondary'
+          variant='contained'
+          onClick={() => history.push('/tasks')}
+          endIcon={<ChevronRightIcon />}
+        >
           View All
         </Button>
       </div>
@@ -37,7 +43,7 @@ function RecentlyAdded({ classes }) {
           <CircularProgress />
         ) : (
           <>
-            {data.slice(0, 4).map((task, i) => (
+            {data.taskList.slice(0, 4).map((task, i) => (
               <Grid key={i} item xs={12}>
                 <TaskField data={task} />
               </Grid>
@@ -49,4 +55,4 @@ function RecentlyAdded({ classes }) {
   );
 }
 
-export default compose(withStyles(styles))(RecentlyAdded);
+export default compose(withStyles(styles), withRouter)(RecentlyAdded);

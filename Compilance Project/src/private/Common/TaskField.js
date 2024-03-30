@@ -58,7 +58,7 @@ function TaskField({ classes, data }) {
                     }}
                     sx={{ borderRadius: '20px' }}
                 >
-                    <div style={{ backgroundColor: '#0000ff' }}>
+                    <div style={{ backgroundColor: '#0000ffb0' }}>
                         <div style={{ background: 'white', width: '400px', padding: '10px', borderRadius: '0px 0px 15px 15px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <div>
@@ -96,7 +96,7 @@ function TaskField({ classes, data }) {
                                 </AvatarGroup>
                             </div>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', color: 'white' }}>
                             <Typography>
                                 Assign To
                             </Typography>

@@ -1,12 +1,10 @@
 import React from 'react'
 import * as PropTypes from 'prop-types';
 import { compose } from 'ramda';
-import { isEmpty } from 'lodash';
+import { withRouter } from 'react-router-dom';
 import withStyles from '@mui/styles/withStyles';
 import { Button, CircularProgress, Grid, IconButton, Typography } from '@mui/material'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import Description from '@mui/icons-material/Description'
-import MoreVert from '@mui/icons-material/MoreVert';
 import TaskField from '../../../Common/TaskField';
 import "../../../../App.css"
 import { useSelector } from 'react-redux';
@@ -22,7 +20,7 @@ const styles = () => ({
     },
 });
 
-function Tasks({ classes }) {
+function Tasks({ classes, history }) {
     const { data, isLoading } = useSelector((state) => state.taskList);
     return (
         <div className={classes.TasksMain}>
@@ -30,7 +28,13 @@ function Tasks({ classes }) {
                 <Typography variant='h4'>
                     Tasks
                 </Typography>
-                <Button variant='contained' color='secondary' endIcon={<ChevronRightIcon />}>
+                <Button
+                    color='secondary'
+                    variant='contained'
+                    onClick={() => history.push('/tasks')}
+                    endIcon={<ChevronRightIcon />}
+                >
+
                     View All
                 </Button>
             </div>
@@ -39,7 +43,7 @@ function Tasks({ classes }) {
                     <CircularProgress />
                 ) : (
                     <>
-                        {data.slice(0, 4).map((task, i) => (
+                        {data.taskList.slice(0, 4).map((task, i) => (
                             <Grid key={i} item xs={6}>
                                 <TaskField data={task} />
                             </Grid>
@@ -54,7 +58,8 @@ function Tasks({ classes }) {
 
 Tasks.propTypes = {
     classes: PropTypes.object,
+    history: PropTypes.object,
 };
 
 
-export default compose(withStyles(styles))(Tasks);
+export default compose(withStyles(styles), withRouter)(Tasks);

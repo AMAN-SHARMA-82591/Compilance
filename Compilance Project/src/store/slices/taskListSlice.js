@@ -24,7 +24,7 @@ export const editTask = createAsyncThunk('tasks/edit', async ({ id, values }) =>
 const taskListSlice = createSlice({
     name: 'taskList',
     initialState: {
-        data: [],
+        data: { pageInfo: {}, taskList: [] },
         error: null,
         isLoading: false,
     },
@@ -45,7 +45,7 @@ const taskListSlice = createSlice({
         });
         builder.addCase(createTask.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.data.push(action.payload);
+            state.data.taskList.push(action.payload);
         });
         builder.addCase(createTask.rejected, (state, action) => {
             state.isLoading = false;
@@ -55,9 +55,9 @@ const taskListSlice = createSlice({
             state.isLoading = true
         });
         builder.addCase(deleteTask.fulfilled, (state, action) => {
-            const taskIndex = state.data.indexOf(action.payload);
+            const taskIndex = state.data.taskList.indexOf(action.payload);
             state.isLoading = false;
-            state.data.splice(taskIndex, 1);
+            state.data.taskList.splice(taskIndex, 1);
         });
         builder.addCase(deleteTask.rejected, (state, action) => {
             state.isLoading = false;
@@ -68,7 +68,7 @@ const taskListSlice = createSlice({
         });
         builder.addCase(editTask.fulfilled, (state, action) => {
             const data = action.payload;
-            state.data = state.data.map((task) => task._id === data._id ? data : task);
+            state.data.taskList = state.data.taskList.map((task) => task._id === data._id ? data : task);
             state.isLoading = false;
         });
         builder.addCase(editTask.rejected, (state, action) => {

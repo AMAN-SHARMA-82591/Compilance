@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 import { taskFilterAction } from '../../../store/store';
@@ -21,6 +21,12 @@ function Index() {
     return state.taskList;
   });
 
+  useEffect(() => {
+    return () => {
+      dispatch(taskFilterAction(''));
+    }
+  }, []);
+
   const taskFilterType = useSelector((state) => state.taskFilterType);
 
   const handleDeleteTask = (task) => {
@@ -38,7 +44,7 @@ function Index() {
     content = (
       <>
         <tbody>
-          {!isEmpty(data) && data.map((task, key) => (
+          {!isEmpty(data.taskList) && data.taskList.map((task, key) => (
             <tr key={key}>
               <td>{task.status}</td>
               <td>{task.title}</td>
@@ -92,18 +98,17 @@ function Index() {
           </Button>
         </div>
         <div className='search-main'>
-          <p>
-            Search
-          </p>
           <TextField
             size='small'
-            inputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <Search />
-                </InputAdornment>
-              )
-            }}
+            variant='outlined'
+            placeholder='Search'
+          // inputProps={{
+          //   startAdornment: (
+          //     <InputAdornment position='start'>
+          //       <Search />
+          //     </InputAdornment>
+          //   )
+          // }}
           />
         </div>
       </div>
