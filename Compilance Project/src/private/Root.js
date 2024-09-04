@@ -7,6 +7,7 @@ import TopBar from './components/TopBar';
 import LeftBar from './components/LeftBar';
 import IndexProfile from './components/profile/Index';
 import IndexTasks from './components/tasks/Index';
+import PeopleDetails from './components/people/common/PeopleDetails';
 import { useDispatch } from 'react-redux';
 import { fetchTaskList } from '../store/store';
 
@@ -24,6 +25,7 @@ function Root() {
                 <Switch>
                     <Route exact path="/home" component={IndexHome}></Route>
                     <Route exact path="/people" component={IndexPeople}></Route>
+                    <Route exact path="/people/:id" component={PeopleDetails}></Route>
                     <Route exact path="/community" component={IndexCommunity}></Route>
                     <Route exact path="/Profile" component={IndexProfile}></Route>
                     <Route exact path="/tasks" component={IndexTasks}></Route>

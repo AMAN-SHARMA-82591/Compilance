@@ -15,15 +15,13 @@ const login = async (req, res) => {
         if (!user) {
             return res.status(400).json({ msg: 'User Not Found.' });
         }
+        const profile = await Profile.findOne({ user: user._id });
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
         const token = jwt.sign(
-            {
-                userId: user._id,
-                user: user.name,
-            },
+            { profile },
             process.env.JWT_SECRET,
             { expiresIn: '1d' },
         )
@@ -50,8 +48,16 @@ const register = async (req, res) => {
         await user.save();
         const userProfile = new Profile({
             user: user._id,
+            name: user.name,
+            email: user.email,
+            admin: true,
+            phone_number: null,
+            department: null,
+            designation: null,
+            organization: null,
             skills: null,
             company: null,
+            image: null,
             website: null,
             location: null,
             status: null,
@@ -59,10 +65,7 @@ const register = async (req, res) => {
         });
         await userProfile.save();
         const token = jwt.sign(
-            {
-                userId: user._id,
-                user: user.name,
-            },
+            { userProfile },
             process.env.JWT_SECRET,
             { expiresIn: '1d' },
         )

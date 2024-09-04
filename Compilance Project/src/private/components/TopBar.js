@@ -15,7 +15,10 @@ import '../../App.css'
 const styles = () => ({
     appBar: {
         display: 'flex',
+        height: '60px',
         marginLeft: '100px',
+        position: 'relative',
+        backgroundColor: '#1976d2',
         justifyContent: 'space-between',
     },
 });
@@ -33,7 +36,7 @@ function TopBar({ classes }) {
     return (
         <AppBar>
             <div className={classes.appBar}>
-                <div className="week-table-container-items">
+                {/* <div className="week-table-container-items">
                     <div className="date-section">
                         <WatchLaterIcon fontSize="large" className="date-logo-item" />
                     </div>
@@ -71,7 +74,7 @@ function TopBar({ classes }) {
                     <div className="calender-section">
                         <CalendarTodayIcon fontSize="large" className="calender-logo-item" />
                     </div>
-                </div>
+                </div> */}
                 <div className="admin-section">
                     <div className="admin-sec-logo">
                         <EmailIcon className="admin-images-item-1" />
@@ -112,7 +115,6 @@ function TopBar({ classes }) {
                             handleClosePopover={handleClosePopover}
                         />
                     </Popover>
-
                 </div>
             </div>
         </AppBar>

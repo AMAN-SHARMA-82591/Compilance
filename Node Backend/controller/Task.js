@@ -36,7 +36,7 @@ const getTask = async (req, res) => {
         } = req
         const taskData = await Task.findById({
             _id: id,
-        })
+        });
         res.status(200).json(taskData);
     } catch (error) {
         console.error(error.message);

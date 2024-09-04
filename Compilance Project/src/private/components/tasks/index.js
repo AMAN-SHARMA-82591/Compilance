@@ -5,11 +5,9 @@ import { taskFilterAction } from '../../../store/store';
 import {
   Button,
   CircularProgress,
-  InputAdornment,
   TextField,
 } from '@mui/material';
 import List from '@mui/icons-material/List';
-import Search from '@mui/icons-material/Search';
 import { deleteTask } from '../../../store/store';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CreateTaskDialog from './common/CreateTaskDialog';
@@ -25,7 +23,7 @@ function Index() {
     return () => {
       dispatch(taskFilterAction(''));
     }
-  }, []);
+  }, [dispatch]);
 
   const taskFilterType = useSelector((state) => state.taskFilterType);
 

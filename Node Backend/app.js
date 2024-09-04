@@ -2,7 +2,7 @@ require('dotenv').config();
 require('express-async-errors');
 const express = require('express');
 const authRouter = require('./Routes/Authentication');
-const dataRouter = require('./Routes/Data');
+const userRouter = require('./Routes/User');
 const taskRouter = require('./Routes/Tasks');
 const connectDB = require('./db/connect');
 const app = express();
@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json({ extended: false }));
 
 app.use('/auth', authRouter);
-app.use('/users', dataRouter);
+app.use('/users', userRouter);
 app.use('/tasks', taskRouter);
 
 const start = async () => {
