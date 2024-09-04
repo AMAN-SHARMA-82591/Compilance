@@ -15,7 +15,10 @@ import '../../App.css'
 const styles = () => ({
     appBar: {
         display: 'flex',
+        height: '60px',
         marginLeft: '100px',
+        position: 'relative',
+        backgroundColor: '#1976d2',
         justifyContent: 'space-between',
     },
 });
@@ -33,7 +36,7 @@ function TopBar({ classes }) {
     return (
         <AppBar>
             <div className={classes.appBar}>
-                <div className="week-table-container-items">
+                {/* <div className="week-table-container-items">
                     <div className="date-section">
                         <WatchLaterIcon fontSize="large" className="date-logo-item" />
                     </div>
@@ -71,45 +74,47 @@ function TopBar({ classes }) {
                     <div className="calender-section">
                         <CalendarTodayIcon fontSize="large" className="calender-logo-item" />
                     </div>
-                </div>
+                </div> */}
                 <div className="admin-section">
                     <div className="admin-sec-logo">
                         <EmailIcon className="admin-images-item-1" />
                         <SettingsIcon className="admin-images-item-1" />
                         <AlarmIcon className="admin-images-item-1" />
                     </div>
-                    <div className="admin-sec-info">
+                    <div
+                        className="admin-sec-info"
+                        onClick={handleOpenPopover}
+                    >
                         <Avatar style={{ marginRight: '10px' }}>A</Avatar>
                         <div>
                             <h1 className="admin-name">Vicky Kaushal</h1>
                             <p>
                                 Admin
-                                <ArrowDropDownIcon
-                                    style={{ fontSize: '30px' }}
-                                    onClick={handleOpenPopover}
-                                    className="admin-drop-down"
-                                />
+                                <ArrowDropDownIcon fontSize='small' />
                             </p>
-                            <Popover
-                                id='simple-popover'
-                                anchorEl={show}
-                                open={show}
-                                onClose={handleClosePopover}
-                                anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'center',
-                                }}
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'center',
-                                }}
-                                sx={{ borderRadius: '20px' }}
-                            >
-                                <LoginAdminDropDownMenu />
-                            </Popover>
-
                         </div>
                     </div>
+
+                    <Popover
+                        id='simple-popover'
+                        anchorEl={show}
+                        open={show}
+                        keepMounted={false}
+                        onClose={handleClosePopover}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'center',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',
+                        }}
+                        sx={{ borderRadius: '20px' }}
+                    >
+                        <LoginAdminDropDownMenu
+                            handleClosePopover={handleClosePopover}
+                        />
+                    </Popover>
                 </div>
             </div>
         </AppBar>

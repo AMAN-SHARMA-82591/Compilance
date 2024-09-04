@@ -1,6 +1,6 @@
 import React from 'react'
 import '../../App.css'
-import FilterOverdue from '../../../Section-1/FilterOverdue'
+import FilterOverdue from './FilterOverdue'
 import OverdueLinkAdmin from './OverdueLinkAdmin'
 import OverdueTable from './OverdueTable'
 

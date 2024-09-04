@@ -5,7 +5,33 @@ const profileSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     },
+    name: {
+        type: String,
+        required: [true, 'Name field is required'],
+        minLength: 3,
+    },
+    email: {
+        type: String,
+        required: [true, 'Email field is required'],
+        RegExp: [
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            'Provide a valid email!',
+        ],
+        unique: true,
+    },
+    image: {
+        type: String,
+    },
     company: {
+        type: String,
+    },
+    phone_number: {
+        type: Number,
+    },
+    department: {
+        type: String,
+    },
+    designation: {
         type: String,
     },
     website: {
@@ -16,6 +42,12 @@ const profileSchema = new mongoose.Schema({
     },
     status: {
         type: String,
+    },
+    organization: {
+        type: String,
+    },
+    admin: {
+        type: Boolean,
     },
     skills: {
         type: [String],

@@ -1,6 +1,12 @@
 /* body {
   background-color: #4b56cb;
 } */
+
+:root {
+  --letter-spacing2: 2px;
+  --letter-spacing3: 3px;
+}
+
 .App {
   box-sizing: border-box;
   display: grid;
@@ -78,12 +84,12 @@
 }
 .week-items h1 {
   font-size: 18px;
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
   font-weight: lighter;
 }
 .week-items p {
   font-size: 13px;
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
 }
 .week-section .week-items:hover {
   background: rgba(255, 255, 255, 0.226);
@@ -91,20 +97,27 @@
 /*-----------------Main Menu Section------------------*/
 
 .main-menu-section {
-  height: 100%;
   width: 80px;
+  height: 100%;
+  position: relative;
   background-color: #6572f5;
-  display: grid;
-  grid-template-rows: 90% 10%;
 }
 .home-logo-contents {
   width: 100%;
   margin-top: 100px;
 }
-.unordered-list-items,
-.home-settings {
+
+.unordered-list-items {
   padding: 0px;
 }
+
+.home-settings {
+  padding: 0px;
+  position: absolute;
+  bottom: 30px;
+  width: 80px;
+}
+
 .home-main-logo {
   display: block;
   width: 100%;
@@ -168,7 +181,7 @@
   justify-content: space-between;
 }
 .home-sec-2-item-1 h1 {
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
 }
 .home-sec-viewall-sec h1 {
   font-size: 17px;
@@ -196,7 +209,7 @@
   margin: 0px;
   font-size: 19px;
   font-weight: lighter;
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
   margin-left: 10px;
 }
 .compilance-container-small {
@@ -231,7 +244,7 @@
   margin: 0px;
   font-size: 12px;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
   padding-left: 10px;
   color: #111975;
   text-decoration: underline;
@@ -246,7 +259,7 @@
   margin: 0px;
   font-size: 15px;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
 }
 .compilance-dropdown-pending-button > button {
   padding: 3px 15px;
@@ -255,7 +268,7 @@
   background: rgb(255, 156, 25);
   color: white;
   font-size: 13px;
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
   cursor: default;
 }
 .compilance-dropdown-process-section {
@@ -280,7 +293,7 @@
   border: none;
   border-radius: 10px;
   color: white;
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
   cursor: pointer;
 }
 .compilance-dropdown-main-sec-cont-2 div {
@@ -359,7 +372,9 @@
 }
 
 .admin-section {
+  right: 0;
   display: flex;
+  position: absolute;
   align-items: center;
   margin-right: 20px;
 }
@@ -367,18 +382,19 @@
   display: flex;
   align-items: center;
   padding-right: 5px;
+  cursor: pointer !important;
 }
 .admin-sec-info h1 {
   margin: 0px;
   font-size: 13px;
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
   margin: 8px 0px 0px 0px;
+  cursor: pointer;
 }
 .admin-sec-info p {
   margin: 5px 0px 0px 0px;
   font-size: 14px;
   display: flex;
-  cursor: pointer;
 }
 .admin-sec-logo {
   margin-right: 20px;
@@ -404,7 +420,7 @@
 }
 
 /*------------admin-drop-down-menu----------------*/
-.admin-drop-down-menu{
+.admin-drop-down-menu {
   padding: 0px 10px;
 }
 
@@ -431,7 +447,7 @@
 }
 .drop-down-sec-logo-cont2 h1 {
   font-size: 12px;
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
   margin: 0px;
   font-weight: 800;
   color: #151b55d7;
@@ -464,7 +480,7 @@
 .drop-down-menu-admin-add-comp-items p {
   margin: 3px;
   font-weight: bold;
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
 }
 
 /*-------people-section-------*/
@@ -479,14 +495,14 @@
 }
 .people-tags-items-1 h1,
 .today-tags-items-1 h1 {
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
   margin: 0px;
   font-size: 22px;
 }
 .people-tags-items-1 p,
 .today-tags-items-1 p {
   margin: 0px;
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
   font-size: 15px;
   padding: 4px;
   height: 17px;
@@ -521,7 +537,7 @@
 }
 .people-img-3 p {
   color: rgb(65, 61, 61);
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
   padding-left: 12px;
   font-weight: 600;
 }
@@ -562,7 +578,7 @@
   border-spacing: 0;
   text-align: center;
   color: #2c39c4d8;
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
   font-weight: 600;
 }
 .overdue-table-cont tr {
@@ -574,7 +590,11 @@
   padding: 20px;
 }
 
-.overdue-table-cont tr th:first-child,
+.overdue-table-cont tr td {
+  padding: 10px;
+}
+
+/* .overdue-table-cont tr th:first-child,
 .overdue-table-items-cont tr td:first-child {
   width: 500px;
 }
@@ -585,7 +605,7 @@
 .overdue-table-cont-items td {
   padding: 10px;
   background-color: #8089e41f;
-}
+} */
 .table-data-cont-1 {
   display: flex;
   justify-content: center;
@@ -626,7 +646,7 @@
   outline: none;
   padding: 0px 20px;
   font-size: 17px;
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing3);
 
   margin-right: auto;
 }
@@ -650,4 +670,195 @@
 .com-list-items-logo-message {
   padding: 0px 3px;
   cursor: pointer;
+}
+
+/* Tasks Component */
+.task-header {
+  max-width: 100%;
+  width: 1800px;
+  display: flex;
+  align-items: center;
+  margin: 100px auto 40px auto;
+  justify-content: space-between;
+}
+
+.task-header-title {
+  font-size: 30px;
+  margin: 0px;
+  display: flex;
+  align-items: center;
+}
+
+.task-filter-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 70px;
+  background-color: #78798377;
+}
+
+.filter-main {
+  width: 550px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter-main p {
+  font-weight: bold;
+  font-size: 20px;
+  margin-right: 20px;
+}
+
+.search-main {
+  display: flex;
+  align-items: center;
+}
+
+.search-main p {
+  margin-right: 20px;
+}
+
+form {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/*------------------------ People Section ------------------------*/
+.people-heading {
+  width: 100%;
+  margin: 0px 10px 40px 0px;
+  align-items: center;
+  text-align: center;
+}
+
+.people-create-btn {
+  padding: 10px;
+}
+
+.people-create-header {
+  display: flex;
+  padding: 0px 30px;
+  align-items: center;
+  background-color: #6571f5da;
+  justify-content: space-between;
+}
+
+.people-main {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.profile-image > div {
+  width: 50%;
+  margin: 0px auto;
+  text-align: center;
+  cursor: pointer;
+}
+
+.profile-image > div > img {
+  width: 160px;
+  height: 160px;
+  border-radius: 100%;
+  border: 5px solid #b4afaf;
+}
+
+.profile-box {
+  width: 250px;
+  height: 120px;
+  display: flex;
+  padding: 10px;
+  border: 1px solid rgba(155, 153, 153, 0.308);
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-box:hover {
+  width: 250px;
+  height: 120px;
+  display: flex;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid rgba(107, 106, 106, 0.527);
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-box p {
+  margin: 0px;
+}
+
+.profile-header-section {
+  height: 180px;
+  position: relative;
+  border-bottom: 1px solid grey;
+}
+
+.profile-edit-options {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0px;
+  padding-bottom: 10px;
+}
+
+.profile-edit-options button {
+  padding: 2px 30px;
+  font-size: 15px;
+  font-weight: bold;
+  margin-right: 20px;
+  letter-spacing: var(--letter-spacing2);
+}
+
+.profile-main-section > p {
+  font-size: 23px;
+  letter-spacing: var(--letter-spacing3);
+  text-align: center;
+}
+
+.profile-details-section {
+  padding: 10px 100px;
+  margin-bottom: 20px;
+}
+
+.profile-details-item {
+  width: 200px;
+}
+
+.profile-details-item > p {
+  text-align: center;
+}
+
+.profile-details-item > p:first-child {
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: var(--letter-spacing3);
+}
+
+.profile-details-item > p:nth-child(2) {
+  background-color: rgba(196, 188, 188, 0.322);
+  border-radius: 5px;
+  padding: 10px 0px;
 }
