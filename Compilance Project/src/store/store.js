@@ -6,4 +6,5 @@ export const store = configureStore({
 });
 
 export * from './slices/taskListSlice';
+export * from './slices/profileSlice';
 export * from './actions/index';

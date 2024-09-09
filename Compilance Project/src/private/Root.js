@@ -9,14 +9,16 @@ import IndexProfile from './components/profile/Index';
 import IndexTasks from './components/tasks/Index';
 import PeopleDetails from './components/people/common/PeopleDetails';
 import { useDispatch } from 'react-redux';
-import { fetchLoggedProfile, fetchTaskList } from '../store/store';
-
+import { fetchTaskList } from '../store/store';
+import { jwtDecode } from 'jwt-decode';
+import { setData } from '../store/store';
 
 function Root() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(fetchTaskList());
-        dispatch(fetchLoggedProfile());
+        const decodedToken = jwtDecode(localStorage.getItem('token'));
+        dispatch(setData(decodedToken));
     }, [dispatch]);
     return (
         <>
