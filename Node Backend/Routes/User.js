@@ -1,8 +1,20 @@
 const express = require('express');
-// const multer = require('multer');
+const multer = require('multer');
 
 // const storage = multer.memoryStorage();
 // const upload = multer({ storage });
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now();
+      cb(null,  uniqueSuffix + file.originalname);
+    }
+  })
+  
+  const upload = multer({ storage: storage })
 
 const { profile, users, profileList, getProfile, createProfile, updateProfile, updateProfileImage } = require('../controller/User');
 const auth = require('../middleware/auth');
@@ -18,7 +30,7 @@ router.route('/organization/:id').get(auth, getOrganization).patch(auth, editOrg
 router.get('/profile/me', auth, profile);
 // router.get('/profile', auth, profileList);
 router.route('/profile').get(auth, profileList).post(auth, createProfile);
-router.patch('/profile/image/:id', auth, updateProfileImage);
+router.patch('/profile/image/:id', auth, upload.single('image'), updateProfileImage);
 router.route('/profile/:id').get(auth, getProfile).patch(auth, updateProfile);
 
 module.exports = router;

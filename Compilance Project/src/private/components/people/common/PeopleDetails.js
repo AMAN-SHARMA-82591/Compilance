@@ -5,7 +5,6 @@ import {
     Button,
     Dialog,
     TextField,
-    Typography,
     DialogTitle,
     DialogActions,
     DialogContent,
@@ -14,8 +13,11 @@ import {
 import { useFormik } from 'formik';
 import axiosInstance from '../../../Common/AxiosInstance';
 import jsImage from '../../../../images/defaultImg.png';
+// import { useDispatch } from 'react-redux';
+import { setProfileData } from '../../../../store/store';
 
 function PeopleDetails(props) {
+    // const dispatch = useDispatch();
     const [imageURL, setImageURL] = useState(null);
     const [error, setError] = useState(false);
     const [profileDetails, setProfileDetails] = useState(null);
@@ -54,6 +56,7 @@ function PeopleDetails(props) {
             const response = await axiosInstance.patch(`/users/profile/${profileDetails._id}`, values);
             if (response.data) {
                 setProfileDetails({ ...profileDetails, ...values });
+                // dispatch(fetchLoggedProfile());
             }
             setEditProfile(false);
         }
@@ -99,18 +102,21 @@ function PeopleDetails(props) {
         } else {
             setError(false);
         }
-        reader.readAsDataURL(event.target.files[0]);
-        reader.onload = () => {
-            setImageURL(reader.result);
-        };
-        reader.onerror = error => {
-            console.error(error);
-        };
+        setImageURL(imageFile);
     };
 
     const handleSubmitImage = async () => {
-        const response = await axiosInstance.patch(`users/profile/image/${profileDetails._id}`, JSON.stringify({ image: imageURL }));
+        const formData = new FormData();
+        formData.append('image', imageURL);
+        const response = await axiosInstance.patch(
+            `users/profile/image/${profileDetails._id}`,
+            formData,
+            {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            },
+        );
         setProfileDetails({ ...profileDetails, image: response.data.image });
+        // dispatch(fetchLoggedProfile());
         handleChangeProfileImage();
     }
 

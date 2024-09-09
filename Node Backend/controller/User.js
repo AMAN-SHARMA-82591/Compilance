@@ -98,11 +98,12 @@ const updateProfile = async (req, res) => {
 const updateProfileImage = async (req, res) => {
     const id = req.params.id;
     try {
+        const imageName = req.file.filename;
         await Profile.findByIdAndUpdate(
             { _id: id },
-            { image: req.body.image },
+            { image: imageName },
         );
-        res.status(200).json({ message: 'Image is uploaded', image: req.body.image });
+        res.status(200).json({ message: 'Image is uploaded', image: imageName });
     } catch (error) {
         res.status(500).send(error);
     }

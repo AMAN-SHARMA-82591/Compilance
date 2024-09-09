@@ -6,11 +6,6 @@ export const fetchTaskList = createAsyncThunk('tasks/fetch', async () => {
     return response.data;
 });
 
-export const fetchLoggedProfile = createAsyncThunk('/users/profile/me', async (data) => {
-    const response = await axiosInstance.get('/users/profile/me');
-    return response.data;
-})
-
 export const createTask = createAsyncThunk('tasks/create', async (data) => {
     const response = await axiosInstance.post('/tasks', data);
     return response.data;
@@ -29,7 +24,7 @@ export const editTask = createAsyncThunk('tasks/edit', async ({ id, values }) =>
 const taskListSlice = createSlice({
     name: 'taskList',
     initialState: {
-        data: { pageInfo: {}, taskList: [], profile: {} },
+        data: { pageInfo: {}, taskList: [] },
         error: null,
         isLoading: false,
     },
@@ -42,17 +37,6 @@ const taskListSlice = createSlice({
             state.data = action.payload;
         });
         builder.addCase(fetchTaskList.rejected, (state, action) => {
-            state.isLoading = false;
-            state.error = action.error;
-        });
-        builder.addCase(fetchLoggedProfile.pending, (state) => {
-            state.isLoading = true
-        });
-        builder.addCase(fetchLoggedProfile.fulfilled, (state, action) => {
-            state.isLoading = false;
-            state.data.profile = action.payload;
-        });
-        builder.addCase(fetchLoggedProfile.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error;
         });
