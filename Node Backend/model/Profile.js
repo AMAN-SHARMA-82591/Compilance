@@ -21,6 +21,7 @@ const profileSchema = new mongoose.Schema({
     },
     image: {
         type: String,
+        unique: false,
     },
     company: {
         type: String,

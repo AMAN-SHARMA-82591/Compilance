@@ -1,6 +1,8 @@
 require('dotenv').config();
 const User = require('../model/Authentication');
 const Profile = require('../model/Profile');
+const bcrypt = require('bcryptjs');
+const { createNewUser } = require('./Authentication');
 
 const users = async (req, res) => {
     try {
@@ -57,23 +59,22 @@ const profileList = async (req, res) => {
 
 const createProfile = async (req, res) => {
     const { name, email, ...entity } = req.body;
-    if (!req.body.email || !req.body.name) {
-        res.status(400).send('Fields Required');
+    if (!email || !name) {
+        return res.status(400).send('Fields Required');
     }
     try {
         let user = await User.findOne({ email });
-        if (!user) {
+        if (user) {
             return res.status(400).json({ msg: 'User already exists.' });
         }
-        // user = new User({
-        //     name,
-        //     email,
-        //     password: 
-        // })
         const username = email.match(/^[^@]+/)[0];
-        console.log('CreateUser', name, email, username);
-        res.status(200).send('Working!!');
+        const newProfile = await createNewUser(name, email, username);
+        if (!newProfile) {
+            return res.status(400).json({ msg: 'Something went wrong' });
+        }
+        res.status(200).json({ message: 'New Profile Created', newProfile });
     } catch (error) {
+        console.error('Server Error:', error);
         res.status(500).send('Server Error');
     }
 };

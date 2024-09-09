@@ -9,13 +9,14 @@ import IndexProfile from './components/profile/Index';
 import IndexTasks from './components/tasks/Index';
 import PeopleDetails from './components/people/common/PeopleDetails';
 import { useDispatch } from 'react-redux';
-import { fetchTaskList } from '../store/store';
+import { fetchLoggedProfile, fetchTaskList } from '../store/store';
 
 
 function Root() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(fetchTaskList());
+        dispatch(fetchLoggedProfile());
     }, [dispatch]);
     return (
         <>
@@ -23,12 +24,12 @@ function Root() {
             <LeftBar />
             <div style={{ margin: '75px 0 0 83px' }}>
                 <Switch>
-                    <Route exact path="/home" component={IndexHome}></Route>
-                    <Route exact path="/people" component={IndexPeople}></Route>
-                    <Route exact path="/people/:id" component={PeopleDetails}></Route>
-                    <Route exact path="/community" component={IndexCommunity}></Route>
-                    <Route exact path="/Profile" component={IndexProfile}></Route>
-                    <Route exact path="/tasks" component={IndexTasks}></Route>
+                    <Route exact path='/home' component={IndexHome}></Route>
+                    <Route exact path='/people' component={IndexPeople}></Route>
+                    <Route exact path='/people/:id' component={PeopleDetails}></Route>
+                    <Route exact path='/community' component={IndexCommunity}></Route>
+                    <Route exact path='/Profile' component={IndexProfile}></Route>
+                    <Route exact path='/tasks' component={IndexTasks}></Route>
                 </Switch>
             </div>
         </>
