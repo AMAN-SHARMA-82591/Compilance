@@ -9,9 +9,19 @@ export const fetchLoggedProfile = createAsyncThunk('/users/profile/me', async (d
 const profileSlice = createSlice({
     name: 'profile',
     initialState: {
-        data: {},
-        error: null,
-        isLoading: false,
+        data: null,
+    },
+    reducers: {
+        setData: (state, action) => {
+            state.data = action.payload;
+        },
+        setProfileData: (state, action) => {
+            console.log('SetProfile', action.payload, state.data);
+            // state.data.profile = action.payload;
+        },
+        clearData: (state) => {
+            state.data = null;
+        }
     },
     extraReducers(builder) {
         builder.addCase(fetchLoggedProfile.pending, (state) => {
@@ -28,6 +38,5 @@ const profileSlice = createSlice({
     }
 });
 
+export const { setData, setProfileData, clearData } = profileSlice.actions;
 export const profileReducer = profileSlice.reducer;
-// export const { reducer: profileReducer } = profileSlice;
-// export default profileReducer;
