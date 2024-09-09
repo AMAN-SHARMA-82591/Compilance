@@ -24,9 +24,9 @@ function LeftBar() {
             <li className="home-main-logo">
               <NavLink className="list-item" to="/home"><HouseIcon fontSize="large" /></NavLink>
             </li>
-            <li className="home-main-logo">
+            {/* <li className="home-main-logo">
               <NavLink className="list-item" to="/community"><QuestionAnswerIcon fontSize="large" /></NavLink>
-            </li>
+            </li> */}
             <li className="home-main-logo">
               <NavLink className="list-item" to="/people"><PeopleAltIcon fontSize="large" /></NavLink>
             </li>

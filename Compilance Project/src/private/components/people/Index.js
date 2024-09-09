@@ -28,23 +28,31 @@ function Index({ history }) {
         initialValues: initialValues,
         validationSchema,
         onSubmit: async (values) => {
-            const response = await axiosInstance.post('/users/profile', values);
-            console.log('CreateProfileResult', response);
+            await axiosInstance.post('/users/profile', values);
+            handleFetchUserProfiles();
+            handleCloseCreateUser();
         },
     });
 
-    useEffect(async () => {
+    useEffect(() => {
+        handleFetchUserProfiles();
+    }, []);
+
+    const handleFetchUserProfiles = async () => {
+        if (peopleList.length) {
+            setPeopleList([]);
+        }
         const response = await axiosInstance.get('/users/profile');
         if (!isEmpty(response.data)) {
             setPeopleList(response.data);
         }
-    }, []);
+    }
 
     const handleOpenCreateUser = () => {
         setOpenCreate(true);
     }
 
-    const handleCreateUser = () => {
+    const handleCloseCreateUser = () => {
         setOpenCreate(false);
         handleReset();
     }
@@ -53,7 +61,7 @@ function Index({ history }) {
         content = (
             peopleList.map((people, key) => (
                 <div key={key} className='profile-box' onClick={() => history.push(`/people/${people._id}`)}>
-                    <Avatar alt={people.name.split('')[0]} src='' />
+                    <Avatar alt={people.name.split('')[0]} src={people.image} />
                     <div style={{ marginLeft: 15 }}>
                         <p>{people.name}</p>
                         <p>{people.email}</p>
@@ -81,7 +89,7 @@ function Index({ history }) {
             <div className='people-create-header'>
                 <h1>Create New User</h1>
                 <div>
-                    <button onClick={handleCreateUser}>Cancel</button>
+                    <button onClick={handleCloseCreateUser}>Cancel</button>
                     <button type='submit' onClick={handleSubmit}>Submit</button>
                 </div>
             </div>
@@ -184,8 +192,7 @@ function Index({ history }) {
 
     return (
         <>
-            {/* {!openCreate ? main : createSection} */}
-            {main}
+            {!openCreate ? main : createSection}
         </>
     )
 }

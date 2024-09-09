@@ -31,26 +31,21 @@ const login = async (req, res) => {
     }
 }
 
-const register = async (req, res) => {
-    const { name, email, password } = req.body;
+const createNewUser = async (name, email, password, admin=false) => {
     try {
-        let user = await User.findOne({ email });
-        if (user) {
-            return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
-        }
-        user = new User({
+        let newUser = new User({
             name,
             email,
             password
         });
         const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password, salt);
-        await user.save();
+        newUser.password = await bcrypt.hash(password, salt);
+        await newUser.save();
         const userProfile = new Profile({
-            user: user._id,
-            name: user.name,
-            email: user.email,
-            admin: true,
+            user: newUser._id,
+            name: newUser.name,
+            email: newUser.email,
+            admin,
             phone_number: null,
             department: null,
             designation: null,
@@ -64,8 +59,26 @@ const register = async (req, res) => {
             bio: null,
         });
         await userProfile.save();
+        return userProfile;
+    } catch (error) {
+        console.error('Error creating user or profile:', error);
+        throw error;
+    }
+}
+
+const register = async (req, res) => {
+    const { name, email, password } = req.body;
+    try {
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+        }
+        const newProfile = await createNewUser(name, email, password, true);
+        if (!newProfile) {
+            return res.status(400).json({ msg: 'Something went wrong' });
+        }
         const token = jwt.sign(
-            { userProfile },
+            { newProfile },
             process.env.JWT_SECRET,
             { expiresIn: '1d' },
         )
@@ -79,4 +92,5 @@ const register = async (req, res) => {
 module.exports = {
     login,
     register,
+    createNewUser,
 };
