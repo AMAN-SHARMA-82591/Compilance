@@ -167,15 +167,15 @@ function PeopleDetails(props) {
                 <div className='profile-edit-options'>
                     {editProfile ? (
                         <>
-                            <button onClick={handleCloseProfileEdit}>
+                            <button className='people-button' onClick={handleCloseProfileEdit}>
                                 Cancel
                             </button>
-                            <button type='submit' onClick={handleSubmit}>
+                            <button className='people-button' type='submit' onClick={handleSubmit}>
                                 Submit
                             </button>
                         </>
                     ) : (
-                        <button onClick={handleOpenProfileEdit}>
+                        <button className='people-button' onClick={handleOpenProfileEdit}>
                             Edit
                         </button>
                     )}

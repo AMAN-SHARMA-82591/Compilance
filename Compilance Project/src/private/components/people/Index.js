@@ -65,6 +65,7 @@ function Index({ history }) {
                     <div style={{ marginLeft: 15 }}>
                         <p>{people.name}</p>
                         <p>{people.email}</p>
+                        <p>{people.department || 'User'}</p>
                     </div>
                 </div>
             ))
@@ -74,9 +75,11 @@ function Index({ history }) {
     }
     const main = (
         <main>
-            <div className='people-heading'>
+            <div className='people-create-header'>
                 <h1>Meet Our Team</h1>
-                <button className='people-create-btn' onClick={handleOpenCreateUser}>Create New User</button>
+                <div>
+                    <button className='people-button' onClick={handleOpenCreateUser}>Create New User</button>
+                </div>
             </div>
             <div className='people-main'>
                 {content}
@@ -89,8 +92,8 @@ function Index({ history }) {
             <div className='people-create-header'>
                 <h1>Create New User</h1>
                 <div>
-                    <button onClick={handleCloseCreateUser}>Cancel</button>
-                    <button type='submit' onClick={handleSubmit}>Submit</button>
+                    <button style={{ marginRight: 10 }} className='people-button' onClick={handleCloseCreateUser}>Cancel</button>
+                    <button className='people-button' type='submit' onClick={handleSubmit}>Submit</button>
                 </div>
             </div>
             <div className='people-create-main'>

@@ -17,7 +17,7 @@ const styles = () => ({
     container: {
         textAlign: 'center',
         maxWidth: '100%',
-        margin: '180px auto 0px auto',
+        margin: '10vh auto 0px auto',
         backgroundColor: '#1f2842',
         width: 550,
         padding: '80px',
@@ -25,8 +25,15 @@ const styles = () => ({
     typography: {
         color: 'white',
     },
-    input: {
-        color: 'white',
+    textField: {
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderColor: 'rgba(255, 255, 255, 0.411)',
+            },
+            '&:hover fieldset': {
+                borderColor: '#1976d3',
+            },
+        },
     },
 });
 
@@ -95,7 +102,7 @@ function Register({ classes, history }) {
                         onChange={(e) => handleNameInputChange(e)}
                         fullWidth={true}
                         InputProps={{
-                            className: classes.input,
+                            style: { color: 'white' }
                         }}
                     />
                 </Grid>
@@ -112,7 +119,7 @@ function Register({ classes, history }) {
                         onChange={(e) => handleEmailInputChange(e)}
                         fullWidth={true}
                         InputProps={{
-                            className: classes.input,
+                            style: { color: 'white' }
                         }}
                     />
                 </Grid>
@@ -128,16 +135,16 @@ function Register({ classes, history }) {
                         onChange={(e) => handlePasswordInputChange(e)}
                         fullWidth={true}
                         InputProps={{
-                            className: classes.input,
+                            style: { color: 'white' }
                         }}
                     />
                 </Grid>
-                <Grid item={true} xs={12}>
+                <Grid item={true} xs={12} style={{ marginTop: 30 }}>
                     <Button
-                        type="submit"
-                        variant="contained"
+                        type='submit'
+                        variant='contained'
                         style={{ height: '50px' }}
-                        color="primary"
+                        color='primary'
                         fullWidth={true}
                         onClick={() => handleRegisterSubmit()}
                     >
@@ -145,7 +152,7 @@ function Register({ classes, history }) {
                     </Button>
                     <Button
                         component={Link}
-                        color="primary"
+                        color='primary'
                         style={{ height: '50px', marginTop: 20 }}
                         to='/login'
                     >

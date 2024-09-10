@@ -13,6 +13,7 @@ import './App.css';
 function App() {
   // const [login, setLogin] = useState(false);
   const dispatch = useDispatch();
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -33,9 +34,9 @@ function App() {
     <Switch>
       {!localStorage.getItem('token') && (
         <>
-          <Redirect exact from="/" to='/login'></Redirect>
-          <Route exact path="/login" component={Login}></Route>
-          <Route exact path="/register" component={Register}></Route>
+          <Redirect exact from='/' to='/login'></Redirect>
+          <Route exact path='/login' component={Login}></Route>
+          <Route exact path='/register' component={Register}></Route>
         </>
       )}
       <Redirect exact from='/' to='/home'></Redirect>
