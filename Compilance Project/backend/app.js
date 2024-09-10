@@ -9,6 +9,7 @@ const app = express();
 
 //To get data in json format!
 app.use(express.json({ extended: false }));
+app.use('/uploads', express.static('images'));
 
 app.use('/auth', authRouter);
 app.use('/users', userRouter);

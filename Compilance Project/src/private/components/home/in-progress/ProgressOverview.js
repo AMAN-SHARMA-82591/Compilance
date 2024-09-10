@@ -13,10 +13,9 @@ const styles = () => ({
         display: 'flex',
         maxWidth: '100%',
         width: '1200px',
-        height: '300px',
+        height: '220px',
         alignItems: 'end',
         marginBottom: '50px',
-        paddingLeft: '50px',
         justifyContent: 'space-between',
     },
     progressbox: {

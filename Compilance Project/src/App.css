@@ -425,9 +425,10 @@
 }
 
 .drop-down-menu-admin-items {
+  width: 200px;
+  padding: 5px;
   display: flex;
   justify-content: space-between;
-  padding: 5px;
 }
 .drop-down-sec-logo-cont1 {
   width: 40px;
@@ -455,9 +456,11 @@
 .drop-down-sec-help-cont3 {
   z-index: 9999;
   display: flex;
+  align-items: flex-start;
 }
 .drop-down-sec-help-cont3 p {
   font-weight: bold;
+  margin: 0px;
 }
 .drop-down-menu-admin-text-items p {
   font-size: 23px;

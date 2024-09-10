@@ -11,32 +11,34 @@ import PlanMeeting from './common/PlanMeeting'
 const styles = makeStyles(() => ({
   mainMenu: {
     display: 'grid',
-    gridTemplateColumns: '80% 20%',
+    gridTemplateColumns: '75% 25%',
   },
   section1: {
     margin: '0',
     padding: '0px 50px',
   },
   section2: {
+    height: '88vh',
     margin: '0 10px',
+    overflowY: 'auto',
   }
 }));
 
 function Index() {
   const classes = styles();
   return (
-    <div className={classes.mainMenu}>
-      <div className={classes.section1}>
+    <main className={classes.mainMenu}>
+      <section className={classes.section1}>
         <ProgressOverview />
         <Tasks />
-        <PlanMeeting />
-      </div>
-      <div className={classes.section2}>
+        {/* <PlanMeeting /> */}
+      </section>
+      <section className={classes.section2}>
         <Donut />
         <People />
         <RecentlyAdded />
-      </div>
-    </div>
+      </section>
+    </main>
   )
 }
 

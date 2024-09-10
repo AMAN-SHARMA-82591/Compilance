@@ -11,6 +11,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { AppBar, Avatar, Popover } from '@mui/material';
 import LoginAdminDropDownMenu from '../Common/LoginAdminDropDownMenu';
 import '../../App.css'
+import { useSelector } from 'react-redux';
 
 const styles = () => ({
     appBar: {
@@ -24,6 +25,7 @@ const styles = () => ({
 });
 function TopBar({ classes }) {
     const [show, setShow] = useState(null);
+    const profile = useSelector((state) => state.tokenInfo?.data?.profile);
 
     function handleOpenPopover(event) {
         setShow(event.currentTarget);
@@ -76,20 +78,20 @@ function TopBar({ classes }) {
                     </div>
                 </div> */}
                 <div className="admin-section">
-                    <div className="admin-sec-logo">
+                    {/* <div className="admin-sec-logo">
                         <EmailIcon className="admin-images-item-1" />
                         <SettingsIcon className="admin-images-item-1" />
                         <AlarmIcon className="admin-images-item-1" />
-                    </div>
+                    </div> */}
                     <div
                         className="admin-sec-info"
                         onClick={handleOpenPopover}
                     >
-                        <Avatar style={{ marginRight: '10px' }}>A</Avatar>
+                        <Avatar style={{ marginRight: '10px' }} src={profile?.image} />
                         <div>
-                            <h1 className="admin-name">Vicky Kaushal</h1>
+                            <h1 className="admin-name">{profile?.name}</h1>
                             <p>
-                                Admin
+                                {profile?.admin ? 'Admin' : 'User'}
                                 <ArrowDropDownIcon fontSize='small' />
                             </p>
                         </div>
@@ -112,6 +114,7 @@ function TopBar({ classes }) {
                         sx={{ borderRadius: '20px' }}
                     >
                         <LoginAdminDropDownMenu
+                            data={profile}
                             handleClosePopover={handleClosePopover}
                         />
                     </Popover>
