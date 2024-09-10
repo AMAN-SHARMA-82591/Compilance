@@ -134,8 +134,9 @@ function PeopleDetails(props) {
                 <div className='profile-image'>
                     <div>
                         <img
-                            alt='profileImage'
+                            alt={profileDetails?.image}
                             src={profileDetails?.image || jsImage}
+                            // src={`${BASE_URL}${profileDetails?.image}` || jsImage}
                             onClick={handleChangeProfileImage}
                         />
                         <Dialog keepMounted={false} open={profileImageDialog}>

@@ -35,11 +35,11 @@ function LeftBar() {
             </li>
           </ul>
         </div>
-        <div className="home-settings">
+        {/* <div className="home-settings">
           <li className="home-main-logo-settings">
             <NavLink className="list-item" to="/settings"><SettingsIcon fontSize="large" /></NavLink>
           </li>
-        </div>
+        </div> */}
       </div>
     </Drawer>
   )
