@@ -14,7 +14,7 @@ function Root() {
         <>
             <TopBar />
             <LeftBar />
-            <div style={{ margin: '75px 0 0 83px' }}>
+            <div style={{ margin: '60px 0 0 83px' }}>
                 <Switch>
                     <Route exact path='/home' component={IndexHome}></Route>
                     <Route exact path='/people' component={IndexPeople}></Route>

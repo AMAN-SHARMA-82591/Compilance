@@ -57,7 +57,6 @@ function CreateTaskDialog() {
                 fullWidth
                 size='small'
                 name='status'
-                label='Type'
                 value={values.status}
                 onChange={handleChange}
               >
@@ -96,7 +95,6 @@ function CreateTaskDialog() {
                 fullWidth
                 size='small'
                 name='type'
-                label='Type'
                 value={values.type}
                 onChange={handleChange}
               >
@@ -121,7 +119,6 @@ function CreateTaskDialog() {
                 fullWidth
                 size='small'
                 name='priority'
-                label='Priority'
                 value={values.priority}
                 onChange={handleChange}
               >

@@ -12,6 +12,7 @@ import { deleteTask } from '../../../store/store';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CreateTaskDialog from './common/CreateTaskDialog';
 import EditTaskDialog from './common/EditTaskDialog';
+import { formatStatus } from '../../Common/formatHelpers';
 
 function Index() {
   const dispatch = useDispatch();
@@ -44,13 +45,13 @@ function Index() {
         <tbody>
           {!isEmpty(data.taskList) && data.taskList.map((task, key) => (
             <tr key={key}>
-              <td>{task.status}</td>
-              <td>{task.title}</td>
-              <td>{task.description}</td>
-              <td>{task.type}</td>
-              <td>
+              <td className="status-cell">{formatStatus(task.status)}</td>
+              <td className="title-cell">{task.title}</td>
+              <td className="description-cell">{task.description}</td>
+              <td className="type-cell">{formatStatus(task.type)}</td>
+              <td className="actions-cell">
                 <EditTaskDialog id={task._id} />
-                <Button><DeleteIcon onClick={() => handleDeleteTask(task)} /></Button>
+                <Button color='error' variant='outlined'><DeleteIcon onClick={() => handleDeleteTask(task)} /></Button>
               </td>
             </tr>
           ))}
@@ -60,14 +61,15 @@ function Index() {
   }
   return (
     <>
-      <div className='task-header'>
-        <p className='task-header-title'><List fontSize="large" /> Tasks </p>
-        <CreateTaskDialog />
+      <div className='people-create-header'>
+        <h1>Tasks</h1>
+        <div>
+          <CreateTaskDialog />
+        </div>
       </div>
       <div className='task-filter-main'>
-
         <div className='filter-main'>
-          <p style={{ margin: 0 }}>
+          <p>
             Filters
           </p>
           <Button
@@ -96,6 +98,9 @@ function Index() {
           </Button>
         </div>
         <div className='search-main'>
+          <p>
+            Search
+          </p>
           <TextField
             size='small'
             variant='outlined'
