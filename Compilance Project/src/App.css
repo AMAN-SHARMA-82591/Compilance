@@ -591,50 +591,129 @@
   border: 2px solid #6572f5;
 }
 
-/*------------Overdue Table Section--------------*/
+/*------------Task/Overdue Table Section--------------*/
+.task-filter-main {
+  display: flex;
+  /* flex-direction: row;
+  align-items: flex-start; */
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: #f8f9fa; /* Light gray background */
+}
+
+.filter-main {
+  display: flex;
+  align-items: center;
+}
+
+.search-main {
+  display: flex;
+  align-items: center;
+}
+
+.filter-main p, .search-main p  {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+  margin-right: 20px;
+}
+
+.search-main .MuiTextField-root {
+  width: 100%;
+  margin-top: 5px;
+}
+
+.search-main .MuiOutlinedInput-root {
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.filter-main button {
+  margin: 5px 10px 5px 0;
+  padding: 5px 12px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #6571f5; /* Primary color */
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.filter-main button:hover {
+  background-color: #4053d5; /* Darker shade on hover */
+}
+
+.filter-main .MuiButton-outlined {
+  background-color: transparent;
+  border: 2px solid #6571f5;
+  color: #6571f5;
+}
+
+.filter-main .MuiButton-outlined:hover {
+  background-color: #6571f5;
+  color: #fff;
+}
+
 .overdue-table-section {
   margin-top: 50px;
 }
 .overdue-table-cont {
   width: 100%;
   border-collapse: collapse;
-  border-spacing: 0;
-  text-align: center;
-  color: #2c39c4d8;
-  letter-spacing: var(--letter-spacing3);
+  background-color: #f8f9fa;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.overdue-table-cont th,
+.overdue-table-cont td {
+  padding: 12px 15px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.overdue-table-cont th {
+  background-color: #6571f5da;
+  color: #fff;
   font-weight: 600;
 }
-.overdue-table-cont tr {
-  border-bottom: 2px solid #6571f581;
-}
-.overdue-table-cont tr th {
-  background: #8089e41f;
-  color: #6572f5;
-  padding: 20px;
+
+.overdue-table-cont td {
+  border-bottom: 1px solid #dee2e6;
 }
 
-.overdue-table-cont tr td {
-  padding: 10px;
+.overdue-table-cont tr:last-child td {
+  border-bottom: none;
 }
 
-/* .overdue-table-cont tr th:first-child,
-.overdue-table-items-cont tr td:first-child {
-  width: 500px;
+.overdue-table-cont tr:hover {
+  background-color: #f1f3f5;
 }
-.overdue-table-cont tr th:nth-child(2),
-.overdue-table-items-cont tr td:nth-child(2) {
-  width: 200px;
+
+.MuiButton-root {
+  border-radius: 20px;
+  transition: background-color 0.3s, color 0.3s;
 }
-.overdue-table-cont-items td {
-  padding: 10px;
-  background-color: #8089e41f;
-} */
-.table-data-cont-1 {
-  display: flex;
-  justify-content: center;
+
+.MuiButton-root:hover {
+  background-color: #4b5ac9;
+  color: #fff;
 }
-.table-data-cont-1 p {
-  margin: 10px 0px 0px 5px;
+
+.MuiButton-outlined:hover {
+  border-color: #4b5ac9;
+  color: #4b5ac9;
+}
+
+.MuiButton-contained:hover {
+  background-color: #4b5ac9;
+}
+
+/* Circular Progress Loader */
+.MuiCircularProgress-root {
+  color: #6571f5da;
 }
 
 /*---------------------Community Section---------------------------------------*/
@@ -693,54 +772,6 @@
 .com-list-items-logo-message {
   padding: 0px 3px;
   cursor: pointer;
-}
-
-/* Tasks Component */
-.task-header {
-  max-width: 100%;
-  width: 1800px;
-  display: flex;
-  align-items: center;
-  margin: 100px auto 40px auto;
-  justify-content: space-between;
-}
-
-.task-header-title {
-  font-size: 30px;
-  margin: 0px;
-  display: flex;
-  align-items: center;
-}
-
-.task-filter-main {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  width: 100%;
-  height: 70px;
-  background-color: #78798377;
-}
-
-.filter-main {
-  width: 550px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.filter-main p {
-  font-weight: bold;
-  font-size: 20px;
-  margin-right: 20px;
-}
-
-.search-main {
-  display: flex;
-  align-items: center;
-}
-
-.search-main p {
-  margin-right: 20px;
 }
 
 form {
@@ -803,7 +834,7 @@ input {
   display: flex;
   padding: 0px 30px;
   align-items: center;
-  background-color: #3734e6e5;
+  background-color: #4543eee5;
   justify-content: space-between;
 }
 
@@ -835,7 +866,8 @@ input {
 }
 
 .profile-box:hover {
-  background-color: #e0e0e0;
+  background-color: #e0e0e05d;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.411);
 }
 
 .profile-box .MuiAvatar-root {

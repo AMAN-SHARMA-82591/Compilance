@@ -60,7 +60,7 @@ function EditTaskDialog({ id }) {
 
   return (
     <>
-      <Button onClick={handleOpenTask}><EditIcon /></Button>
+      <Button style={{ marginRight: 10 }} variant='contained' onClick={handleOpenTask}><EditIcon /></Button>
       <Dialog open={open} maxWidth='md' fullWidth>
         <DialogTitle>Create Task</DialogTitle>
         {!loading ? (
@@ -73,7 +73,6 @@ function EditTaskDialog({ id }) {
                   fullWidth
                   size='small'
                   name='status'
-                  label='Type'
                   value={values.status}
                   onChange={handleChange}
                 >
@@ -112,7 +111,6 @@ function EditTaskDialog({ id }) {
                   fullWidth
                   size='small'
                   name='type'
-                  label='Type'
                   value={values.type}
                   onChange={handleChange}
                 >
@@ -137,7 +135,6 @@ function EditTaskDialog({ id }) {
                   fullWidth
                   size='small'
                   name='priority'
-                  label='Priority'
                   value={values.priority}
                   onChange={handleChange}
                 >
