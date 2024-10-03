@@ -6,7 +6,7 @@ import { Switch, Redirect, Route } from 'react-router-dom';
 import RootPrivate from './private/Root';
 import Login from './private/Login';
 import Register from './private/Register';
-import { fetchTaskList, setData } from './store/store';
+import { fetchProfileList, fetchTaskList, setData } from './store/store';
 import './App.css';
 // import CounterPage from './private/components/CounterPage';
 
@@ -21,8 +21,10 @@ function App() {
       const currentTime = Date.now() / 1000;
       if (currentTime > decodedToken.exp) {
         localStorage.removeItem('token');
+        window.location.reload();
       } else {
         dispatch(setData(decodedToken));
+        dispatch(fetchProfileList());
         dispatch(fetchTaskList());
       }
     }

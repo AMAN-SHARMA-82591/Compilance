@@ -3,16 +3,12 @@ import * as PropTypes from 'prop-types';
 import { compose } from 'ramda';
 import { withRouter } from 'react-router-dom';
 import withStyles from '@mui/styles/withStyles';
-import { Button, CircularProgress, Grid, IconButton, Typography } from '@mui/material'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { CircularProgress, Grid, IconButton, Typography } from '@mui/material'
 import TaskField from '../../../Common/TaskField';
 import "../../../../App.css"
 import { useSelector } from 'react-redux';
 
 const styles = () => ({
-    TasksMain: {
-        marginBottom: '50px',
-    },
     heading: {
         display: 'flex',
         justifyContent: 'space-between',
@@ -23,20 +19,17 @@ const styles = () => ({
 function Tasks({ classes, history }) {
     const { data, isLoading } = useSelector((state) => state.taskList);
     return (
-        <div className={classes.TasksMain}>
-            <div className={classes.heading}>
+        <main className='tasks-main'>
+            <div className='task-heading'>
                 <Typography variant='h4'>
                     Tasks
                 </Typography>
-                <Button
-                    color='secondary'
-                    variant='contained'
+                <button
                     onClick={() => history.push('/tasks')}
-                    endIcon={<ChevronRightIcon />}
                 >
 
                     View All
-                </Button>
+                </button>
             </div>
             <Grid container spacing={3}>
                 {isLoading ? (
@@ -52,7 +45,7 @@ function Tasks({ classes, history }) {
                 )}
             </Grid>
 
-        </div>
+        </main>
     )
 }
 

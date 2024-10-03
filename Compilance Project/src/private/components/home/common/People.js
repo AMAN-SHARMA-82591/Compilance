@@ -2,9 +2,10 @@
 import React, { Component } from 'react';
 import { compose } from 'ramda';
 import withStyles from '@mui/styles/withStyles';
-import { Typography, Button, Avatar } from '@mui/material';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { Typography, Avatar } from '@mui/material';
 import AvatarGroup from '@mui/lab/AvatarGroup';
+import { withRouter } from 'react-router-dom';
+
 
 const styles = () => ({
   peopleMain: {
@@ -19,18 +20,22 @@ const styles = () => ({
 
 class People extends Component {
   render() {
-    const { classes } = this.props;
+    const { classes, history } = this.props;
     return (
       <div className={classes.peopleMain}>
-        <div className={classes.heading}>
-          <Typography variant='h6'>
+        <div className='task-heading'>
+          <Typography variant='h4'>
             People
           </Typography>
-          <Button size='small' variant='contained' color='secondary' endIcon={<ChevronRightIcon />}>
+          <button
+            onClick={() => history.push('/people')}
+          >
+
             View All
-          </Button>
+          </button>
         </div>
         <AvatarGroup style={{ width: '150px' }} max={4}>
+
           <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
           <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
           <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
@@ -42,4 +47,4 @@ class People extends Component {
   }
 }
 
-export default compose(withStyles(styles))(People);
+export default compose(withStyles(styles), withRouter)(People);

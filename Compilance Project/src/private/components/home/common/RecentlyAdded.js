@@ -1,16 +1,15 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 import { compose } from 'ramda';
 import withStyles from '@mui/styles/withStyles';
-import { Typography, Button, Grid, CircularProgress } from '@mui/material';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { Typography, Grid, CircularProgress } from '@mui/material';
 import { withRouter } from 'react-router-dom';
 import TaskField from '../../../Common/TaskField';
 import { useSelector } from 'react-redux';
 
 const styles = () => ({
   recentMain: {
-    marginTop: '50px',
+    marginTop: '30px',
   },
   heading: {
     display: 'flex',
@@ -24,19 +23,16 @@ function RecentlyAdded({ classes, history }) {
   const { data, isLoading } = useSelector((state) => state.taskList);
   return (
     <div className={classes.recentMain}>
-      <div className={classes.heading}>
-        <Typography variant='h6'>
+      <div className='task-heading'>
+        <Typography variant='h4'>
           Today
         </Typography>
-        <Button
-          size='small'
-          color='secondary'
-          variant='contained'
+        <button
           onClick={() => history.push('/tasks')}
-          endIcon={<ChevronRightIcon />}
         >
+
           View All
-        </Button>
+        </button>
       </div>
       <Grid container spacing={3}>
         {isLoading ? (
