@@ -36,7 +36,7 @@ function Index() {
       <section className={classes.section2}>
         <Donut />
         <People />
-        <RecentlyAdded />
+        {/* <RecentlyAdded /> */}
       </section>
     </main>
   )

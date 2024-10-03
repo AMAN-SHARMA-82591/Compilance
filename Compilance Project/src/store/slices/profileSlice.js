@@ -6,10 +6,18 @@ export const fetchLoggedProfile = createAsyncThunk('/users/profile/me', async (d
     return response.data;
 });
 
+export const fetchProfileList = createAsyncThunk('/users/profile', async (data) => {
+    const response = await axiosInstance.get('/users/profile');
+    return response.data;
+});
+
 const profileSlice = createSlice({
     name: 'profile',
     initialState: {
         data: null,
+        profileList: [],
+        error: null,
+        isLoading: false,
     },
     reducers: {
         setData: (state, action) => {
@@ -32,6 +40,17 @@ const profileSlice = createSlice({
             state.data.profile = action.payload;
         });
         builder.addCase(fetchLoggedProfile.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error;
+        });
+        builder.addCase(fetchProfileList.pending, (state) => {
+            state.isLoading = true
+        });
+        builder.addCase(fetchProfileList.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.data.profileList = action.payload;
+        });
+        builder.addCase(fetchProfileList.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error;
         });

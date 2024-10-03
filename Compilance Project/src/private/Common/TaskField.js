@@ -4,7 +4,7 @@ import { compose } from 'ramda'
 import withStyles from '@mui/styles/withStyles';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import SendIcon from '@mui/icons-material/Send';
-import { AvatarGroup, Avatar, Button, Divider, IconButton, LinearProgress, Popover, Typography } from '@mui/material'
+import { AvatarGroup, Avatar, Divider, IconButton, LinearProgress, Popover, Typography } from '@mui/material'
 import Description from '@mui/icons-material/Description'
 import MoreVert from '@mui/icons-material/MoreVert';
 import "../../App.css"
@@ -31,22 +31,22 @@ function TaskField({ classes, data }) {
     }
     return (
         <>
-            <div className={classes.recentItem}>
-                <div style={{ display: 'flex' }}>
-                    <IconButton style={{ pointerEvents: 'none' }} disableFocusRipple disableRipple size='small' color='primary'>
-                        <Description />
+            <div className="recent-items">
+                <div className="recent-items__header">
+                    <div className="recent-items__title">
+                        <IconButton className="recent-items__icon" disableFocusRipple disableRipple size="small" color="primary">
+                            <Description />
+                        </IconButton>
+                        <Typography variant="h6">{data.title}</Typography>
+                    </div>
+                    <IconButton className="recent-items__more-button" onClick={handleOpenPopover} size="small">
+                        <MoreVert />
                     </IconButton>
-                    <Typography variant='h6'>
-                        {data.title && data.title}
-                    </Typography>
                 </div>
-                <IconButton ref={anchorEl} onClick={handleOpenPopover} style={{ color: 'black' }} size='small'>
-                    <MoreVert />
-                </IconButton>
                 <Popover
-                    id='simple-popover'
+                    id="simple-popover"
                     anchorEl={anchorEl}
-                    open={anchorEl}
+                    open={Boolean(anchorEl)}
                     onClose={handleClosePopover}
                     anchorOrigin={{
                         vertical: 'bottom',
@@ -56,53 +56,39 @@ function TaskField({ classes, data }) {
                         vertical: 'top',
                         horizontal: 'center',
                     }}
-                    sx={{ borderRadius: '20px' }}
+                    classes={{ paper: 'recent-items__popover' }}
                 >
-                    <div style={{ backgroundColor: '#0000ffb0' }}>
-                        <div style={{ background: 'white', width: '400px', padding: '10px', borderRadius: '0px 0px 15px 15px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div>
-                                    <Typography variant='subtitle2'>
-                                        June 1, 2020
-                                    </Typography>
-                                    <Typography variant='h6'>
-                                        {data.title && data.title}
-                                    </Typography>
-                                </div>
-                                <span>{data.status && data.status}</span>
-                            </div>
+                    <div className="recent-items__popover-content">
+                        <div className="recent-items__popover-header">
                             <div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px' }}>
-                                    <Typography variant='subtitle2'>
-                                        Process
-                                    </Typography>
-                                    <Typography variant='subtitle2'>
-                                        0%
-                                    </Typography>
-                                </div>
-                                <LinearProgress value={50} variant='determinate' />
+                                <Typography variant="subtitle2">June 1, 2020</Typography>
+                                <Typography variant="h6">{data.title}</Typography>
                             </div>
-                            <Divider variant='fullWidth' orientation='horizontal' />
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', alignItems: 'center' }}>
-                                <span>
-                                    High
-                                </span>
-                                <AvatarGroup spacing='small' style={{ width: '100px' }} max={4}>
-                                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                                    <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-                                    <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-                                    <Avatar alt="Agnes Walker" src="/static/images/avatar/4.jpg" />
-                                    <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
-                                </AvatarGroup>
-                            </div>
+                            <span className="recent-items__status">{data.status}</span>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', color: 'white' }}>
-                            <Typography>
-                                Assign To
-                            </Typography>
+                        <div className="recent-items__progress">
+                            <div className="recent-items__progress-header">
+                                <Typography variant="subtitle2">Process</Typography>
+                                <Typography variant="subtitle2">0%</Typography>
+                            </div>
+                            <LinearProgress value={50} variant="determinate" />
+                        </div>
+                        <Divider />
+                        <div className="recent-items__footer">
+                            <span className="recent-items__priority">High</span>
+                            <AvatarGroup max={4} className="recent-items__avatar-group">
+                                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                                <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
+                                <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
+                                <Avatar alt="Agnes Walker" src="/static/images/avatar/4.jpg" />
+                                <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
+                            </AvatarGroup>
+                        </div>
+                        <div className="recent-items__actions">
+                            <Typography>Assign To</Typography>
                             <div>
-                                <SendIcon />
-                                <ChatBubbleIcon />
+                                <IconButton size="small"><SendIcon /></IconButton>
+                                <IconButton size="small"><ChatBubbleIcon /></IconButton>
                             </div>
                         </div>
                     </div>
