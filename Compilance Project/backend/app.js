@@ -18,7 +18,7 @@ app.use('/tasks', taskRouter);
 const start = async () => {
     try {
         await connectDB(process.env.MONGO_URI);
-        app.listen(5000, () => {
+        app.listen(process.env.PORT || 5000, () => {
             console.log('Server is Running on host 5000');
         });
     } catch (error) {
