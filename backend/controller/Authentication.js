@@ -78,7 +78,7 @@ const register = async (req, res) => {
     const token = jwt.sign({ newProfile }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    res.status(201).json({ uid: newProfile._id, token });
+    res.status(201).json(token);
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error!");

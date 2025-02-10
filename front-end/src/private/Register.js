@@ -60,7 +60,6 @@ function Register({ classes }) {
       }).then((resp) => resp.json());
       if (res.token) {
         localStorage.setItem("token", `Bearer ${res.token}`);
-        localStorage.setItem("uid", res.uid);
         navigate("/home");
         window.location.reload();
         setTextInput({ name: "", email: "", password: "" });

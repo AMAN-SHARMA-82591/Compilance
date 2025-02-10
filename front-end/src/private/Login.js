@@ -54,7 +54,6 @@ function Login({ classes }) {
       .catch((error) => console.error(error));
     if (res.token) {
       localStorage.setItem("token", `Bearer ${res.token}`);
-      localStorage.setItem("uid", res.uid);
       navigate("/home");
       window.location.reload();
       setTextInput({ email: "", password: "" });
