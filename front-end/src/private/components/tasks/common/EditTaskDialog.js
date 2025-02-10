@@ -6,9 +6,9 @@ import {
   DialogTitle,
   DialogActions,
   TextField,
-  Grid,
   MenuItem,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { editTask } from '../../../../store/store';
 import { useFormik } from 'formik';
 import { useState } from 'react';
@@ -66,7 +66,7 @@ function EditTaskDialog({ id }) {
         {!loading ? (
           <DialogContent>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <label htmlFor='status'>Status</label>
                 <TextField
                   select
@@ -96,15 +96,15 @@ function EditTaskDialog({ id }) {
                 </MenuItem> */}
                 </TextField>
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <label htmlFor="title">Title</label>
                 <TextField fullWidth size='small' name='title' value={values.title} placeholder='Title' onChange={handleChange} />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <label htmlFor="description">Description</label>
                 <TextField fullWidth size='small' name='description' value={values.description} placeholder='Description' onChange={handleChange} />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <label htmlFor="type">Type</label>
                 <TextField
                   select
@@ -128,7 +128,7 @@ function EditTaskDialog({ id }) {
                   </MenuItem>
                 </TextField>
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <label htmlFor="priority">Priority</label>
                 <TextField
                   select

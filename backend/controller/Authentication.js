@@ -7,7 +7,7 @@ const bcrypt = require("bcryptjs");
 const login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    res.status(400).send("Fields Required!");
+    return res.status(400).send("Fields Required!");
   }
   try {
     const user = await User.findOne({ email });
@@ -15,7 +15,7 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(400).json({ msg: "User Not Found." });
     }
-    const profile = await Profile.findOne({ user: user._id });
+    const profile = await Profile.findOne({ userId: user._id });
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ msg: "Invalid Credentials" });
@@ -40,7 +40,7 @@ const createNewUser = async (name, email, password, admin = false) => {
     newUser.password = await bcrypt.hash(password, salt);
     await newUser.save();
     const userProfile = new Profile({
-      user: newUser._id,
+      userId: newUser._id,
       name: newUser.name,
       email: newUser.email,
       admin,
@@ -68,7 +68,6 @@ const register = async (req, res) => {
   const { name, email, password } = req.body;
   try {
     let user = await User.findOne({ email });
-    console.log(user);
     if (user) {
       return res.status(400).json({ errors: [{ msg: "User already exists" }] });
     }
@@ -79,7 +78,7 @@ const register = async (req, res) => {
     const token = jwt.sign({ newProfile }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    res.status(201).json({ token });
+    res.status(201).json({ uid: newProfile._id, token });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error!");

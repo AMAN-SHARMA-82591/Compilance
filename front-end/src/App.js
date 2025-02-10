@@ -40,7 +40,7 @@ function App() {
     <Routes>
       {!localStorage.getItem('token') ? (
         <>
-          <Route path='/' element={<Navigate replace to='/login' />} />
+          <Route path='/*' element={<Navigate replace to='/login' />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
         </>
