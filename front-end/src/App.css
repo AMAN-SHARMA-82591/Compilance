@@ -396,18 +396,19 @@
   position: absolute;
   align-items: center;
   margin-right: 20px;
+  margin-top: 4px;
 }
 .admin-sec-info {
   display: flex;
   align-items: center;
   padding-right: 5px;
+  margin-top: 5px;
   cursor: pointer !important;
 }
-.admin-sec-info h1 {
+.admin-name {
   margin: 0px;
   font-size: 13px;
   letter-spacing: var(--letter-spacing3);
-  margin: 8px 0px 0px 0px;
   cursor: pointer;
 }
 .admin-sec-info p {

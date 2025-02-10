@@ -6,8 +6,6 @@ import withStyles from '@mui/styles/withStyles';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AlarmIcon from '@mui/icons-material/Alarm';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import WatchLaterIcon from '@mui/icons-material/WatchLater';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { AppBar, Avatar, Popover } from '@mui/material';
 import LoginAdminDropDownMenu from '../Common/LoginAdminDropDownMenu';
 import '../../App.css'
@@ -78,11 +76,11 @@ function TopBar({ classes }) {
                     </div>
                 </div> */}
                 <div className="admin-section">
-                    {/* <div className="admin-sec-logo">
+                    <div className="admin-sec-logo">
                         <EmailIcon className="admin-images-item-1" />
                         <SettingsIcon className="admin-images-item-1" />
                         <AlarmIcon className="admin-images-item-1" />
-                    </div> */}
+                    </div>
                     <div
                         className="admin-sec-info"
                         onClick={handleOpenPopover}
