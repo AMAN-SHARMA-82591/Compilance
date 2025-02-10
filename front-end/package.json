@@ -1,8 +1,8 @@
 {
   "name": "front-end",
-  "version": "1.0",
+  "version": "1.1",
   "private": true,
-  "proxy": "https://compilance-backend.onrender.com",
+  "proxy": "https://compilance-backend.vercel.app/",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
