@@ -3,7 +3,13 @@ import * as PropTypes from "prop-types";
 import { compose } from "ramda";
 import withStyles from "@mui/styles/withStyles";
 import { Link, useNavigate } from "react-router";
-import { Button, Paper, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Paper,
+  TextField,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
 const styles = () => ({
@@ -30,9 +36,12 @@ const styles = () => ({
 });
 
 function Login({ classes }) {
+  const baseURL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [textInput, setTextInput] = useState({ email: "", password: "" });
   const [error, setError] = useState(false);
+
   async function handleLoginSubmit() {
     if (!/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(textInput.email)) {
       setError({ email: true, password: false });
@@ -40,7 +49,8 @@ function Login({ classes }) {
     if (!textInput.email || !textInput.password) {
       alert("Email & Password is REQUIRED!");
     }
-    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/login`, {
+    setLoading(true);
+    const res = await fetch(`${baseURL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -54,8 +64,9 @@ function Login({ classes }) {
       .catch((error) => console.error(error));
     if (res && res.token) {
       localStorage.setItem("token", `Bearer ${res.token}`);
-      navigate("/home");
+      await navigate("/home");
       window.location.reload();
+      setLoading(false);
       setTextInput({ email: "", password: "" });
     } else {
       alert("Invalid Credentials");
@@ -142,7 +153,7 @@ function Login({ classes }) {
             fullWidth={true}
             onClick={() => handleLoginSubmit()}
           >
-            Submit
+            {loading ? <CircularProgress sx={{ color: "white" }} /> : "Submit"}
           </Button>
           <Button
             component={Link}

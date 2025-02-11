@@ -3,7 +3,14 @@ import * as PropTypes from "prop-types";
 import { compose } from "ramda";
 import withStyles from "@mui/styles/withStyles";
 import { Link, useNavigate } from "react-router";
-import { Button, Paper, TextField, Typography, Grid } from "@mui/material";
+import {
+  Button,
+  Paper,
+  TextField,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
+import Grid from "@mui/material/Grid2";
 
 const styles = () => ({
   container: {
@@ -30,7 +37,9 @@ const styles = () => ({
 });
 
 function Register({ classes }) {
+  const baseURL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [textInput, setTextInput] = useState({
     name: "",
     email: "",
@@ -46,25 +55,24 @@ function Register({ classes }) {
     if (!textInput.email || !textInput.password || !textInput.name) {
       alert("Name, Email & Password is REQUIRED!");
     }
+    setLoading(true);
     try {
-      const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/auth/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name,
-            email,
-            password,
-          }),
-        }
-      ).then((resp) => resp.json());
+      const res = await fetch(`${baseURL}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      }).then((resp) => resp.json());
       if (res && res.token) {
         localStorage.setItem("token", `Bearer ${res.token}`);
-        navigate("/home");
+        await navigate("/home");
         window.location.reload();
+        setLoading(false);
         setTextInput({ name: "", email: "", password: "" });
       }
     } catch (error) {
@@ -107,12 +115,12 @@ function Register({ classes }) {
       elevation={2}
     >
       <Grid container={true} spacing={3}>
-        <Grid item={true} xs={12}>
+        <Grid item={true} size={12}>
           <Typography variant="h2" className={classes.typography}>
             Register Form
           </Typography>
         </Grid>
-        <Grid item={true} xs={12}>
+        <Grid item={true} size={12}>
           <Typography className={classes.typography} variant="h5">
             Name
           </Typography>
@@ -122,12 +130,17 @@ function Register({ classes }) {
             value={textInput.name}
             onChange={(e) => handleNameInputChange(e)}
             fullWidth={true}
-            InputProps={{
-              style: { color: "white" },
+            sx={{
+              "& .MuiOutlinedInput-input": {
+                color: "white",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "white",
+              },
             }}
           />
         </Grid>
-        <Grid item={true} xs={12}>
+        <Grid item={true} size={12}>
           <Typography className={classes.typography} variant="h5">
             Email
           </Typography>
@@ -143,12 +156,17 @@ function Register({ classes }) {
             value={textInput.email}
             onChange={(e) => handleEmailInputChange(e)}
             fullWidth={true}
-            InputProps={{
-              style: { color: "white" },
+            sx={{
+              "& .MuiOutlinedInput-input": {
+                color: "white",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "white",
+              },
             }}
           />
         </Grid>
-        <Grid item={true} xs={12}>
+        <Grid item={true} size={12}>
           <Typography className={classes.typography} variant="h5">
             Password
           </Typography>
@@ -159,12 +177,17 @@ function Register({ classes }) {
             value={textInput.password}
             onChange={(e) => handlePasswordInputChange(e)}
             fullWidth={true}
-            InputProps={{
-              style: { color: "white" },
+            sx={{
+              "& .MuiOutlinedInput-input": {
+                color: "white",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "white",
+              },
             }}
           />
         </Grid>
-        <Grid item={true} xs={12} style={{ marginTop: 30 }}>
+        <Grid item={true} size={12} style={{ marginTop: 30 }}>
           <Button
             type="submit"
             variant="contained"
@@ -173,7 +196,7 @@ function Register({ classes }) {
             fullWidth={true}
             onClick={() => handleRegisterSubmit()}
           >
-            Submit
+            {loading ? <CircularProgress sx={{ color: "white" }} /> : "Submit"}
           </Button>
           <Button
             component={Link}

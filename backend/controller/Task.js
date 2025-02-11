@@ -5,7 +5,7 @@ const taskList = async (req, res) => {
   const { uid } = req;
   try {
     const page = parseInt(req.query.page) - 1 || 0;
-    const limit = parseInt(req.query.limit) || 5;
+    const limit = parseInt(req.query.limit) || 20;
     const search = req.query.search || "";
     const filter = req.query.filter || "";
     const taskList = await Task.find({
@@ -14,11 +14,34 @@ const taskList = async (req, res) => {
     })
       .find({ type: { $regex: filter, $options: "i" } })
       .limit(limit);
-    res.json({ pageInfo: {}, taskList });
+    res.json({ pageInfo: {}, taskList, length: taskList.length });
   } catch (error) {
     console.error(error.message);
     res.json({ message: "Error", error: error.message });
   }
+};
+
+const progressOverviewData = async (req, res) => {
+  const { uid } = req;
+  const overdue = await Task.countDocuments({
+    status: "overdue",
+    rootUserId: uid,
+  });
+  const upcomingCount = await Task.countDocuments({
+    status: "upcoming",
+    rootUserId: uid,
+  });
+  const inProgressCount = await Task.countDocuments({
+    status: "in-progress",
+    rootUserId: uid,
+  });
+  const totalCount = await Task.countDocuments({ rootUserId: uid });
+  res.json({
+    overdue: overdue,
+    upcoming: upcomingCount,
+    in_progress: inProgressCount,
+    total: totalCount,
+  });
 };
 
 const createTask = async (req, res) => {
@@ -89,4 +112,5 @@ module.exports = {
   deleteTask,
   updateTask,
   createTask,
+  progressOverviewData,
 };
