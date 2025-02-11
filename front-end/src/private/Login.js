@@ -40,7 +40,7 @@ function Login({ classes }) {
     if (!textInput.email || !textInput.password) {
       alert("Email & Password is REQUIRED!");
     }
-    const res = await fetch("/auth/login", {
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,7 +52,7 @@ function Login({ classes }) {
     })
       .then((resp) => resp.json())
       .catch((error) => console.error(error));
-    if (res.token) {
+    if (res && res.token) {
       localStorage.setItem("token", `Bearer ${res.token}`);
       navigate("/home");
       window.location.reload();

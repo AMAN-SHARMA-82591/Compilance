@@ -47,18 +47,21 @@ function Register({ classes }) {
       alert("Name, Email & Password is REQUIRED!");
     }
     try {
-      const res = await fetch("/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-        }),
-      }).then((resp) => resp.json());
-      if (res.token) {
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+          }),
+        }
+      ).then((resp) => resp.json());
+      if (res && res.token) {
         localStorage.setItem("token", `Bearer ${res.token}`);
         navigate("/home");
         window.location.reload();
