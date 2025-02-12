@@ -34,9 +34,6 @@ function App() {
     }
   }, [dispatch]);
   return (
-    // <>
-    //   <CounterPage />
-    // </>
     <Routes>
       {!localStorage.getItem('token') ? (
         <>

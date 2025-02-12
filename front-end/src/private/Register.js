@@ -67,7 +67,9 @@ function Register({ classes }) {
           email,
           password,
         }),
-      }).then((resp) => resp.json());
+      })
+        .then((resp) => resp.json())
+        .catch((error) => console.error(error));
       if (res && res.token) {
         localStorage.setItem("token", `Bearer ${res.token}`);
         await navigate("/home");

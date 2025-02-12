@@ -71,14 +71,14 @@ const register = async (req, res) => {
     if (user) {
       return res.status(400).json({ errors: [{ msg: "User already exists" }] });
     }
-    const newProfile = await createNewUser(name, email, password, true);
-    if (!newProfile) {
+    const profile = await createNewUser(name, email, password, true);
+    if (!profile) {
       return res.status(400).json({ msg: "Something went wrong" });
     }
-    const token = jwt.sign({ newProfile }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ profile }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    res.status(201).json(token);
+    res.status(201).json({ token });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error!");

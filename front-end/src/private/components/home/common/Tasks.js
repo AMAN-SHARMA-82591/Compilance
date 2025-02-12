@@ -1,13 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { compose } from "ramda";
 import withStyles from "@mui/styles/withStyles";
-import {
-  Box,
-  CircularProgress,
-  Skeleton,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import TaskField from "../../../Common/TaskField";
 import "../../../../App.css";
@@ -24,8 +18,19 @@ const styles = () => ({
 });
 
 function Tasks() {
-  const { data, isLoading } = useSelector((state) => state.taskList);
+  const { data } = useSelector((state) => state.taskList);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [taskList, setTaskList] = useState([]);
+
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setTaskList(data.taskList.slice(0, 4));
+      setLoading(false);
+    }, 1000);
+  }, [data.taskList]);
+
   return (
     <main className="tasks-main">
       <div className="task-heading">
@@ -33,7 +38,7 @@ function Tasks() {
         <button onClick={() => navigate("/tasks")}>View All</button>
       </div>
       <Grid container spacing={3}>
-        {isLoading ? (
+        {loading ? (
           Array(4)
             .fill(null)
             .map((_, i) => (
@@ -41,14 +46,14 @@ function Tasks() {
                 <TaskSkeleton />
               </Grid>
             ))
+        ) : taskList.length > 0 ? (
+          taskList.map((task, i) => (
+            <Grid key={i} size={6}>
+              <TaskField data={task} />
+            </Grid>
+          ))
         ) : (
-          <>
-            {data.taskList.slice(0, 4).map((task, i) => (
-              <Grid key={i} size={6}>
-                <TaskField data={task} />
-              </Grid>
-            ))}
-          </>
+          <Typography variant="body1">No tasks found.</Typography>
         )}
       </Grid>
     </main>
