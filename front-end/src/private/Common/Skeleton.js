@@ -1,5 +1,16 @@
 import React from "react";
-import { Stack, Box, Skeleton } from "@mui/material";
+import {
+  Stack,
+  Box,
+  Card,
+  CardContent,
+  Skeleton,
+  CardHeader,
+  IconButton,
+} from "@mui/material";
+import Grid from "@mui/material/Grid2";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { StyledCard } from "../components/home/common/CustomCard";
 
 function TaskSkeleton() {
   return (
@@ -22,7 +33,7 @@ function TaskSkeleton() {
   );
 }
 
-const TableSkeleton = () => {
+function TableSkeleton() {
   return (
     <tbody>
       <tr>
@@ -50,9 +61,9 @@ const TableSkeleton = () => {
       </tr>
     </tbody>
   );
-};
+}
 
-function PeopleSkeleton({ color, width, height }) {
+function ProgressOverviewSkeleton({ color, width, height }) {
   return (
     <Box
       sx={{
@@ -81,6 +92,23 @@ function PeopleSkeleton({ color, width, height }) {
   );
 }
 
+function PeopleSkeleton() {
+  return (
+    <StyledCard>
+      <CardHeader
+        avatar={<Skeleton variant="circular" width={40} height={40} />}
+        action={
+          <IconButton>
+            <MoreVertIcon />
+          </IconButton>
+        }
+        title={<Skeleton variant="text" width={120} />}
+        subheader={<Skeleton variant="text" width={100} />}
+      />
+    </StyledCard>
+  );
+}
+
 function AvatarSkeleton({ color, width, height }) {
   return (
     <Stack direction="row">
@@ -97,4 +125,40 @@ function AvatarSkeleton({ color, width, height }) {
   );
 }
 
-export { TaskSkeleton, PeopleSkeleton, AvatarSkeleton, TableSkeleton };
+const ProfileSkeleton = () => {
+  return (
+    <Box sx={{ flexGrow: 1, padding: 3 }}>
+      <Grid container justifyContent="center">
+        <Grid item>
+          <Card
+            sx={{
+              width: 290,
+              height: 260,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 2,
+            }}
+          >
+            <Skeleton variant="circular" width={80} height={80} />
+            <CardContent sx={{ textAlign: "center", width: "100%" }}>
+              <Skeleton variant="text" width="100%" height={24} />
+              <Skeleton variant="text" width="100%" height={20} />
+              <Skeleton variant="text" width="100%" height={20} />
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+
+export {
+  TaskSkeleton,
+  TableSkeleton,
+  AvatarSkeleton,
+  PeopleSkeleton,
+  ProfileSkeleton,
+  ProgressOverviewSkeleton,
+};

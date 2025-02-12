@@ -7,7 +7,7 @@ import "../../../../App.css";
 import { useDispatch, useSelector } from "react-redux";
 import { taskFilterAction } from "../../../../store/actions";
 import { useNavigate } from "react-router";
-import { PeopleSkeleton } from "../../../Common/Skeleton";
+import { ProgressOverviewSkeleton } from "../../../Common/Skeleton";
 import axiosInstance from "../../../Common/AxiosInstance";
 
 const colorPallet = ["#E74C3C", "#5B6EE1", "#F4B942", "#1ABC9C"];
@@ -103,7 +103,7 @@ function ProgressOverview({ classes }) {
         Array(4)
           .fill(null)
           .map((_, i) => (
-            <PeopleSkeleton
+            <ProgressOverviewSkeleton
               key={i}
               color={colorPallet[i]}
               width={200}
