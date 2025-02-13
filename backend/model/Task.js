@@ -31,6 +31,10 @@ const TaskSchema = new mongoose.Schema({
     type: String,
     required: [true, "User ID field is required"],
   },
+  orgId: {
+    type: String,
+    required: [true, "Organization ID is required"],
+  },
   type: {
     type: String,
     enum: ["enhancement", "task", "bug", "epic"],

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import * as PropTypes from "prop-types";
 import { compose } from "ramda";
 import withStyles from "@mui/styles/withStyles";
 import { Typography } from "@mui/material";
 import "../../../../App.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { taskFilterAction } from "../../../../store/actions";
 import { useNavigate } from "react-router";
 import { ProgressOverviewSkeleton } from "../../../Common/Skeleton";
@@ -45,17 +45,18 @@ function ProgressOverview({ classes }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    async function getProgressOverviewCount() {
-      setLoading(true);
-      const response = await axiosInstance.get("/tasks/progressOverview");
-      if (response.data) {
-        setData(response.data);
-        setLoading(false);
-      }
+  const getProgressOverviewCount = useCallback(async () => {
+    setLoading(true);
+    const response = await axiosInstance.get("/tasks/progressOverview");
+    if (response.data) {
+      setData(response.data);
+      setLoading(false);
     }
-    getProgressOverviewCount();
   }, []);
+
+  useEffect(() => {
+    getProgressOverviewCount();
+  }, [getProgressOverviewCount]);
 
   const handleChange = (type) => {
     dispatch(taskFilterAction(type));

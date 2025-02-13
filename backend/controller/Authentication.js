@@ -29,7 +29,13 @@ const login = async (req, res) => {
   }
 };
 
-const createNewUser = async (name, email, password, admin = false) => {
+const createNewUser = async (
+  name,
+  email,
+  password,
+  admin = false,
+  oid = null
+) => {
   try {
     let newUser = new User({
       name,
@@ -47,7 +53,7 @@ const createNewUser = async (name, email, password, admin = false) => {
       phone_number: null,
       department: null,
       designation: null,
-      organization: null,
+      oid,
       skills: null,
       company: null,
       image: null,
