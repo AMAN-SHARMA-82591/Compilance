@@ -12,15 +12,15 @@ const organization = require("../middleware/organization");
 
 const router = express.Router();
 
-// router.route('/').get(auth, organization, taskList).post(auth, organization, createTask);
-// router.route('/:id').get(auth, organization, getTask).delete(auth, organization, deleteTask).patch(auth, organization, updateTask)
-
-router.route("/").get(auth, taskList).post(auth, createTask);
-router.route("/progressOverview").get(auth, progressOverviewData);
+router
+  .route("/")
+  .get(auth, organization, taskList)
+  .post(auth, organization, createTask);
+router.route("/progressOverview").get(auth, organization, progressOverviewData);
 router
   .route("/:id")
-  .get(auth, getTask)
-  .delete(auth, deleteTask)
-  .patch(auth, updateTask);
+  .get(auth, organization, getTask)
+  .delete(auth, organization, deleteTask)
+  .patch(auth, organization, updateTask);
 
 module.exports = router;

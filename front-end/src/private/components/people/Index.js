@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import * as Yup from "yup";
 import Avatar from "@mui/material/Avatar";
 import { isEmpty } from "lodash";
-import { CircularProgress, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import axiosInstance from "../../Common/AxiosInstance";
 import { useFormik } from "formik";
@@ -16,7 +16,7 @@ const validationSchema = Yup.object({
     .min(3, "Name must be at least 3 charachter long"),
 });
 
-function Index({ history }) {
+function Index() {
   let content;
   const navigate = useNavigate();
   const [peopleList, setPeopleList] = useState([]);
@@ -29,8 +29,8 @@ function Index({ history }) {
     designation: "",
     company: "",
   };
-  const { values, errors, handleSubmit, handleChange, handleReset, setValues } =
-    useFormik({
+  const { values, errors, handleSubmit, handleChange, handleReset } = useFormik(
+    {
       initialValues: initialValues,
       validationSchema,
       onSubmit: async (values) => {
@@ -38,21 +38,19 @@ function Index({ history }) {
         handleFetchUserProfiles();
         handleCloseCreateUser();
       },
-    });
+    }
+  );
+
+  const handleFetchUserProfiles = useCallback(async () => {
+    if (isEmpty(peopleList)) {
+      const response = await axiosInstance.get("/users/profile");
+      if (!isEmpty(response.data)) setPeopleList(response.data);
+    }
+  }, [peopleList]);
 
   useEffect(() => {
     handleFetchUserProfiles();
-  }, []);
-
-  const handleFetchUserProfiles = async () => {
-    if (peopleList.length) {
-      setPeopleList([]);
-    }
-    const response = await axiosInstance.get("/users/profile");
-    if (!isEmpty(response.data)) {
-      setPeopleList(response.data);
-    }
-  };
+  }, [handleFetchUserProfiles]);
 
   const handleOpenCreateUser = () => {
     setOpenCreate(true);

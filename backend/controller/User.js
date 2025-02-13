@@ -65,6 +65,7 @@ const profileList = async (req, res) => {
 
 const createProfile = async (req, res) => {
   const { name, email, ...entity } = req.body;
+  const { oid } = req;
   if (!email || !name) {
     return res.status(400).send("Fields Required");
   }
@@ -74,7 +75,7 @@ const createProfile = async (req, res) => {
       return res.status(400).json({ msg: "User already exists." });
     }
     const username = email.match(/^[^@]+/)[0];
-    const newProfile = await createNewUser(name, email, username);
+    const newProfile = await createNewUser(name, email, username, oid);
     if (!newProfile) {
       return res.status(400).json({ msg: "Something went wrong" });
     }

@@ -44,7 +44,7 @@ const profileSchema = new mongoose.Schema({
     status: {
         type: String,
     },
-    organization: {
+    oid: {
         type: String,
     },
     admin: {

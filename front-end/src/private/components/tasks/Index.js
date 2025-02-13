@@ -20,7 +20,7 @@ function Index() {
     return () => {
       dispatch(taskFilterAction(""));
     };
-  }, [dispatch]);
+  });
 
   const taskFilterType = useSelector((state) => state.taskFilterType);
 
@@ -37,36 +37,34 @@ function Index() {
     content = [...Array(5)].map((_, index) => <TableSkeleton key={index} />);
   } else {
     content = (
-      <>
-        <tbody>
-          {!isEmpty(data.taskList) &&
-            data.taskList.map((task, key) => (
-              <tr key={key}>
-                <td className="status-cell">{formatStatus(task.status)}</td>
-                <td className="title-cell">{task.title}</td>
-                <td className="description-cell">{task.description}</td>
-                <td className="type-cell">{formatStatus(task.type)}</td>
-                <td className="actions-cell">
-                  <EditTaskDialog id={task._id} />
-                  <Button
-                    color="error"
-                    variant="outlined"
-                    sx={{
-                      borderColor: "red",
-                      color: "red",
-                      "&:hover": {
-                        backgroundColor: "red",
-                        color: "white",
-                      },
-                    }}
-                  >
-                    <DeleteIcon onClick={() => handleDeleteTask(task)} />
-                  </Button>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </>
+      <tbody>
+        {!isEmpty(data.taskList) &&
+          data.taskList.map((task, key) => (
+            <tr key={key}>
+              <td className="status-cell">{formatStatus(task.status)}</td>
+              <td className="title-cell">{task.title}</td>
+              <td className="description-cell">{task.description}</td>
+              <td className="type-cell">{formatStatus(task.type)}</td>
+              <td className="actions-cell">
+                <EditTaskDialog id={task._id} />
+                <Button
+                  color="error"
+                  variant="outlined"
+                  sx={{
+                    borderColor: "red",
+                    color: "red",
+                    "&:hover": {
+                      backgroundColor: "red",
+                      color: "white",
+                    },
+                  }}
+                >
+                  <DeleteIcon onClick={() => handleDeleteTask(task)} />
+                </Button>
+              </td>
+            </tr>
+          ))}
+      </tbody>
     );
   }
   return (
