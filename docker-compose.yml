@@ -1,0 +1,46 @@
+version: "2"
+services:
+  frontend:
+    build: front-end
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./front-end:/app
+      - /app/node_modules
+    environment:
+      REACT_APP_BACKEND_URL: ${REACT_APP_BACKEND_URL}  # Its not working. Right now backend url is going to the defaule value set in AxiosInstance file.
+    develop:
+      watch:
+        - action: rebuild
+          path: ./front-end
+          target: /app
+          ignore:
+            - node_modules/
+    networks:
+      - mern
+  backend:
+    build: backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - backend/.env
+    develop:
+      watch:
+        - action: rebuild
+          path: ./backend
+          target: /app
+          ignore:
+            - node_modules/
+    networks:
+      - mern
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - mern
+networks:
+  mern:
+    driver: bridge
