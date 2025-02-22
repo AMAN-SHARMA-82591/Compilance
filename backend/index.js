@@ -27,7 +27,7 @@ app.use(
 
 app.use((err, req, res, next) => {
   console.log(err);
-  res.status(err.status || 500).json({ message: "Something went wrong!!" });
+  res.status(err.status || 500).json({ message: "Something Went Wrong!!" });
 });
 
 app.use("/auth", authRouter);

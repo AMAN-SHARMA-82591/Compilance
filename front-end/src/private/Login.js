@@ -66,11 +66,11 @@ function Login({ classes }) {
       localStorage.setItem("token", `Bearer ${res.token}`);
       await navigate("/home");
       window.location.reload();
-      setLoading(false);
       setTextInput({ email: "", password: "" });
     } else {
       alert("Invalid Credentials");
     }
+    setLoading(false);
   }
 
   function handleEmailInputChange(event) {
