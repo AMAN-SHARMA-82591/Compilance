@@ -3,6 +3,7 @@ const multer = require("multer");
 const {
   profile,
   users,
+  getUser,
   profileList,
   getProfile,
   createProfile,
@@ -33,7 +34,11 @@ const upload = multer({ storage: storage });
 
 const router = express.Router();
 
+// Get User Details
 router.get("/", auth, users);
+router.get('/me', auth, getUser)
+
+// Organization Routes
 router
   .route("/organization")
   .get(auth, organizationList)
@@ -43,6 +48,8 @@ router
   .get(auth, getOrganization)
   .patch(auth, editOrganization)
   .delete(auth, deleteOrganization);
+
+// User Routes
 // router.get('/profile/me', auth, organization, profile);
 router.get("/profile/me", auth, profile);
 // router.get('/profile', auth, profileList);

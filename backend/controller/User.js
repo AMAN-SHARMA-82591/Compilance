@@ -14,6 +14,18 @@ const users = async (req, res) => {
   }
 };
 
+const getUser = async (req, res) => {
+  const { uid } = req;
+  try {
+    const userData = await User.findOne({ _id: uid });
+
+    res.status(200).json({ success: true, msg: userData });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server Error");
+  }
+};
+
 const profile = async (req, res) => {
   try {
     const profile = await Profile.findOne({ _id: req.user.profile._id });
@@ -115,6 +127,7 @@ const updateProfileImage = async (req, res) => {
 module.exports = {
   users,
   profile,
+  getUser,
   profileList,
   getProfile,
   updateProfile,

@@ -2,14 +2,13 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 module.exports = function (req, res, next) {
-  const token = req.headers.authorization?.split(" ")[1];
+  const { profile } = req.user; // Check if you need to verify token or not. Because you're already verifying your token in auth middleware
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded.profile.oid) {
+    if (!profile.oid) {
       return res.status(401).json({ msg: "Organization is not been created" });
     }
     req.oid = decoded.profile.oid;
-    next();
+    return next();
   } catch (error) {
     res.status(401).json({ msg: "Token is not valid" });
   }

@@ -29,18 +29,19 @@ const login = async (req, res) => {
   }
 };
 
-const createNewUser = async (
-  name,
-  email,
-  password,
-  admin = false,
-  oid = null
-) => {
+const createNewUser = async (name, email, password, role = 0, oid = null) => {
   try {
+    if (role && role === 1) {
+      return res.status(400).json({
+        success: false,
+        msg: "You cannot create admin",
+      });
+    }
     let newUser = new User({
       name,
       email,
       password,
+      role,
     });
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(password, salt);
@@ -49,7 +50,7 @@ const createNewUser = async (
       userId: newUser._id,
       name: newUser.name,
       email: newUser.email,
-      admin,
+      role: newUser.role,
       phone_number: null,
       department: null,
       designation: null,
@@ -84,7 +85,7 @@ const register = async (req, res) => {
     const token = jwt.sign({ profile }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    res.status(201).json({ token });
+    res.status(201).json({ msg: "Registered Successfully", token });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error!");
