@@ -947,25 +947,26 @@ input {
 
 /*------------------------ People Section ------------------------*/
 
-.people-button {
+.page-header-button {
   background-color: #6571f5da;
   color: #ffffff;
   padding: 10px 20px;
   border: 2px solid transparent;
   border-radius: 5px;
   font-size: 16px;
+  margin: 0px 5px;
   cursor: pointer;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
 }
 
-.people-button:hover {
+.page-header-button:hover {
   background-color: #525eeb;
   border: 2px solid #ffffff;
   box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
 }
 
-.people-button:active {
+.page-header-button:active {
   background-color: #4b57c6;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
 }
@@ -977,7 +978,7 @@ input {
   text-align: center;
 }
 
-.people-create-header {
+.page-header {
   display: flex;
   padding: 0px 30px;
   align-items: center;
@@ -985,7 +986,7 @@ input {
   justify-content: space-between;
 }
 
-.people-create-header h1 {
+.page-header h1 {
   color: white;
 }
 

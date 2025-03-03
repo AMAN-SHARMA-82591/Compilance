@@ -18,6 +18,8 @@ const { onlyAdminAccess } = require("../middleware/adminMiddleware");
 const { createRole, getRoles } = require("../controller/admin/roleController");
 const router = express.Router();
 
+
+// Auth Routes
 router.post("/register", register);
 router.post("/login", login);
 

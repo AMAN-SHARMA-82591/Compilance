@@ -21,17 +21,17 @@ const organizationSchema = new mongoose.Schema({
     type: String,
     required: [true, "Country field is required"],
   },
-  website: {
-    type: String,
-  },
-  establishedDate: {
-    type: Date,
-  },
   description: {
     type: String,
   },
-  logo: {
-    type: String,
+  adminId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: [true, "Sub Admin ID is required"],
+  },
+  roles: {
+    type: [Number],
+    default: [0, 1, 2],
   },
 });
 
