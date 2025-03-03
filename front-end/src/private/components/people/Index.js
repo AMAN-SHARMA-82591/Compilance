@@ -8,6 +8,7 @@ import axiosInstance from "../../Common/AxiosInstance";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router";
 import { ProfileSkeleton } from "../../Common/Skeleton";
+import PageHeader from "../../Common/PageHeader";
 
 const validationSchema = Yup.object({
   email: Yup.string().email().required("Email Field is required"),
@@ -80,17 +81,13 @@ function Index() {
     content = [...Array(3)].map((_, index) => <ProfileSkeleton key={index} />);
   }
   const main = (
-    <main>
-      <div className="people-create-header">
-        <h1>Meet Our Team</h1>
-        <div>
-          <button className="people-button" onClick={handleOpenCreateUser}>
-            Create New User
-          </button>
-        </div>
-      </div>
+    <PageHeader
+      title="Meet Our Team"
+      buttonTitle="Create New User"
+      onClick={handleOpenCreateUser}
+    >
       <div className="people-main">{content}</div>
-    </main>
+    </PageHeader>
   );
 
   const createSection = (

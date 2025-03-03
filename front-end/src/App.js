@@ -13,6 +13,7 @@ import IndexTasks from "./private/components/tasks/Index";
 import IndexOrganization from "./private/components/organization/Index";
 import PeopleDetails from "./private/components/people/common/PeopleDetails";
 import "./App.css";
+import OrganizationDetails from "./private/components/organization/common/OrganizationDetails";
 // import CounterPage from './private/components/CounterPage';
 
 function App() {
@@ -44,13 +45,13 @@ function App() {
         </>
       ) : (
         <Route path="/" element={<RootPrivate />}>
+          <Route path="/organization" element={<IndexOrganization />} />
           <Route path="/home" element={<IndexHome />} />
           <Route path="/tasks" element={<IndexTasks />} />
-          <Route path="/organization" element={<IndexOrganization />} />
           <Route path="/people" element={<IndexPeople />} />
           <Route path="/people/:id" element={<PeopleDetails />} />
-
-          <Route path="/" element={<Navigate replace to="/home" />} />
+          <Route path="/organization/:id" element={<OrganizationDetails />} />
+          <Route path="/" element={<Navigate replace to="/organization" />} />
           {/* <Route path='/community' element={<IndexCommunity />}></Route> */}
           {/* <Route path='/Profile' element={<IndexProfile />}></Route> */}
         </Route>

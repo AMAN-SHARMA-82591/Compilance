@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { isEmpty } from "lodash";
-import { taskFilterAction } from "../../../store/store";
+import { createTask, taskFilterAction } from "../../../store/store";
 import { Button, TextField } from "@mui/material";
 import { deleteTask } from "../../../store/store";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -9,9 +9,11 @@ import CreateTaskDialog from "./common/CreateTaskDialog";
 import EditTaskDialog from "./common/EditTaskDialog";
 import { formatStatus } from "../../Common/formatHelpers";
 import { TableSkeleton } from "../../Common/Skeleton";
+import PageHeader from "../../Common/PageHeader";
 
 function Index() {
   const dispatch = useDispatch();
+  const [createTaskDialog, setCreateTaskDialog] = useState(false);
   const { data, isLoading } = useSelector((state) => {
     return state.taskList;
   });
@@ -26,6 +28,10 @@ function Index() {
 
   const handleDeleteTask = (task) => {
     dispatch(deleteTask(task));
+  };
+
+  const handleOpenCreateTaskDialog = () => {
+    setCreateTaskDialog(!createTaskDialog);
   };
 
   const handleChangeFilterType = (filterType) => {
@@ -69,12 +75,16 @@ function Index() {
   }
   return (
     <>
-      <div className="people-create-header">
-        <h1>Tasks</h1>
-        <div>
-          <CreateTaskDialog />
-        </div>
-      </div>
+      <PageHeader
+        title="Tasks"
+        buttonTitle="Create Task"
+        onClick={handleOpenCreateTaskDialog}
+      >
+        <CreateTaskDialog
+          open={createTaskDialog}
+          handleOpenTaskDialog={handleOpenCreateTaskDialog}
+        />
+      </PageHeader>
       <div className="task-filter-main">
         <div className="filter-main">
           <p>Filters</p>

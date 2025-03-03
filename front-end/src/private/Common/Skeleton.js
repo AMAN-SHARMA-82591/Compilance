@@ -109,6 +109,38 @@ function PeopleSkeleton() {
   );
 }
 
+function OrganizationSkeleton() {
+  return (
+    <Card
+      sx={{
+        maxWidth: 345,
+        width: "100%",
+        boxShadow: 3,
+        borderRadius: 2,
+        textAlign: "center",
+        margin: 2,
+        p: 2,
+      }}
+    >
+      <CardContent>
+        <Skeleton variant="text" width="60%" height={28} sx={{ mx: "auto" }} />
+        <Skeleton
+          variant="text"
+          width="80%"
+          height={20}
+          sx={{ mx: "auto", mt: 1 }}
+        />
+        <Skeleton
+          variant="text"
+          width="50%"
+          height={18}
+          sx={{ mx: "auto", mt: 1 }}
+        />
+      </CardContent>
+    </Card>
+  );
+}
+
 function AvatarSkeleton({ color, width, height }) {
   return (
     <Stack direction="row">
@@ -160,5 +192,6 @@ export {
   AvatarSkeleton,
   PeopleSkeleton,
   ProfileSkeleton,
+  OrganizationSkeleton,
   ProgressOverviewSkeleton,
 };

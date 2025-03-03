@@ -4,6 +4,7 @@ const Profile = require("../model/Profile");
 const bcrypt = require("bcryptjs");
 const { createNewUser } = require("./Authentication");
 
+// List of Users
 const users = async (req, res) => {
   try {
     const profiles = await User.find().select("name email").exec();
@@ -14,6 +15,20 @@ const users = async (req, res) => {
   }
 };
 
+// Logged In User
+const getUser = async (req, res) => {
+  const { uid } = req;
+  try {
+    const userData = await User.findOne({ _id: uid });
+
+    res.status(200).json({ success: true, msg: userData });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server Error");
+  }
+};
+
+// Logged In Profile Details
 const profile = async (req, res) => {
   try {
     const profile = await Profile.findOne({ _id: req.user.profile._id });
@@ -50,7 +65,9 @@ const profileList = async (req, res) => {
   const limit = parseInt(req.query.limit) || 20;
   const fields = req.query.fields || "name email";
   try {
-    const profileList = await Profile.find().select(fields).limit(limit);
+    const profileList = await Profile.find({ role: { $ne: 1 } })
+      .select(fields)
+      .limit(limit);
     if (!profileList) {
       return res.status(400).json({ msg: "There is no profile List." });
     }
@@ -64,8 +81,7 @@ const profileList = async (req, res) => {
 };
 
 const createProfile = async (req, res) => {
-  const { name, email, ...entity } = req.body;
-  const { oid } = req;
+  const { name, email, orgId, ...entity } = req.body;
   if (!email || !name) {
     return res.status(400).send("Fields Required");
   }
@@ -75,7 +91,7 @@ const createProfile = async (req, res) => {
       return res.status(400).json({ msg: "User already exists." });
     }
     const username = email.match(/^[^@]+/)[0];
-    const newProfile = await createNewUser(name, email, username, oid);
+    const newProfile = await createNewUser(res, name, email, username, 0, orgId);
     if (!newProfile) {
       return res.status(400).json({ msg: "Something went wrong" });
     }
@@ -115,6 +131,7 @@ const updateProfileImage = async (req, res) => {
 module.exports = {
   users,
   profile,
+  getUser,
   profileList,
   getProfile,
   updateProfile,

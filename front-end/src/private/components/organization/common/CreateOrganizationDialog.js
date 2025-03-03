@@ -11,93 +11,100 @@ import {
 import Grid from "@mui/material/Grid2";
 import { createTask } from "../../../../store/store";
 import { useFormik } from "formik";
-import { useState } from "react";
 
 const initialValues = {
-  status: "",
-  title: "",
-  description: "",
-  type: "",
-  priority: "",
+  name: "",
+  address: "",
+  city: "",
+  state: "",
+  country: "",
+  description: null,
 };
 
-function CreateTaskDialog({ open, handleOpenTaskDialog }) {
+function CreateOrganizationDialog({ open, handleOrganizationDialog }) {
   const dispatch = useDispatch();
-  // const [open, setOpen] = useState(false);
   const { values, error, handleSubmit, handleChange, handleReset } = useFormik({
     initialValues: initialValues,
     onSubmit: (values) => {
-      dispatch(createTask(values));
+      // dispatch(createTask(values));
       handleReset();
-      // setOpen(false);
-      handleOpenTaskDialog();
+      handleOrganizationDialog();
     },
   });
 
   const handleCloseCreateTask = () => {
-    // setOpen(false);
-    handleOpenTaskDialog();
+    handleOrganizationDialog();
     handleReset();
   };
 
   return (
     <>
-      <Dialog open={open} maxWidth="md" fullWidth>
-        <DialogTitle>Create Task</DialogTitle>
+      <Dialog open={open} maxWidth="sm" fullWidth>
+        <DialogTitle>Create Organization</DialogTitle>
         <DialogContent>
           <Grid container spacing={3}>
             <Grid size={12}>
-              <label htmlFor="status">Status</label>
+              <label htmlFor="name">Name</label>
+              <TextField
+                fullWidth
+                size="small"
+                name="name"
+                value={values.name}
+                placeholder="Name"
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid size={12}>
+              <label htmlFor="address">Address</label>
+              <TextField
+                fullWidth
+                size="small"
+                name="address"
+                value={values.address}
+                placeholder="Address"
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid size={12}>
+              <label htmlFor="country">Country</label>
               <TextField
                 select
                 fullWidth
                 size="small"
-                name="status"
-                value={values.status}
+                name="country"
+                value={values.country}
                 onChange={handleChange}
               >
-                <MenuItem value="overdue">Overdue</MenuItem>
-                <MenuItem value="in-progress">In Progress</MenuItem>
-                <MenuItem value="upcoming">Upcoming</MenuItem>
-                <MenuItem value="not-started">Not Started</MenuItem>
-                {/* <MenuItem value='closed'>
-                  Closed
-                </MenuItem>
-                <MenuItem value='pending'>
-                  Pending
-                </MenuItem> */}
+                <MenuItem value="enhancement">Enhancement</MenuItem>
+                <MenuItem value="task">Task</MenuItem>
+                <MenuItem value="bug">Bug</MenuItem>
+                <MenuItem value="epic">Epic</MenuItem>
               </TextField>
             </Grid>
-            <Grid size={12}>
-              <label htmlFor="title">Title</label>
-              <TextField
-                fullWidth
-                size="small"
-                name="title"
-                value={values.title}
-                placeholder="Title"
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid size={12}>
-              <label htmlFor="description">Description</label>
-              <TextField
-                fullWidth
-                size="small"
-                name="description"
-                value={values.description}
-                placeholder="Description"
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid size={12}>
-              <label htmlFor="type">Type</label>
+            <Grid size={6}>
+              <label htmlFor="state">State</label>
               <TextField
                 select
                 fullWidth
                 size="small"
-                name="type"
-                value={values.type}
+                name="state"
+                value={values.state}
+                onChange={handleChange}
+              >
+                <MenuItem value="enhancement">Enhancement</MenuItem>
+                <MenuItem value="task">Task</MenuItem>
+                <MenuItem value="bug">Bug</MenuItem>
+                <MenuItem value="epic">Epic</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid size={6}>
+              <label htmlFor="city">City</label>
+              <TextField
+                select
+                fullWidth
+                size="small"
+                name="city"
+                value={values.city}
                 onChange={handleChange}
               >
                 <MenuItem value="enhancement">Enhancement</MenuItem>
@@ -107,26 +114,20 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
               </TextField>
             </Grid>
             <Grid size={12}>
-              <label htmlFor="priority">Priority</label>
+              <label htmlFor="description">Description</label>
               <TextField
-                select
                 fullWidth
                 size="small"
-                name="priority"
-                value={values.priority}
+                name="description"
+                rows={5}
+                value={values.description}
+                placeholder="Description"
                 onChange={handleChange}
-              >
-                <MenuItem value="major">Major</MenuItem>
-                <MenuItem value="blocker">Blocker</MenuItem>
-                <MenuItem value="critical">Critical</MenuItem>
-                <MenuItem value="minor">Minor</MenuItem>
-              </TextField>
+              />
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions
-          style={{ margin: "10px 0 20px 20px", justifyContent: "flex-start" }}
-        >
+        <DialogActions style={{ margin: "", justifyContent: "flex-start" }}>
           <Button variant="outlined" onClick={handleCloseCreateTask}>
             Close
           </Button>
@@ -139,4 +140,4 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
   );
 }
 
-export default CreateTaskDialog;
+export default CreateOrganizationDialog;

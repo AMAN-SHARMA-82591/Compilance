@@ -36,25 +36,29 @@ function People({ classes }) {
     }, 1000);
   }, []);
 
+  const renderContent = () => {
+    if (loading) {
+      return Array.from({ length: 3 }, (_, index) => (
+        <PeopleSkeleton key={index} />
+      ));
+    }
+
+    if (peopleList.length === 0) {
+      return <Typography variant="body1">No People found.</Typography>;
+    }
+
+    return peopleList.map((person) => (
+      <CustomCard key={person._id} data={person} />
+    ));
+  };
+
   return (
     <div className={classes.peopleMain}>
       <div className="task-heading">
         <Typography variant="h4">People</Typography>
         <button onClick={() => navigate("/people")}>View All</button>
       </div>
-      {!loading ? (
-        peopleList.length > 0 ? (
-          peopleList.map((person, index) => (
-            <CustomCard key={index} data={person} />
-          ))
-        ) : (
-          <Typography variant="body1">No people found.</Typography>
-        )
-      ) : (
-        Array(3)
-          .fill(null)
-          .map((_, index) => <PeopleSkeleton key={index} />)
-      )}
+      {renderContent()}
     </div>
   );
 }

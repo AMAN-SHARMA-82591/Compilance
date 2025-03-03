@@ -29,18 +29,20 @@ const login = async (req, res) => {
   }
 };
 
-const createNewUser = async (
-  name,
-  email,
-  password,
-  admin = false,
-  oid = null
-) => {
+const createNewUser = async (res, name, email, password, role = 0, orgId = null) => {
   try {
+    if (role && role === 1) {
+      return res.status(400).json({
+        success: false,
+        msg: "You cannot create admin",
+      });
+    }
     let newUser = new User({
       name,
       email,
       password,
+      role,
+      orgId,
     });
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(password, salt);
@@ -49,11 +51,11 @@ const createNewUser = async (
       userId: newUser._id,
       name: newUser.name,
       email: newUser.email,
-      admin,
+      role: newUser.role,
       phone_number: null,
       department: null,
       designation: null,
-      oid,
+      orgId,
       skills: null,
       company: null,
       image: null,
@@ -66,7 +68,7 @@ const createNewUser = async (
     return userProfile;
   } catch (error) {
     console.error("Error creating user or profile:", error);
-    throw error;
+    return res.status(404).json({ error: true, msg: "Something went wrong!" });
   }
 };
 
@@ -77,14 +79,14 @@ const register = async (req, res) => {
     if (user) {
       return res.status(400).json({ errors: [{ msg: "User already exists" }] });
     }
-    const profile = await createNewUser(name, email, password, true);
+    const profile = await createNewUser(name, email, password, 2);
     if (!profile) {
       return res.status(400).json({ msg: "Something went wrong" });
     }
     const token = jwt.sign({ profile }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    res.status(201).json({ token });
+    res.status(201).json({ msg: "Registered Successfully", token });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error!");
