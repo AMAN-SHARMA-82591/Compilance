@@ -2,33 +2,43 @@ import React, { useCallback, useEffect, useState } from "react";
 import * as Yup from "yup";
 import Avatar from "@mui/material/Avatar";
 import { isEmpty } from "lodash";
-import { TextField } from "@mui/material";
+import { MenuItem, TextField, IconButton } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import axiosInstance from "../../Common/AxiosInstance";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router";
 import { ProfileSkeleton } from "../../Common/Skeleton";
+import DeleteBox from "@mui/icons-material/Delete";
 import PageHeader from "../../Common/PageHeader";
+import { ConfirmDialogBox } from "../../Common/DialogBox";
+import { toastError } from "../../Common/ToastContainer";
+import { fetchOrgData } from "../../Common/ApiUtils";
+import { authAdminRole } from "../../Common/Constants";
 
 const validationSchema = Yup.object({
   email: Yup.string().email().required("Email Field is required"),
   name: Yup.string()
     .required("Name Field is required")
     .min(3, "Name must be at least 3 charachter long"),
+  orgId: Yup.string().required("Organization Field is required"),
 });
 
 function Index() {
   let content;
   const navigate = useNavigate();
   const [peopleList, setPeopleList] = useState([]);
+  const [orgData, setOrgData] = useState([]);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [deleteProfileId, setDeleteProfileId] = useState(null);
   const [openCreate, setOpenCreate] = useState(false);
   const initialValues = {
     name: "",
+    orgId: "",
     email: "",
-    phone_number: "",
+    company: "",
     department: "",
     designation: "",
-    company: "",
+    phone_number: "",
   };
   const { values, errors, handleSubmit, handleChange, handleReset } = useFormik(
     {
@@ -36,6 +46,7 @@ function Index() {
       validationSchema,
       onSubmit: async (values) => {
         await axiosInstance.post("/users/profile", values);
+        setOpenDeleteDialog(false);
         handleFetchUserProfiles();
         handleCloseCreateUser();
       },
@@ -43,15 +54,32 @@ function Index() {
   );
 
   const handleFetchUserProfiles = useCallback(async () => {
-    if (isEmpty(peopleList)) {
-      const response = await axiosInstance.get("/users/profile");
-      if (!isEmpty(response.data)) setPeopleList(response.data);
+    const response = await axiosInstance.get("/users/profile");
+    if (!isEmpty(response.data)) setPeopleList(response.data);
+  }, []);
+
+  const handleFetchOrgData = useCallback(async () => {
+    const data = await fetchOrgData();
+    setOrgData(data);
+  }, []);
+
+  const handleDeletUserProfile = async () => {
+    if (deleteProfileId) {
+      const response = await axiosInstance.delete(
+        `/users/profile/${deleteProfileId}`
+      );
+      if (!isEmpty(response.data)) handleFetchUserProfiles();
+      setDeleteProfileId(null);
+      setOpenDeleteDialog(false);
+    } else {
+      toastError("Profile Id not found.");
     }
-  }, [peopleList]);
+  };
 
   useEffect(() => {
     handleFetchUserProfiles();
-  }, [handleFetchUserProfiles]);
+    handleFetchOrgData();
+  }, [handleFetchUserProfiles, handleFetchOrgData]);
 
   const handleOpenCreateUser = () => {
     setOpenCreate(true);
@@ -63,12 +91,24 @@ function Index() {
   };
 
   if (!isEmpty(peopleList)) {
-    content = peopleList.map((people, key) => (
+    content = peopleList.map((people) => (
       <div
-        key={key}
+        key={people._id}
         className="profile-box"
         onClick={() => navigate(`/people/${people._id}`)}
       >
+        {!authAdminRole.includes(people.role) && people.role !== 0 && (
+          <IconButton
+            className="delete_icon_button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setDeleteProfileId(people._id);
+              setOpenDeleteDialog(true);
+            }}
+          >
+            <DeleteBox color="error" />
+          </IconButton>
+        )}
         <Avatar alt={people.name.split("")[0]} src={people.image} />
         <div style={{ marginLeft: 15 }}>
           <p>{people.name}</p>
@@ -91,29 +131,17 @@ function Index() {
   );
 
   const createSection = (
-    <section>
-      <div className="people-create-header">
-        <h1>Create New User</h1>
-        <div>
-          <button
-            style={{ marginRight: 10 }}
-            className="people-button"
-            onClick={handleCloseCreateUser}
-          >
-            Cancel
-          </button>
-          <button
-            className="people-button"
-            type="submit"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
-        </div>
-      </div>
+    <>
+      <PageHeader
+        title="Create New User"
+        buttonTitle="Cancel"
+        submitBtnTitle="Submit"
+        onSubmit={handleSubmit}
+        onClick={handleCloseCreateUser}
+      />
       <div className="people-create-main">
         <Grid container spacing={3} className="profile-details-section">
-          <Grid item xs={6} className="profile-details-item">
+          <Grid item="true" size={6} className="profile-details-item">
             <p>Name</p>
             <TextField
               fullWidth
@@ -126,7 +154,7 @@ function Index() {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={6} className="profile-details-item">
+          <Grid item="true" size={6} className="profile-details-item">
             <p>Email</p>
             <TextField
               fullWidth
@@ -139,7 +167,27 @@ function Index() {
               helperText={errors.email}
             />
           </Grid>
-          <Grid item xs={6} className="profile-details-item">
+          <Grid item="true" size={6} className="profile-details-item">
+            <p>Organization</p>
+            <TextField
+              select
+              fullWidth
+              size="small"
+              label="Select Organization"
+              name="orgId"
+              error={errors.orgId}
+              value={values.orgId}
+              onChange={handleChange}
+            >
+              {!isEmpty(orgData) &&
+                orgData.data.map((org) => (
+                  <MenuItem key={org._id} value={org._id}>
+                    {org.name && org.name}
+                  </MenuItem>
+                ))}
+            </TextField>
+          </Grid>
+          <Grid item="true" size={6} className="profile-details-item">
             <p>Phone Number</p>
             <TextField
               fullWidth
@@ -152,7 +200,7 @@ function Index() {
               helperText={errors.phone_number}
             />
           </Grid>
-          <Grid item xs={6} className="profile-details-item">
+          <Grid item="true" size={6} className="profile-details-item">
             <p>Department</p>
             <TextField
               fullWidth
@@ -165,7 +213,7 @@ function Index() {
               helperText={errors.department}
             />
           </Grid>
-          <Grid item xs={6} className="profile-details-item">
+          <Grid item="true" size={6} className="profile-details-item">
             <p>Designation</p>
             <TextField
               fullWidth
@@ -178,7 +226,7 @@ function Index() {
               helperText={errors.designation}
             />
           </Grid>
-          <Grid item xs={6} className="profile-details-item">
+          <Grid item="true" size={6} className="profile-details-item">
             <p>Company</p>
             <TextField
               fullWidth
@@ -193,10 +241,21 @@ function Index() {
           </Grid>
         </Grid>
       </div>
-    </section>
+    </>
   );
 
-  return <>{!openCreate ? main : createSection}</>;
+  return (
+    <>
+      {!openCreate ? main : createSection}
+      <ConfirmDialogBox
+        submitBtnText="Delete"
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+        onSubmit={() => handleDeletUserProfile()}
+        text="Do you want to remove these elements from this report?"
+      />
+    </>
+  );
 }
 
 export default Index;

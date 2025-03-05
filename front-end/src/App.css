@@ -998,6 +998,18 @@ input {
   justify-content: space-evenly;
 }
 
+.profile-box .delete_icon_button {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.profile-box:hover .delete_icon_button {
+  opacity: 1;
+}
+
 .profile-box {
   width: 250px;
   display: flex;
@@ -1005,6 +1017,7 @@ input {
   padding: 20px;
   cursor: pointer;
   align-items: center;
+  position: relative;
   border-radius: 10px;
   flex-direction: column;
   background-color: #ffffff; /* Light background color */
@@ -1107,7 +1120,6 @@ input {
   border-radius: 5px;
   padding: 10px 0px;
 }
-
 
 @media (max-width: 768px) {
   .task-heading {

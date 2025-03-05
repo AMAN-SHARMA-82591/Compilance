@@ -23,7 +23,7 @@ const styles = () => ({
 });
 function TopBar({ classes }) {
     const [show, setShow] = useState(null);
-    const profile = useSelector((state) => state.tokenInfo?.data?.profile);
+    const profile = useSelector((state) => state.basicInformation?.data?.profile);
 
     function handleOpenPopover(event) {
         setShow(event.currentTarget);

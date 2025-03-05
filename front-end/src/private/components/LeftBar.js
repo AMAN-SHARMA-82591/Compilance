@@ -9,8 +9,13 @@ import List from "@mui/icons-material/List";
 import { NavLink } from "react-router";
 import { Drawer } from "@mui/material";
 import reactIcon from "../../images/react-icon-original.svg";
+import { useSelector } from "react-redux";
+import { authAdminRole } from "../Common/Constants";
 
 function LeftBar() {
+  const profileData = useSelector(
+    (store) => store.basicInformation?.data?.profile || null
+  );
   return (
     <Drawer variant="permanent" anchor="left">
       <div className="main-menu-section">
@@ -38,11 +43,13 @@ function LeftBar() {
                 <PeopleAltIcon fontSize="large" />
               </NavLink>
             </li>
-            <li className="home-main-logo">
-              <NavLink className="list-item" to="/organization">
-                <CorporateFareIcon fontSize="large" />
-              </NavLink>
-            </li>
+            {profileData && authAdminRole.includes(profileData.role) && (
+              <li className="home-main-logo">
+                <NavLink className="list-item" to="/organization">
+                  <CorporateFareIcon fontSize="large" />
+                </NavLink>
+              </li>
+            )}
             <li className="home-main-logo">
               <NavLink className="list-item" to="/tasks">
                 <List fontSize="large" />

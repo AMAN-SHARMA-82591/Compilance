@@ -14,9 +14,10 @@ import PageHeader from "../../Common/PageHeader";
 function Index() {
   const dispatch = useDispatch();
   const [createTaskDialog, setCreateTaskDialog] = useState(false);
-  const { data, isLoading } = useSelector((state) => {
-    return state.taskList;
-  });
+  const { taskList, isLoading } = useSelector((state) => ({
+    taskList: state.taskList.data.taskList,
+    isLoading: state.taskList.isLoading,
+  }));
 
   useEffect(() => {
     return () => {
@@ -44,8 +45,8 @@ function Index() {
   } else {
     content = (
       <tbody>
-        {!isEmpty(data.taskList) &&
-          data.taskList.map((task, key) => (
+        {!isEmpty(taskList) &&
+          taskList.map((task, key) => (
             <tr key={key}>
               <td className="status-cell">{formatStatus(task.status)}</td>
               <td className="title-cell">{task.title}</td>

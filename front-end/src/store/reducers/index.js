@@ -6,7 +6,7 @@ import { profileReducer } from "../slices/profileSlice";
 const rootReducers = combineReducers({
     taskList: taskListReducer,
     taskFilterType: taskFilterReducer,
-    tokenInfo: profileReducer,
+    basicInformation: profileReducer,
 });
 
 export default rootReducers;

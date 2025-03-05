@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Button,
   Dialog,
@@ -11,7 +11,10 @@ import {
 import Grid from "@mui/material/Grid2";
 import { createTask } from "../../../../store/store";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { fetchOrgData } from "../../../Common/ApiUtils";
+import { useCallback, useEffect, useState } from "react";
+import { isEmpty } from "lodash";
+import { authAdminRole } from "../../../Common/Constants";
 
 const initialValues = {
   status: "",
@@ -19,20 +22,37 @@ const initialValues = {
   description: "",
   type: "",
   priority: "",
+  orgId: "",
 };
 
 function CreateTaskDialog({ open, handleOpenTaskDialog }) {
   const dispatch = useDispatch();
-  // const [open, setOpen] = useState(false);
-  const { values, error, handleSubmit, handleChange, handleReset } = useFormik({
-    initialValues: initialValues,
-    onSubmit: (values) => {
-      dispatch(createTask(values));
-      handleReset();
-      // setOpen(false);
-      handleOpenTaskDialog();
-    },
-  });
+  const [orgData, setOrgData] = useState([]);
+  const profileData = useSelector(
+    (store) => store.basicInformation?.data?.profile || null
+  );
+  // initialValues.orgId = profileData.orgId;
+
+  const handleFetchOrgData = useCallback(async () => {
+    const data = await fetchOrgData();
+    setOrgData(data);
+  }, []);
+
+  useEffect(() => {
+    handleFetchOrgData();
+  }, [handleFetchOrgData]);
+
+  const { values, errors, handleSubmit, handleChange, handleReset } = useFormik(
+    {
+      initialValues: initialValues,
+      onSubmit: (values) => {
+        dispatch(createTask(values));
+        handleReset();
+        // setOpen(false);
+        handleOpenTaskDialog();
+      },
+    }
+  );
 
   const handleCloseCreateTask = () => {
     // setOpen(false);
@@ -46,6 +66,28 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
         <DialogTitle>Create Task</DialogTitle>
         <DialogContent>
           <Grid container spacing={3}>
+            {authAdminRole.includes(profileData.role) && (
+              <Grid item="true" size={12} className="profile-details-item">
+                <label htmlFor="organization">Organization</label>
+                <TextField
+                  select
+                  fullWidth
+                  size="small"
+                  label="Select Organization"
+                  name="orgId"
+                  // error={errors.orgId}
+                  value={values.orgId}
+                  onChange={handleChange}
+                >
+                  {!isEmpty(orgData) &&
+                    orgData.data.map((org) => (
+                      <MenuItem key={org._id} value={org._id}>
+                        {org.name && org.name}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              </Grid>
+            )}
             <Grid size={12}>
               <label htmlFor="status">Status</label>
               <TextField
