@@ -1,5 +1,8 @@
 require("dotenv").config();
+const Organization = require("../model/Organization");
 const Task = require("../model/Task");
+const { validationResult } = require("express-validator");
+const { profile } = require("./User");
 
 const taskList = async (req, res) => {
   const { uid, oid } = req;
@@ -8,14 +11,25 @@ const taskList = async (req, res) => {
     const limit = parseInt(req.query.limit) || 20;
     const search = req.query.search || "";
     const filter = req.query.filter || "";
-    const taskList = await Task.find({
+
+    let query = {
       title: { $regex: search, $options: "i" },
-      rootUserId: uid,
-      orgId: oid,
-    })
-      .find({ type: { $regex: filter, $options: "i" } })
+      type: { $regex: filter, $options: "i" },
+    };
+
+    if (profile.role === 0) {
+      query.orgId = oid;
+    }
+
+    const taskList = await Task.find(query)
+      .skip(page * limit)
       .limit(limit);
-    res.json({ pageInfo: {}, taskList, length: taskList.length });
+    res.status(200).json({
+      success: true,
+      msg: "Fetched Task List",
+      taskList,
+      length: taskList.length,
+    });
   } catch (error) {
     console.error(error.message);
     res.json({ message: "Error", error: error.message });
@@ -51,10 +65,28 @@ const progressOverviewData = async (req, res) => {
 const createTask = async (req, res) => {
   const { uid, oid } = req;
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        msg: "Errors",
+        errors: errors.array(),
+      });
+    }
+    const organization = Organization.findById(req.body.orgId || oid).select(
+      "_id"
+    );
+    if (!organization) {
+      return res.status(400).json({
+        error: true,
+        msg: "Organization Not Found!",
+      });
+    }
+
     const taskDetails = req.body;
     const newTask = await Task.create({
-      orgId: oid,
-      rootUserId: uid,
+      orgId: req.body.orgId || oid,
+      userId: uid,
       ...taskDetails,
     });
     res.status(200).json(newTask);

@@ -8,6 +8,7 @@ const {
   getProfile,
   createProfile,
   updateProfile,
+  deleteProfile,
   updateProfileImage,
 } = require("../controller/User");
 const auth = require("../middleware/auth");
@@ -19,6 +20,7 @@ const {
   editOrganization,
   deleteOrganization,
 } = require("../controller/Organization");
+const { profileValidator } = require("../helper/userValidator");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -36,7 +38,7 @@ const router = express.Router();
 
 // Get User Details
 router.get("/", auth, users);
-router.get('/me', auth, getUser)
+router.get("/me", auth, getUser);
 
 // Organization Routes
 router
@@ -53,13 +55,16 @@ router
 // router.get('/profile/me', auth, organization, profile);
 router.get("/profile/me", auth, profile);
 // router.get('/profile', auth, profileList);
-router.route("/profile").get(auth, profileList).post(auth, createProfile);
+router
+  .route("/profile")
+  .get(auth, profileList)
+  .post(auth, profileValidator, createProfile);
 router.patch(
   "/profile/image/:id",
   auth,
   upload.single("image"),
   updateProfileImage
 );
-router.route("/profile/:id").get(auth, getProfile).patch(auth, updateProfile);
+router.route("/profile/:id").get(auth, getProfile).patch(auth, updateProfile).delete(auth, deleteProfile);
 
 module.exports = router;

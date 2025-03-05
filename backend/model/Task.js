@@ -25,14 +25,15 @@ const TaskSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: [true, "Description field is required"],
   },
-  rootUserId: {
-    type: String,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: [true, "User ID field is required"],
   },
   orgId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Organization",
     required: [true, "Organization ID is required"],
   },
   type: {
@@ -44,6 +45,10 @@ const TaskSchema = new mongoose.Schema({
     type: String,
     enum: ["major", "blocker", "critical", "minor"],
     required: [true, "Piority field is required"],
+  },
+  accessRoles: {
+    type: [Number],
+    default: [1, 2], // Default roles that can access the task
   },
 });
 

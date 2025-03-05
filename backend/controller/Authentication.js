@@ -29,7 +29,14 @@ const login = async (req, res) => {
   }
 };
 
-const createNewUser = async (res, name, email, password, role = 0, orgId = null) => {
+const createNewUser = async (
+  res,
+  name,
+  email,
+  password,
+  role = 0,
+  orgId = null
+) => {
   try {
     if (role && role === 1) {
       return res.status(400).json({
@@ -75,11 +82,11 @@ const createNewUser = async (res, name, email, password, role = 0, orgId = null)
 const register = async (req, res) => {
   const { name, email, password } = req.body;
   try {
-    let user = await User.findOne({ email });
+    const user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ errors: [{ msg: "User already exists" }] });
     }
-    const profile = await createNewUser(name, email, password, 2);
+    const profile = await createNewUser(res, name, email, password, 2);
     if (!profile) {
       return res.status(400).json({ msg: "Something went wrong" });
     }
@@ -89,7 +96,7 @@ const register = async (req, res) => {
     res.status(201).json({ msg: "Registered Successfully", token });
   } catch (error) {
     console.error(error.message);
-    res.status(500).send("Server Error!");
+    res.status(500).json({ error: true, msg: "Something weng wrong!" });
   }
 };
 

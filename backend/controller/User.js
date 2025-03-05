@@ -1,8 +1,10 @@
+const mongoose = require("mongoose");
 require("dotenv").config();
 const User = require("../model/Authentication");
 const Profile = require("../model/Profile");
-const bcrypt = require("bcryptjs");
 const { createNewUser } = require("./Authentication");
+const { validationResult } = require("express-validator");
+const { authAdminRole } = require("../common/constants");
 
 // List of Users
 const users = async (req, res) => {
@@ -63,7 +65,7 @@ const getProfile = async (req, res) => {
 
 const profileList = async (req, res) => {
   const limit = parseInt(req.query.limit) || 20;
-  const fields = req.query.fields || "name email";
+  const fields = req.query.fields || "name email role";
   try {
     const profileList = await Profile.find({ role: { $ne: 1 } })
       .select(fields)
@@ -82,16 +84,30 @@ const profileList = async (req, res) => {
 
 const createProfile = async (req, res) => {
   const { name, email, orgId, ...entity } = req.body;
-  if (!email || !name) {
-    return res.status(400).send("Fields Required");
-  }
   try {
-    let user = await User.findOne({ email });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        msg: "Errors",
+        errors: errors.array(),
+      });
+    }
+    let user = await User.findOne({ email }).select("_id");
     if (user) {
-      return res.status(400).json({ msg: "User already exists." });
+      return res
+        .status(400)
+        .json({ success: false, msg: "User already exists." });
     }
     const username = email.match(/^[^@]+/)[0];
-    const newProfile = await createNewUser(res, name, email, username, 0, orgId);
+    const newProfile = await createNewUser(
+      res,
+      name,
+      email,
+      username,
+      0,
+      orgId
+    );
     if (!newProfile) {
       return res.status(400).json({ msg: "Something went wrong" });
     }
@@ -117,6 +133,52 @@ const updateProfile = async (req, res) => {
   }
 };
 
+const deleteProfile = async (req, res) => {
+  const { id } = req.params;
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    const profileData = await Profile.findById(id).select("_id, userId, role");
+    if (authAdminRole.includes(profileData.role)) {
+      return res.status(502).json({
+        error: true,
+        msg: "You don't have the access to delete a profile.",
+      });
+    }
+    // Find the Profile
+    if (!profileData) {
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(404).json({ error: true, msg: "Profile not found" });
+    }
+    const userData = await User.findById(profileData.userId).select("_id");
+    if (!userData) {
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(404).json({ error: true, msg: "User not found" });
+    }
+
+    //Deleting profile
+    await Profile.findByIdAndDelete(id).session(session);
+
+    // Deleting User
+    await User.findByIdAndDelete(profileData.userId).session(session);
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return res
+      .status(200)
+      .json({ message: "Profile and user have been deleted." });
+  } catch (error) {
+    // Abort the transaction in case of error
+    await session.abortTransaction();
+    session.endSession();
+    console.error("Error deleting profile and user:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 const updateProfileImage = async (req, res) => {
   const id = req.params.id;
   try {
@@ -136,5 +198,6 @@ module.exports = {
   getProfile,
   updateProfile,
   createProfile,
+  deleteProfile,
   updateProfileImage,
 };

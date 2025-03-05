@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-pascal-case */
 import React, { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Routes, Navigate, Route } from "react-router";
 import RootPrivate from "./private/Root";
 import Login from "./private/Login";
 import Register from "./private/Register";
-import { fetchProfileList, fetchTaskList, setData } from "./store/store";
+import { fetchTaskList, setData } from "./store/store";
 import IndexPeople from "./private/components/people/Index";
 import IndexHome from "./private/components/home/Index";
 import IndexTasks from "./private/components/tasks/Index";
@@ -14,11 +14,15 @@ import IndexOrganization from "./private/components/organization/Index";
 import PeopleDetails from "./private/components/people/common/PeopleDetails";
 import "./App.css";
 import OrganizationDetails from "./private/components/organization/common/OrganizationDetails";
+import { authAdminRole } from "./private/Common/Constants";
 // import CounterPage from './private/components/CounterPage';
 
 function App() {
   // const [login, setLogin] = useState(false);
   const dispatch = useDispatch();
+  const profileData = useSelector(
+    (state) => state.basicInformation?.data?.profile || null
+  );
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -30,7 +34,6 @@ function App() {
         window.location.reload();
       } else {
         dispatch(setData(decodedToken));
-        dispatch(fetchProfileList());
         dispatch(fetchTaskList());
       }
     }
@@ -45,7 +48,9 @@ function App() {
         </>
       ) : (
         <Route path="/" element={<RootPrivate />}>
-          <Route path="/organization" element={<IndexOrganization />} />
+          {profileData && authAdminRole.includes(profileData.role) && (
+            <Route path="/organization" element={<IndexOrganization />} />
+          )}
           <Route path="/home" element={<IndexHome />} />
           <Route path="/tasks" element={<IndexTasks />} />
           <Route path="/people" element={<IndexPeople />} />
