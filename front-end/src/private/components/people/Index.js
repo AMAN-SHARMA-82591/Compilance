@@ -14,6 +14,7 @@ import { ConfirmDialogBox } from "../../Common/DialogBox";
 import { toastError } from "../../Common/ToastContainer";
 import { fetchOrgData } from "../../Common/ApiUtils";
 import { authAdminRole } from "../../Common/Constants";
+import { useSelector } from "react-redux";
 
 const validationSchema = Yup.object({
   email: Yup.string().email().required("Email Field is required"),
@@ -25,6 +26,9 @@ const validationSchema = Yup.object({
 
 function Index() {
   let content;
+  const profileData = useSelector(
+    (store) => store.basicInformation?.data?.profile
+  );
   const navigate = useNavigate();
   const [peopleList, setPeopleList] = useState([]);
   const [orgData, setOrgData] = useState([]);
@@ -97,7 +101,7 @@ function Index() {
         className="profile-box"
         onClick={() => navigate(`/people/${people._id}`)}
       >
-        {!authAdminRole.includes(people.role) && people.role !== 0 && (
+        {profileData.role !== 0 && !authAdminRole.includes(people.role) && (
           <IconButton
             className="delete_icon_button"
             onClick={(e) => {

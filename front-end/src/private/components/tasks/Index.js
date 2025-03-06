@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { isEmpty } from "lodash";
-import { createTask, taskFilterAction } from "../../../store/store";
+import { taskFilterAction } from "../../../store/store";
 import { Button, TextField } from "@mui/material";
 import { deleteTask } from "../../../store/store";
 import DeleteIcon from "@mui/icons-material/Delete";

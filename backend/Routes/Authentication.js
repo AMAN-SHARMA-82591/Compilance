@@ -16,12 +16,15 @@ const {
 } = require("../controller/admin/permissionController");
 const { onlyAdminAccess } = require("../middleware/adminMiddleware");
 const { createRole, getRoles } = require("../controller/admin/roleController");
+const {
+  userLoginValidator,
+  userRegisterValidator,
+} = require("../helper/userValidator");
 const router = express.Router();
 
-
 // Auth Routes
-router.post("/register", register);
-router.post("/login", login);
+router.post("/register", userRegisterValidator, register);
+router.post("/login", userLoginValidator, login);
 
 // Permission Routes
 router

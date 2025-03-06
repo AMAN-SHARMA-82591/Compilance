@@ -7,13 +7,13 @@ export const toastSuccess = (message) => {
     console.debug("can't toast with no message");
     return;
   }
-  toast.success(message, {
+  return toast.success(message, {
     autoClose: baseCloseTime,
   });
 };
 
 export const toastError = (message) => {
-  toast.error(message || "Something Went Wrong!", {
+  return toast.error(message || "Something Went Wrong!", {
     autoClose: baseCloseTime,
   });
 };
