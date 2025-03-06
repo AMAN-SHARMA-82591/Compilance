@@ -11,6 +11,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import { toastError, toastSuccess } from "./Common/ToastContainer";
 
 const styles = () => ({
   container: {
@@ -44,10 +45,10 @@ function Login({ classes }) {
 
   async function handleLoginSubmit() {
     if (!/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(textInput.email)) {
-      setError({ email: true, password: false });
+      setError(true);
     }
     if (!textInput.email || !textInput.password) {
-      alert("Email & Password is REQUIRED!");
+      return toastError("Email & Password is REQUIRED!");
     }
     setLoading(true);
     const res = await fetch(`${baseURL}/auth/login`, {
@@ -63,12 +64,13 @@ function Login({ classes }) {
       .then((resp) => resp.json())
       .catch((error) => console.error(error));
     if (res && res.token) {
+      toastSuccess("Login Successful");
       localStorage.setItem("token", `Bearer ${res.token}`);
       await navigate("/home");
       window.location.reload();
       setTextInput({ email: "", password: "" });
     } else {
-      alert("Invalid Credentials");
+      toastError("Invalid Credentials");
     }
     setLoading(false);
   }
@@ -151,7 +153,7 @@ function Login({ classes }) {
             style={{ height: "50px" }}
             color="primary"
             fullWidth={true}
-            onClick={() => handleLoginSubmit()}
+            onClick={handleLoginSubmit}
           >
             {loading ? <CircularProgress sx={{ color: "white" }} /> : "Submit"}
           </Button>

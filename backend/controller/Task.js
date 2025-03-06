@@ -92,7 +92,7 @@ const createTask = async (req, res) => {
     res.status(200).json(newTask);
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: "Server Error", error: error.message });
+    return res.status(500).json({ message: "Something went wrong" });
   }
 };
 
