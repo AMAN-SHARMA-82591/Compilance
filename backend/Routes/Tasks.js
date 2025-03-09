@@ -8,20 +8,22 @@ const {
   updateTask,
   progressOverviewData,
 } = require("../controller/Task");
-const organization = require("../middleware/organization");
+const { checkOrganization } = require("../middleware/organization");
 const { taskValidator } = require("../helper/taskValidator");
 
 const router = express.Router();
 
 router
   .route("/")
-  .get(auth, organization, taskList)
-  .post(auth, organization, taskValidator, createTask);
-router.route("/progressOverview").get(auth, organization, progressOverviewData);
+  .get(auth, checkOrganization, taskList)
+  .post(auth, checkOrganization, taskValidator, createTask);
+router
+  .route("/progressOverview")
+  .get(auth, checkOrganization, progressOverviewData);
 router
   .route("/:id")
-  .get(auth, organization, getTask)
-  .delete(auth, organization, deleteTask)
-  .patch(auth, organization, taskValidator, updateTask);
+  .get(auth, checkOrganization, getTask)
+  .delete(auth, checkOrganization, deleteTask)
+  .patch(auth, checkOrganization, taskValidator, updateTask);
 
 module.exports = router;

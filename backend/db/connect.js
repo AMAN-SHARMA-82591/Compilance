@@ -1,10 +1,11 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const connectDB = (url) => {
-    return mongoose.connect(url, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-}
+  mongoose.set("autoCreate", false);  // It will not create a collection unless and until there's data init.
+  return mongoose.connect(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+};
 
-module.exports = connectDB
+module.exports = connectDB;

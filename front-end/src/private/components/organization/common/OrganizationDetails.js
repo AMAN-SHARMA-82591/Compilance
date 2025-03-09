@@ -81,13 +81,12 @@ function OrganizationDetails(props) {
     <main>
       <PageHeader
         submitBtnTitle="Submit"
-        onSubmit={handleSubmit}
+        onSubmit={editProfile ? handleSubmit : null}
         title="Organization Details"
         buttonTitle={editProfile ? "Cancel" : "Edit Organization"}
         onClick={editProfile ? handleCloseProfileEdit : handleOpenProfileEdit}
       />
       <div className="profile-main-section">
-        <p>Profile Details</p>
         <Grid container spacing={3} className="profile-details-section">
           <Grid item="true" size={6} className="profile-details-item">
             <p>Name</p>

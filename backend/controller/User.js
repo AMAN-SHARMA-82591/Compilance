@@ -4,7 +4,7 @@ const User = require("../model/Authentication");
 const Profile = require("../model/Profile");
 const { createNewUser } = require("./Authentication");
 const { validationResult } = require("express-validator");
-const { authAdminRole } = require("../common/constants");
+const { authAdminRole } = require("../utils/constants");
 
 // List of Users
 const users = async (req, res) => {
@@ -139,12 +139,6 @@ const deleteProfile = async (req, res) => {
   session.startTransaction();
   try {
     const profileData = await Profile.findById(id).select("_id, userId, role");
-    if (authAdminRole.includes(profileData.role)) {
-      return res.status(502).json({
-        error: true,
-        msg: "You don't have the access to delete a profile.",
-      });
-    }
     // Find the Profile
     if (!profileData) {
       await session.abortTransaction();

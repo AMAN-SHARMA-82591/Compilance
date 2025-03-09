@@ -12,7 +12,7 @@ const {
   updateProfileImage,
 } = require("../controller/User");
 const auth = require("../middleware/auth");
-const organization = require("../middleware/organization");
+const { checkRoleAccess } = require("../middleware/organization");
 const {
   organizationList,
   createOrganization,
@@ -43,13 +43,13 @@ router.get("/me", auth, getUser);
 // Organization Routes
 router
   .route("/organization")
-  .get(auth, organizationList)
-  .post(auth, createOrganization);
+  .get(auth, checkRoleAccess, organizationList)
+  .post(auth, checkRoleAccess, createOrganization);
 router
   .route("/organization/:id")
-  .get(auth, getOrganization)
-  .patch(auth, editOrganization)
-  .delete(auth, deleteOrganization);
+  .get(auth, checkRoleAccess, getOrganization)
+  .patch(auth, checkRoleAccess, editOrganization)
+  .delete(auth, checkRoleAccess, deleteOrganization);
 
 // User Routes
 // router.get('/profile/me', auth, organization, profile);
@@ -65,6 +65,10 @@ router.patch(
   upload.single("image"),
   updateProfileImage
 );
-router.route("/profile/:id").get(auth, getProfile).patch(auth, updateProfile).delete(auth, deleteProfile);
+router
+  .route("/profile/:id")
+  .get(auth, getProfile)
+  .patch(auth, updateProfile)
+  .delete(auth, checkRoleAccess, deleteProfile);
 
 module.exports = router;

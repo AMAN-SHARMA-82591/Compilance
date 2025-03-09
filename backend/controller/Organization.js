@@ -1,7 +1,10 @@
 require("dotenv").config();
+const mongoose = require("mongoose");
 const Organization = require("../model/Organization");
 const jwt = require("jsonwebtoken");
 const Profile = require("../model/Profile");
+const Task = require("../model/Task");
+const Authentication = require("../model/Authentication");
 
 const organizationList = async (req, res) => {
   try {
@@ -87,19 +90,45 @@ const editOrganization = async (req, res) => {
 
 const deleteOrganization = async (req, res) => {
   const { id } = req.params;
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
-    const organization = await Organization.findOne({ _id: id });
+    const organization = await Organization.findOne({ _id: id }).session(
+      session
+    );
     if (!organization) {
+      await session.abortTransaction();
+      session.endSession();
       return res
         .status(404)
         .json({ success: false, msg: "Organization not found!" });
     }
-    await Organization.findOneAndDelete({ _id: id });
+
+    // Delete Profile and users attached with organization
+    const profileIds = await Profile.find({ orgId: id })
+      .select("_id userId")
+      .session(session);
+    const userIds = profileIds.map((profile) => profile.userId);
+    await Profile.deleteMany({ orgId: id }).session(session);
+    await Authentication.deleteMany({ _id: { $in: userIds } }).session(session);
+
+    // Delete Tasks
+    await Task.deleteMany({ orgId: id }).session(session);
+
+    // Delete Organization
+    await Organization.findOneAndDelete({ _id: id }).session(session);
+
+    await session.commitTransaction();
+    session.endSession();
+
     return res
       .status(200)
       .json({ success: true, msg: "Organization Deleted." });
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
     console.error(error.message);
+    res.status(500).json({ msg: "Server error", error: error.message });
   }
 };
 
