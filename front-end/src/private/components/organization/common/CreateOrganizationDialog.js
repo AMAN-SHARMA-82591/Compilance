@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import {
   Button,
   Dialog,
@@ -9,8 +8,8 @@ import {
   MenuItem,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { createTask } from "../../../../store/store";
 import { useFormik } from "formik";
+import axiosInstance from "../../../Common/AxiosInstance";
 
 const initialValues = {
   name: "",
@@ -21,14 +20,18 @@ const initialValues = {
   description: null,
 };
 
-function CreateOrganizationDialog({ open, handleOrganizationDialog }) {
-  const dispatch = useDispatch();
+function CreateOrganizationDialog({
+  open,
+  handleOrganizationDialog,
+  handleFetchOrganizationData,
+}) {
   const { values, error, handleSubmit, handleChange, handleReset } = useFormik({
     initialValues: initialValues,
-    onSubmit: (values) => {
-      // dispatch(createTask(values));
+    onSubmit: async (values) => {
+      await axiosInstance.post("/users/organization", values);
       handleReset();
       handleOrganizationDialog();
+      handleFetchOrganizationData();
     },
   });
 

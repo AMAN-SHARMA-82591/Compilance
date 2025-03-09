@@ -998,7 +998,8 @@ input {
   justify-content: space-evenly;
 }
 
-.profile-box .delete_icon_button {
+.profile-box .delete_icon_button,
+.organization_box .delete_icon_button {
   opacity: 0;
   transition: opacity 0.3s ease;
   position: absolute;
@@ -1006,7 +1007,8 @@ input {
   right: 10px;
 }
 
-.profile-box:hover .delete_icon_button {
+.profile-box:hover .delete_icon_button,
+.organization_box:hover .delete_icon_button {
   opacity: 1;
 }
 

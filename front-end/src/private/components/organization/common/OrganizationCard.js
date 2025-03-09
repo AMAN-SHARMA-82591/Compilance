@@ -1,8 +1,15 @@
 import React from "react";
-import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import { useNavigate } from "react-router";
+import DeleteBox from "@mui/icons-material/Delete";
 
-function OrganizationCard({ data }) {
+function OrganizationCard({ data, setOpenDeleteDialog, setDeleteProfileId }) {
   const navigate = useNavigate();
 
   return (
@@ -20,8 +27,19 @@ function OrganizationCard({ data }) {
           p: 2,
           width: "100%",
         }}
+        className="organization_box"
         onClick={() => navigate(`/organization/${data._id}`)}
       >
+        <IconButton
+          className="delete_icon_button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setDeleteProfileId(data._id);
+            setOpenDeleteDialog(true);
+          }}
+        >
+          <DeleteBox color="error" />
+        </IconButton>
         <CardContent>
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
             {data.name}
