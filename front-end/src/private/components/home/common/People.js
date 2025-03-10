@@ -27,7 +27,7 @@ function People({ classes }) {
         const response = await axiosInstance.get(
           `/users/profile?limit=${limit}&fields=${fields}`
         );
-        setPeopleList(response.data);
+        setPeopleList(response.data?.profileList);
       } catch (error) {
         console.error("Error fetching profile list:", error);
       } finally {

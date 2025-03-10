@@ -11,23 +11,32 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import { toastSuccess } from "./Common/ToastContainer";
 
 const styles = () => ({
+  root: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+    backgroundColor: "#1f2842",
+  },
+  paper: {
+    padding: "50px",
+    width: "100%",
+    maxWidth: "500px",
+  },
   container: {
     textAlign: "center",
-    maxWidth: "100%",
-    margin: "10vh auto 0px auto",
-    backgroundColor: "#1f2842",
-    width: 550,
-    padding: "80px",
+    width: "100%",
   },
   typography: {
-    color: "white",
+    color: "#1976d3",
   },
   textField: {
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: "rgba(255, 255, 255, 0.411)",
+        borderColor: "rgba(14, 13, 13, 0.41)",
       },
       "&:hover fieldset": {
         borderColor: "#1976d3",
@@ -71,8 +80,9 @@ function Register({ classes }) {
         .then((resp) => resp.json())
         .catch((error) => console.error(error));
       if (res && res.token) {
+        toastSuccess("New user registered.");
         localStorage.setItem("token", `Bearer ${res.token}`);
-        await navigate("/home");
+        await navigate("/organization");
         window.location.reload();
         setLoading(false);
         setTextInput({ name: "", email: "", password: "" });
@@ -110,107 +120,88 @@ function Register({ classes }) {
   }
 
   return (
-    <Paper
-      classes={{ root: classes.container }}
-      sx={{ backgroundColor: "#1f2842" }}
-      variant="outlined"
-      elevation={2}
-    >
-      <Grid container={true} spacing={3}>
-        <Grid item={true} size={12}>
-          <Typography variant="h2" className={classes.typography}>
-            Register Form
-          </Typography>
-        </Grid>
-        <Grid item={true} size={12}>
-          <Typography className={classes.typography} variant="h5">
-            Name
-          </Typography>
-          <TextField
-            variant="outlined"
-            className={classes.textField}
-            value={textInput.name}
-            onChange={(e) => handleNameInputChange(e)}
-            fullWidth={true}
-            sx={{
-              "& .MuiOutlinedInput-input": {
-                color: "white",
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white",
-              },
-            }}
-          />
-        </Grid>
-        <Grid item={true} size={12}>
-          <Typography className={classes.typography} variant="h5">
-            Email
-          </Typography>
-          <TextField
-            variant="outlined"
-            error={Boolean(error)}
-            helperText={
-              Boolean(error)
-                ? "Email is incorrect, example: abc1@gmail.com"
-                : ""
-            }
-            className={classes.textField}
-            value={textInput.email}
-            onChange={(e) => handleEmailInputChange(e)}
-            fullWidth={true}
-            sx={{
-              "& .MuiOutlinedInput-input": {
-                color: "white",
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white",
-              },
-            }}
-          />
-        </Grid>
-        <Grid item={true} size={12}>
-          <Typography className={classes.typography} variant="h5">
-            Password
-          </Typography>
-          <TextField
-            variant="outlined"
-            type="password"
-            className={classes.textField}
-            value={textInput.password}
-            onChange={(e) => handlePasswordInputChange(e)}
-            fullWidth={true}
-            sx={{
-              "& .MuiOutlinedInput-input": {
-                color: "white",
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "white",
-              },
-            }}
-          />
-        </Grid>
-        <Grid item={true} size={12} style={{ marginTop: 30 }}>
-          <Button
-            type="submit"
-            variant="contained"
-            style={{ height: "50px" }}
-            color="primary"
-            fullWidth={true}
-            onClick={() => handleRegisterSubmit()}
-          >
-            {loading ? <CircularProgress sx={{ color: "white" }} /> : "Submit"}
-          </Button>
-          <Button
-            component={Link}
-            color="primary"
-            style={{ height: "50px", marginTop: 20 }}
-            to="/login"
-          >
-            Log In
-          </Button>
-        </Grid>
-      </Grid>
-    </Paper>
+    <div className={classes.root}>
+      <Paper classes={{ root: classes.paper }} variant="outlined" elevation={2}>
+        <form className={classes.container} onSubmit={handleRegisterSubmit}>
+          <Grid container={true} spacing={3}>
+            <Grid item={true} size={12}>
+              <Typography variant="h2" className={classes.typography}>
+                Register Form
+              </Typography>
+            </Grid>
+            <Grid item={true} size={12}>
+              <Typography className={classes.typography} variant="h5">
+                Name
+              </Typography>
+              <TextField
+                name="name"
+                variant="outlined"
+                className={classes.textField}
+                value={textInput.name}
+                onChange={(e) => handleNameInputChange(e)}
+                fullWidth={true}
+              />
+            </Grid>
+            <Grid item={true} size={12}>
+              <Typography className={classes.typography} variant="h5">
+                Email
+              </Typography>
+              <TextField
+                name="email"
+                variant="outlined"
+                error={Boolean(error)}
+                helperText={
+                  Boolean(error)
+                    ? "Email is incorrect, example: abc1@gmail.com"
+                    : ""
+                }
+                className={classes.textField}
+                value={textInput.email}
+                onChange={(e) => handleEmailInputChange(e)}
+                fullWidth={true}
+              />
+            </Grid>
+            <Grid item={true} size={12}>
+              <Typography className={classes.typography} variant="h5">
+                Password
+              </Typography>
+              <TextField
+                name="password"
+                variant="outlined"
+                type="password"
+                className={classes.textField}
+                value={textInput.password}
+                onChange={(e) => handlePasswordInputChange(e)}
+                fullWidth={true}
+              />
+            </Grid>
+            <Grid item={true} size={12} style={{ marginTop: 30 }}>
+              <Button
+                type="submit"
+                variant="contained"
+                style={{ height: "50px" }}
+                color="primary"
+                fullWidth={true}
+              >
+                {loading ? (
+                  <CircularProgress sx={{ color: "white" }} />
+                ) : (
+                  "Submit"
+                )}
+              </Button>
+              <Button
+                component={Link}
+                color="primary"
+                style={{ height: "50px", marginTop: 20 }}
+                to="/login"
+              >
+                Log In
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Paper>
+    </div>
   );
 }
 

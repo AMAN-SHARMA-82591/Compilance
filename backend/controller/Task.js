@@ -7,7 +7,7 @@ const { default: mongoose } = require("mongoose");
 const { authAdminRole } = require("../utils/constants");
 
 const taskList = async (req, res) => {
-  const { uid, oid } = req;
+  const { uid, oid, user } = req;
   try {
     const page = parseInt(req.query.page) - 1 || 0;
     const limit = parseInt(req.query.limit) || 20;
@@ -19,7 +19,19 @@ const taskList = async (req, res) => {
       type: { $regex: filter, $options: "i" },
     };
 
-    if (profile.role === 0) {
+    if (user.profile.role === 1) {
+      query = {};
+    } else if (user.profile.role === 2) {
+      const organizationList = await Organization.find({ adminId: uid })
+        .select("_id")
+        .lean();
+
+      const orgIds = organizationList.map((org) => org._id);
+
+      query = {
+        orgId: { $in: orgIds },
+      };
+    } else {
       query.orgId = oid;
     }
 
@@ -27,7 +39,7 @@ const taskList = async (req, res) => {
       .skip(page * limit)
       .limit(limit)
       .lean();
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       msg: "Fetched Task List",
       taskList,

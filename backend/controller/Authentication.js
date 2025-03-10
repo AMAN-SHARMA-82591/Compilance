@@ -46,7 +46,8 @@ const createNewUser = async (
   email,
   password,
   role = 0,
-  orgId = null
+  orgId = null,
+  adminId = null
 ) => {
   try {
     if (role && role === 1) {
@@ -61,6 +62,7 @@ const createNewUser = async (
       password,
       role,
       orgId,
+      adminId,
     });
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(password, salt);
@@ -74,6 +76,7 @@ const createNewUser = async (
       department: null,
       designation: null,
       orgId,
+      adminId,
       skills: null,
       company: null,
       image: null,

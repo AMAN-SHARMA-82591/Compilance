@@ -49,6 +49,10 @@ const profileSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organization",
     },
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     role: {
       type: Number,
       default: 0,

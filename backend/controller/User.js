@@ -64,19 +64,62 @@ const getProfile = async (req, res) => {
 };
 
 const profileList = async (req, res) => {
+  const { uid } = req;
+  const userRole = req.user.profile.role;
   const limit = parseInt(req.query.limit) || 20;
-  const fields = req.query.fields || "name email role";
+  const fields = req.query.fields
+    ? req.query.fields.split(" ")
+    : ["name", "email", "role"];
   try {
-    const profileList = await Profile.find({ role: { $ne: 1 } })
-      .select(fields)
-      .limit(limit)
-      .lean();
-    if (!profileList) {
-      return res.status(400).json({ msg: "There is no profile List." });
+    let profileList;
+    if (userRole === 1) {
+      profileList = await Profile.find().select(fields).limit(limit).lean();
+    } else if (userRole === 2) {
+      profileList = await Profile.aggregate([
+        {
+          $lookup: {
+            from: "organizations",
+            localField: "orgId",
+            foreignField: "_id",
+            as: "organization",
+          },
+        },
+        {
+          $unwind: {
+            path: "$organization",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $match: {
+            $or: [
+              { "organization.adminId": new mongoose.Types.ObjectId(uid) },
+              { userId: new mongoose.Types.ObjectId(uid) },
+            ],
+            role: { $ne: 1 },
+          },
+        },
+        {
+          $project: fields.reduce(
+            (acc, field) => {
+              acc[field] = 1;
+              return acc;
+            },
+            { _id: 1 }
+          ),
+        },
+        { $limit: limit },
+      ]);
+    } else {
+      profileList = await Profile.find({ role: { $ne: 1 } })
+        .select(fields)
+        .limit(limit)
+        .lean();
     }
-    setTimeout(() => {
-      return res.status(200).json(profileList);
-    }, 1000);
+    return res.status(200).json({
+      success: true,
+      profileList,
+    });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error");
@@ -85,6 +128,7 @@ const profileList = async (req, res) => {
 
 const createProfile = async (req, res) => {
   const { name, email, orgId, ...entity } = req.body;
+  const userId = req.uid;
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -107,7 +151,8 @@ const createProfile = async (req, res) => {
       email,
       username,
       0,
-      orgId
+      orgId,
+      userId
     );
     if (!newProfile) {
       return res.status(400).json({ msg: "Something went wrong" });
