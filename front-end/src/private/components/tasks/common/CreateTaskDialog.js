@@ -16,22 +16,21 @@ import { useCallback, useEffect, useState } from "react";
 import { isEmpty } from "lodash";
 import { authAdminRole } from "../../../Common/Constants";
 
-const initialValues = {
-  status: "",
-  title: "",
-  description: "",
-  type: "",
-  priority: "",
-  orgId: "",
-};
-
 function CreateTaskDialog({ open, handleOpenTaskDialog }) {
   const dispatch = useDispatch();
   const [orgData, setOrgData] = useState([]);
   const profileData = useSelector(
     (store) => store.basicInformation?.data?.profile || null
   );
-  // initialValues.orgId = profileData.orgId;
+
+  const initialValues = {
+    status: "",
+    title: "",
+    type: "",
+    priority: "",
+    description: "",
+    orgId: authAdminRole.includes(profileData.role) ? "" : null,
+  };
 
   const handleFetchOrgData = useCallback(async () => {
     const data = await fetchOrgData();
@@ -39,8 +38,10 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
   }, []);
 
   useEffect(() => {
-    handleFetchOrgData();
-  }, [handleFetchOrgData]);
+    if (profileData && authAdminRole.includes(profileData.role)) {
+      handleFetchOrgData();
+    }
+  }, [profileData, handleFetchOrgData]);
 
   const { values, errors, handleSubmit, handleChange, handleReset } = useFormik(
     {

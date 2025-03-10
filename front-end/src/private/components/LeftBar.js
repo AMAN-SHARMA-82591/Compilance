@@ -8,7 +8,7 @@ import CorporateFareIcon from "@mui/icons-material/CorporateFare";
 import List from "@mui/icons-material/List";
 import { NavLink } from "react-router";
 import { Drawer } from "@mui/material";
-import reactIcon from "../../images/react-icon-original.svg";
+import logo from "../../images/logo.png";
 import { useSelector } from "react-redux";
 import { authAdminRole } from "../Common/Constants";
 
@@ -22,11 +22,7 @@ function LeftBar() {
         <div
           style={{ marginTop: 20, display: "flex", justifyContent: "center" }}
         >
-          <img
-            src={reactIcon}
-            style={{ width: 40, height: 40 }}
-            alt="main-log"
-          />
+          <img src={logo} style={{ width: 40, height: 40 }} alt="main-log" />
         </div>
         <div className="home-logo-contents">
           <ul className="unordered-list-items">

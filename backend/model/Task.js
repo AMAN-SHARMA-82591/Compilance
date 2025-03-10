@@ -47,10 +47,10 @@ const TaskSchema = new mongoose.Schema(
       enum: ["major", "blocker", "critical", "minor"],
       required: [true, "Piority field is required"],
     },
-    accessRoles: {
-      type: [Number],
-      default: [1, 2], // Default roles that can access the task
-    },
+    // accessRoles: {
+    //   type: [Number],
+    //   default: [1, 2], // Default roles that can access the task
+    // },
   },
   {
     strict: "throw",

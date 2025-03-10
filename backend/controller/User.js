@@ -9,7 +9,7 @@ const { authAdminRole } = require("../utils/constants");
 // List of Users
 const users = async (req, res) => {
   try {
-    const profiles = await User.find().select("name email").exec();
+    const profiles = await User.find().select("name email").exec().lean();
     res.status(200).json(profiles);
   } catch (error) {
     console.error(error.message);
@@ -21,7 +21,7 @@ const users = async (req, res) => {
 const getUser = async (req, res) => {
   const { uid } = req;
   try {
-    const userData = await User.findOne({ _id: uid });
+    const userData = await User.findOne({ _id: uid }).lean();
 
     res.status(200).json({ success: true, msg: userData });
   } catch (error) {
@@ -52,7 +52,7 @@ const getProfile = async (req, res) => {
       params: { id },
     } = req;
 
-    const profileData = await Profile.findById({ _id: id });
+    const profileData = await Profile.findById({ _id: id }).lean();
     if (!profileData) {
       return res.status(404).send({ message: "User not found" });
     }
@@ -69,7 +69,8 @@ const profileList = async (req, res) => {
   try {
     const profileList = await Profile.find({ role: { $ne: 1 } })
       .select(fields)
-      .limit(limit);
+      .limit(limit)
+      .lean();
     if (!profileList) {
       return res.status(400).json({ msg: "There is no profile List." });
     }
@@ -93,7 +94,7 @@ const createProfile = async (req, res) => {
         errors: errors.array(),
       });
     }
-    let user = await User.findOne({ email }).select("_id");
+    let user = await User.findOne({ email }).select("_id").lean();
     if (user) {
       return res
         .status(400)
@@ -121,7 +122,9 @@ const createProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   const id = req.params.id;
   try {
-    const updatedProfile = await Profile.findByIdAndUpdate(id, req.body);
+    const updatedProfile = await Profile.findByIdAndUpdate(id, req.body, {
+      runValidators: true,
+    }).lean();
     if (!updatedProfile) {
       return res.status(404).send({ message: "User not found" });
     }
@@ -138,14 +141,18 @@ const deleteProfile = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    const profileData = await Profile.findById(id).select("_id, userId, role");
+    const profileData = await Profile.findById(id)
+      .select("_id, userId, role")
+      .lean();
     // Find the Profile
     if (!profileData) {
       await session.abortTransaction();
       session.endSession();
       return res.status(404).json({ error: true, msg: "Profile not found" });
     }
-    const userData = await User.findById(profileData.userId).select("_id");
+    const userData = await User.findById(profileData.userId)
+      .select("_id")
+      .lean();
     if (!userData) {
       await session.abortTransaction();
       session.endSession();

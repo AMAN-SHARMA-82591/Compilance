@@ -397,7 +397,7 @@ body {
   position: absolute;
   align-items: center;
   margin-right: 20px;
-  margin-top: 4px;
+  margin-top: 10px;
 }
 .admin-sec-info {
   display: flex;
@@ -446,66 +446,21 @@ body {
   padding: 0px 10px;
 }
 
-.drop-down-menu-admin-items {
-  width: 200px;
-  padding: 5px;
-  display: flex;
-  justify-content: space-between;
-}
-.drop-down-sec-logo-cont1 {
-  width: 40px;
-  height: 40px;
-  background: grey;
-  border-radius: 50%;
-  margin: 2px 0px 0px 2px;
-}
-.drop-down-sec-logo-cont2 p {
-  font-size: 10px;
-  font-weight: bold;
-  color: #111975;
-  margin: 0px;
-}
 .drop-down-sec-logo-cont2 {
-  margin: 6px auto 0px 5px;
+  margin: 6px auto 0px 14px;
 }
-.drop-down-sec-logo-cont2 h1 {
-  font-size: 12px;
-  letter-spacing: var(--letter-spacing3);
-  margin: 0px;
-  font-weight: 800;
+
+.drop-down-sec-logo-cont2 b {
+  font-size: 15px;
+  letter-spacing: var(--letter-spacing2);
   color: #151b55d7;
 }
-.drop-down-sec-help-cont3 {
-  z-index: 9999;
-  display: flex;
-  align-items: flex-start;
-}
-.drop-down-sec-help-cont3 p {
-  font-weight: bold;
+
+.drop-down-sec-logo-cont2 p {
+  width: 200px;
+  font-size: 15px;
+  color: #4a4a4b;
   margin: 0px;
-}
-.drop-down-menu-admin-text-items p {
-  font-size: 23px;
-  margin: 15px 0px 0px 20px;
-  color: rgb(51, 47, 47);
-}
-.drop-down-menu-admin-button-items button {
-  padding: 5px 15px;
-  font-weight: bold;
-  background: none;
-  border: 2px solid grey;
-  border-radius: 6px;
-  cursor: pointer;
-}
-.drop-down-menu-admin-add-comp-items {
-  display: flex;
-  border-top: 2px solid grey;
-  padding: 10px 0px 0px 20px;
-}
-.drop-down-menu-admin-add-comp-items p {
-  margin: 3px;
-  font-weight: bold;
-  letter-spacing: var(--letter-spacing3);
 }
 
 /*-------people-section-------*/

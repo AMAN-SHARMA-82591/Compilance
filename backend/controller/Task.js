@@ -3,6 +3,8 @@ const Organization = require("../model/Organization");
 const Task = require("../model/Task");
 const { validationResult } = require("express-validator");
 const { profile } = require("./User");
+const { default: mongoose } = require("mongoose");
+const { authAdminRole } = require("../utils/constants");
 
 const taskList = async (req, res) => {
   const { uid, oid } = req;
@@ -23,7 +25,8 @@ const taskList = async (req, res) => {
 
     const taskList = await Task.find(query)
       .skip(page * limit)
-      .limit(limit);
+      .limit(limit)
+      .lean();
     res.status(200).json({
       success: true,
       msg: "Fetched Task List",
@@ -37,29 +40,35 @@ const taskList = async (req, res) => {
 };
 
 const progressOverviewData = async (req, res) => {
-  const { uid, oid } = req;
-  const overdue = await Task.countDocuments({
-    status: "overdue",
-    rootUserId: uid,
-    orgId: oid,
-  });
-  const upcomingCount = await Task.countDocuments({
-    status: "upcoming",
-    rootUserId: uid,
-    orgId: oid,
-  });
-  const inProgressCount = await Task.countDocuments({
-    status: "in-progress",
-    rootUserId: uid,
-    orgId: oid,
-  });
-  const totalCount = await Task.countDocuments({ rootUserId: uid });
-  res.json({
-    overdue: overdue,
-    upcoming: upcomingCount,
-    in_progress: inProgressCount,
-    total: totalCount,
-  });
+  const { uid, oid, user } = req;
+  try {
+    let query = { userId: uid, orgId: oid };
+
+    if (user.profile.role === 1) {
+      query = {};
+    } else if (user.profile.role === 2) {
+      query = { userId: uid };
+    }
+    const overdue = await Task.countDocuments({
+      ...query,
+      status: "overdue",
+    });
+    const upcomingCount = await Task.countDocuments({
+      ...query,
+      status: "upcoming",
+    });
+    const inProgressCount = await Task.countDocuments({
+      ...query,
+      status: "in-progress",
+    });
+    const totalCount = await Task.countDocuments(query);
+    res.json({
+      overdue: overdue,
+      upcoming: upcomingCount,
+      in_progress: inProgressCount,
+      total: totalCount,
+    });
+  } catch (error) {}
 };
 
 const createTask = async (req, res) => {
@@ -73,9 +82,18 @@ const createTask = async (req, res) => {
         errors: errors.array(),
       });
     }
-    const organization = Organization.findById(req.body.orgId || oid).select(
-      "_id"
-    );
+
+    const orgId = req.body.orgId || oid;
+    if (orgId && !mongoose.Types.ObjectId.isValid(orgId)) {
+      return res.status(400).json({
+        error: true,
+        msg: "Invalid Organization ID",
+      });
+    }
+
+    const organization = await Organization.findById(orgId)
+      .select("_id")
+      .lean();
     if (!organization) {
       return res.status(400).json({
         error: true,
@@ -83,13 +101,13 @@ const createTask = async (req, res) => {
       });
     }
 
-    const taskDetails = req.body;
-    const newTask = await Task.create({
-      orgId: req.body.orgId || oid,
+    const taskDetails = {
+      ...req.body,
+      orgId,
       userId: uid,
-      ...taskDetails,
-    });
-    res.status(200).json(newTask);
+    };
+    const newTask = await Task.create(taskDetails);
+    res.status(200).json({ success: true, newTask });
   } catch (error) {
     console.error(error.message);
     return res.status(500).json({ message: "Something went wrong" });
@@ -106,7 +124,7 @@ const getTask = async (req, res) => {
       _id: id,
       orgId: oid,
       rootUserId: uid,
-    });
+    }).lean();
     res.status(200).json(taskData);
   } catch (error) {
     console.error(error.message);
@@ -143,11 +161,12 @@ const updateTask = async (req, res) => {
     uid,
   } = req;
   try {
-    await Task.findOneAndUpdate(
+    const task = await Task.findOneAndUpdate(
       { taskId, rootUserId: uid, orgId: oid },
-      req.body
-    );
-    res.status(200).json({ _id: taskId, ...req.body });
+      req.body,
+      { new: true, runValidators: true }
+    ).lean();
+    res.status(200).json({ success: true, task });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error");
