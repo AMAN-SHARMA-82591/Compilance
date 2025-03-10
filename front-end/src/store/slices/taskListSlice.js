@@ -34,7 +34,7 @@ const taskListSlice = createSlice({
         });
         builder.addCase(fetchTaskList.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.data = action.payload;
+            state.data.taskList = action.payload.taskList;
         });
         builder.addCase(fetchTaskList.rejected, (state, action) => {
             state.isLoading = false;

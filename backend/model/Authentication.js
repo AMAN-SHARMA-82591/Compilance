@@ -29,6 +29,11 @@ const UserSchema = new mongoose.Schema(
       ref: "Organization",
       default: null,
     },
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
   },
   {
     strict: "throw",

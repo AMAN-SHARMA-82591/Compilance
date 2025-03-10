@@ -59,7 +59,7 @@ function Index() {
 
   const handleFetchUserProfiles = useCallback(async () => {
     const response = await axiosInstance.get("/users/profile");
-    if (!isEmpty(response.data)) setPeopleList(response.data);
+    if (!isEmpty(response.data)) setPeopleList(response?.data?.profileList);
   }, []);
 
   const handleFetchOrgData = useCallback(async () => {
