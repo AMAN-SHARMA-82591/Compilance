@@ -16,7 +16,7 @@ const login = async (req, res) => {
     });
   }
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).lean();
     //compare password
     if (!user) {
       return res.status(400).json({ msg: "User Not Found." });
@@ -65,7 +65,7 @@ const createNewUser = async (
     const salt = await bcrypt.genSalt(10);
     newUser.password = await bcrypt.hash(password, salt);
     await newUser.save();
-    const userProfile = new Profile({
+    const userProfile = await Profile.create({
       userId: newUser._id,
       name: newUser.name,
       email: newUser.email,
@@ -82,7 +82,6 @@ const createNewUser = async (
       status: null,
       bio: null,
     });
-    await userProfile.save();
     return userProfile;
   } catch (error) {
     console.error("Error creating user or profile:", error);
@@ -101,7 +100,7 @@ const register = async (req, res) => {
     });
   }
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select("_id").lean();
     if (user) {
       return res.status(400).json({ errors: [{ msg: "User already exists" }] });
     }

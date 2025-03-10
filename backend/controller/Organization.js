@@ -11,11 +11,13 @@ const organizationList = async (req, res) => {
     const userRole = req.user.profile.role;
     let organizationData;
     if (userRole === 1) {
-      organizationData = await Organization.find().select("-roles");
+      organizationData = await Organization.find().select("-roles").lean();
     } else {
       organizationData = await Organization.find({
         adminId: req.uid,
-      }).select("-roles");
+      })
+        .select("-roles")
+        .lean();
     }
     res
       .status(200)
@@ -27,18 +29,17 @@ const organizationList = async (req, res) => {
 
 const createOrganization = async (req, res) => {
   try {
-    const isExists = await Organization.findOne({ name: req.body.name });
+    const isExists = await Organization.findOne({ name: req.body.name }).lean();
     if (isExists) {
       return res.status(400).json({
         success: false,
         msg: "Organization already exists with this name.",
       });
     }
-    const organization = new Organization({
+    const organization = await Organization.create({
       ...req.body,
       adminId: req.uid,
     });
-    await organization.save();
     return res
       .status(200)
       .json({ msg: "New Organization is Created.", data: organization });
@@ -50,9 +51,9 @@ const createOrganization = async (req, res) => {
 const getOrganization = async (req, res) => {
   const { id } = req.params;
   try {
-    const organizationData = await Organization.findOne({ _id: id }).select(
-      "-roles"
-    );
+    const organizationData = await Organization.findOne({ _id: id })
+      .select("-roles")
+      .lean();
     if (!organizationData) {
       return res
         .status(400)
@@ -69,7 +70,9 @@ const getOrganization = async (req, res) => {
 const editOrganization = async (req, res) => {
   const { id } = req.params;
   try {
-    const organization = await Organization.findOne({ _id: id });
+    const organization = await Organization.findOne({ _id: id })
+      .select("_id")
+      .lean();
     if (!organization) {
       return res
         .status(404)
@@ -78,7 +81,7 @@ const editOrganization = async (req, res) => {
     const updateOrganization = await Organization.findOneAndUpdate(
       { _id: id },
       { $set: req.body },
-      { new: true }
+      { new: true, runValidators: true }
     ).select("-roles");
     return res
       .status(200)
