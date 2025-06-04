@@ -28,7 +28,7 @@ function LoginAdminDropDownMenu({ handleClosePopover, profileDetails }) {
           <ListItem
             onClick={handleLogout}
             button={true}
-            style={{ color: "red", fontWeight: "bold" }}
+            style={{ color: "red", fontWeight: "bold", cursor: "pointer" }}
           >
             Logout
           </ListItem>

@@ -15,17 +15,16 @@ function Index() {
   const dispatch = useDispatch();
   const [createTaskDialog, setCreateTaskDialog] = useState(false);
   const { taskList, isLoading } = useSelector((state) => ({
-    taskList: state.taskList.data.taskList,
-    isLoading: state.taskList.isLoading,
+    taskList: state.taskList?.data?.taskList || [],
+    isLoading: state.taskList?.isLoading || false,
   }));
+  const taskFilterType = useSelector((state) => state.taskFilterType);
 
   useEffect(() => {
     return () => {
       dispatch(taskFilterAction(""));
     };
   });
-
-  const taskFilterType = useSelector((state) => state.taskFilterType);
 
   const handleDeleteTask = (task) => {
     dispatch(deleteTask(task));

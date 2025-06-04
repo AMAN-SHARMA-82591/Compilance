@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { compose } from "ramda";
 import * as PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router";
 // import EmailIcon from "@mui/icons-material/Email";
 import withStyles from "@mui/styles/withStyles";
 // import SettingsIcon from "@mui/icons-material/Settings";
 // import AlarmIcon from "@mui/icons-material/Alarm";
 // import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { AppBar, Avatar, Popover } from "@mui/material";
-import LoginAdminDropDownMenu from "../Common/LoginAdminDropDownMenu";
-import "../../App.css";
-import { useSelector } from "react-redux";
+import LoginAdminDropDownMenu from "../../Common/LoginAdminDropDownMenu";
+import "../../../App.css";
+import TopMenuCommon from "./TopMenuCommon";
+import TopMenuOrganization from "./TopMenuOrganization";
 
 const styles = () => ({
   appBar: {
@@ -22,6 +25,7 @@ const styles = () => ({
   },
 });
 function TopBar({ classes }) {
+  const location = useLocation();
   const [show, setShow] = useState(null);
   const profileDetails = useSelector(
     (state) => state.basicInformation?.data?.profile
@@ -38,46 +42,21 @@ function TopBar({ classes }) {
   return (
     <AppBar>
       <div className={classes.appBar}>
-        {/* <div className="week-table-container-items">
-                    <div className="date-section">
-                        <WatchLaterIcon fontSize="large" className="date-logo-item" />
-                    </div>
-                    <div className="week-section">
-                        <div className="week-items">
-                            <h1>Mon</h1>
-                            <p>9</p>
-                        </div>
-                        <div className="week-items">
-                            <h1>Tue</h1>
-                            <p>10</p>
-                        </div>
-                        <div className="week-items">
-                            <h1>Wed</h1>
-                            <p>11</p>
-                        </div>
-                        <div className="week-items">
-                            <h1>Thu</h1>
-                            <p>12</p>
-                        </div>
-                        <div className="week-items">
-                            <h1>Fri</h1>
-                            <p>13</p>
-                        </div>
-                        <div className="week-items">
-                            <h1>Sat</h1>
-                            <p>14</p>
-                        </div>
-                        <div className="week-items">
-                            <h1>Sun</h1>
-                            <p>15</p>
-                        </div>
-
-                    </div>
-                    <div className="calender-section">
-                        <CalendarTodayIcon fontSize="large" className="calender-logo-item" />
-                    </div>
-                </div> */}
-        <div className="admin-section">
+        <div className="top-bar-left-section">
+          {location.pathname.includes("/home") && (
+            <TopMenuCommon path="/home" title="home" />
+          )}
+          {location.pathname.includes("/people") && (
+            <TopMenuCommon path="/people" title="people" />
+          )}
+          {location.pathname.includes("/tasks") && (
+            <TopMenuCommon path="/tasks" title="tasks" />
+          )}
+          {location.pathname.includes("/organization") && (
+            <TopMenuOrganization path="/organization" title="organization" />
+          )}
+        </div>
+        <div className="top-bar-right-section">
           {/* <div className="admin-sec-logo">
             <EmailIcon className="admin-images-item-1" />
             <SettingsIcon className="admin-images-item-1" />

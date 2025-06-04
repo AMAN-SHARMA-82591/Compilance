@@ -6,6 +6,11 @@ const { createNewUser } = require("./Authentication");
 const { validationResult } = require("express-validator");
 const { authAdminRole } = require("../utils/constants");
 
+
+// learn about exicts() method. This can improve api retrieval performance
+
+
+
 // List of Users
 const users = async (req, res) => {
   try {

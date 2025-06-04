@@ -1,76 +1,71 @@
-import React, { useCallback, useEffect, useState } from "react";
-import PageHeader from "../../Common/PageHeader";
-import CreateOrganizationDialog from "./common/CreateOrganizationDialog";
-import OrganizationCard from "./common/OrganizationCard";
-import axiosInstance from "../../Common/AxiosInstance";
-import { OrganizationSkeleton } from "../../Common/Skeleton";
-import { Typography } from "@mui/material";
-import { ConfirmDialogBox } from "../../Common/DialogBox";
+import { useState } from "react";
 import { isEmpty } from "lodash";
-import { toastError } from "../../Common/ToastContainer";
+import { Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import PageHeader from "../../Common/PageHeader";
+import OrganizationCard from "./common/OrganizationCard";
+import { ConfirmDialogBox } from "../../Common/DialogBox";
+import { deleteOrganization } from "../../../store/store";
+import { OrganizationSkeleton } from "../../Common/Skeleton";
+import CreateOrganizationDialog from "./common/CreateOrganizationDialog";
 
 function Index() {
-  const [orgList, setOrgList] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { isLoading, data: orgList } = useSelector(
+    (state) => state.organizationData || {}
+  );
   const [deleteProfileId, setDeleteProfileId] = useState(null);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-  const handleFetchOrganizationData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await axiosInstance.get("/users/organization");
-      setOrgList(response.data);
-    } catch (error) {
-      console.error("Error fetching org list:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    handleFetchOrganizationData();
-  }, [handleFetchOrganizationData]);
-
-  const handleDeletUserProfile = async () => {
-    if (deleteProfileId) {
-      const response = await axiosInstance.delete(
-        `/users/organization/${deleteProfileId}`
-      );
-      if (!isEmpty(response.data)) handleFetchOrganizationData();
-      setDeleteProfileId(null);
-      setOpenDeleteDialog(false);
-    } else {
-      toastError("Organization data not found.");
-    }
+  const handleDeleteUserProfile = async () => {
+    dispatch(deleteOrganization({ id: deleteProfileId }));
+    setDeleteProfileId(null);
+    setOpenDeleteDialog(false);
   };
 
   const handleOpenOrganizationDialog = () => {
-    setOpenCreateDialog(!openCreateDialog);
+    setOpenCreateDialog((openCreateDialog) => !openCreateDialog);
   };
 
   const renderContent = () => {
-    if (loading) {
+    if (isLoading) {
       return Array.from({ length: 3 }, (_, index) => (
         <OrganizationSkeleton key={index} />
       ));
     }
-
-    if (data.length === 0) {
-      return <Typography variant="body1">No Organization found.</Typography>;
+    if (isEmpty(orgList)) {
+      return (
+        <Typography
+          variant="body1"
+          align="center"
+          sx={{ mt: 10, fontSize: 20, color: "grey" }}
+        >
+          <strong style={{ fontSize: "30px", padding: 40, color: "black" }}>
+            No Organization found.
+          </strong>
+          <br />
+          To get started, you need to create an organization.
+          <br />
+          Creating an organization is required before you can add users, manage
+          tasks, or access other features of this site.
+        </Typography>
+      );
     }
 
-    return data.map((org) => (
-      <OrganizationCard
-        data={org}
-        key={org._id}
-        setDeleteProfileId={setDeleteProfileId}
-        setOpenDeleteDialog={setOpenDeleteDialog}
-      />
-    ));
+    return (
+      !isEmpty(orgList) &&
+      orgList.map((org) => (
+        <OrganizationCard
+          data={org}
+          key={org._id}
+          setDeleteProfileId={setDeleteProfileId}
+          setOpenDeleteDialog={setOpenDeleteDialog}
+        />
+      ))
+    );
   };
 
-  const { data } = orgList;
   return (
     <>
       <PageHeader
@@ -81,7 +76,6 @@ function Index() {
         <CreateOrganizationDialog
           open={openCreateDialog}
           handleOrganizationDialog={handleOpenOrganizationDialog}
-          handleFetchOrganizationData={handleFetchOrganizationData}
         />
       </PageHeader>
       <div
@@ -97,7 +91,7 @@ function Index() {
           submitBtnText="Delete"
           open={openDeleteDialog}
           onClose={() => setOpenDeleteDialog(false)}
-          onSubmit={() => handleDeletUserProfile()}
+          onSubmit={() => handleDeleteUserProfile()}
           text="Do you want to remove these elements from this report?"
         />
       </div>

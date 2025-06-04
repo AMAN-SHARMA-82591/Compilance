@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-pascal-case */
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { Routes, Navigate, Route } from "react-router";
@@ -16,6 +16,9 @@ import "./App.css";
 import OrganizationDetails from "./private/components/organization/common/OrganizationDetails";
 import { authAdminRole } from "./private/Common/Constants";
 import { ToastContainer } from "react-toastify";
+import NoPageFound from "./private/Common/NoPageFound";
+import { fetchOrganizationList } from "./store/slices/organizationListSlice";
+import RequireOrganization from "./private/Common/RequiredOrganization";
 // import CounterPage from './private/components/CounterPage';
 
 function App() {
@@ -25,8 +28,8 @@ function App() {
     (state) => state.basicInformation?.data?.profile || null
   );
 
+  const token = localStorage.getItem("token");
   useEffect(() => {
-    const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwtDecode(token);
       const currentTime = Date.now() / 1000;
@@ -36,13 +39,14 @@ function App() {
       } else {
         dispatch(setData(decodedToken));
         dispatch(fetchTaskList());
+        dispatch(fetchOrganizationList());
       }
     }
-  }, [dispatch]);
+  }, [dispatch, token]);
   return (
     <>
       <Routes>
-        {!localStorage.getItem("token") ? (
+        {!token ? (
           <>
             <Route path="/*" element={<Navigate replace to="/login" />} />
             <Route path="/login" element={<Login />} />
@@ -61,13 +65,47 @@ function App() {
             ) : (
               <Route path="/" element={<Navigate replace to="/home" />} />
             )}
-            <Route path="/home" element={<IndexHome />} />
-            <Route path="/tasks" element={<IndexTasks />} />
-            <Route path="/people" element={<IndexPeople />} />
-            <Route path="/people/:id" element={<PeopleDetails />} />
-            <Route path="/organization/:id" element={<OrganizationDetails />} />
-            {/* <Route path='/community' element={<IndexCommunity />}></Route> */}
-            {/* <Route path='/Profile' element={<IndexProfile />}></Route> */}
+            <Route
+              path="/home"
+              element={
+                <RequireOrganization>
+                  <IndexHome />
+                </RequireOrganization>
+              }
+            />
+            <Route
+              path="/tasks"
+              element={
+                <RequireOrganization>
+                  <IndexTasks />
+                </RequireOrganization>
+              }
+            />
+            <Route
+              path="/people"
+              element={
+                <RequireOrganization>
+                  <IndexPeople />
+                </RequireOrganization>
+              }
+            />
+            <Route
+              path="/people/:id"
+              element={
+                <RequireOrganization>
+                  <PeopleDetails />
+                </RequireOrganization>
+              }
+            />
+            <Route
+              path="/organization/:id"
+              element={
+                <RequireOrganization>
+                  <OrganizationDetails />
+                </RequireOrganization>
+              }
+            />
+            <Route path="*" element={<NoPageFound />} />
           </Route>
         )}
       </Routes>

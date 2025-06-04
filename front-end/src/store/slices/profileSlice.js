@@ -29,8 +29,7 @@ const profileSlice = createSlice({
       state.data = action.payload;
     },
     setProfileData: (state, action) => {
-      console.log("SetProfile", action.payload, state.data);
-      // state.data.profile = action.payload;
+      state.data.profile = action.payload;
     },
     clearData: (state) => {
       state.data = null;

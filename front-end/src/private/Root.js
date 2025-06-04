@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router";
-import TopBar from "./components/TopBar";
+import TopBar from "./components/nav/TopBar";
 import LeftBar from "./components/LeftBar";
 
 function Root() {

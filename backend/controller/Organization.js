@@ -1,7 +1,6 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 const Organization = require("../model/Organization");
-const jwt = require("jsonwebtoken");
 const Profile = require("../model/Profile");
 const Task = require("../model/Task");
 const Authentication = require("../model/Authentication");
@@ -9,21 +8,19 @@ const Authentication = require("../model/Authentication");
 const organizationList = async (req, res) => {
   try {
     const userRole = req.user.profile.role;
-    let organizationData;
+    let organization;
     if (userRole === 1) {
-      organizationData = await Organization.find().select("-roles").lean();
+      organization = await Organization.find().select("-roles").lean();
     } else {
-      organizationData = await Organization.find({
+      organization = await Organization.find({
         adminId: req.uid,
       })
         .select("-roles")
         .lean();
     }
-    res
-      .status(200)
-      .json({ msg: "Fetched organization list.", data: organizationData });
+    res.status(200).json({ msg: "Fetched organization list.", organization });
   } catch (error) {
-    console.error(error.message);
+    next(error);
   }
 };
 
@@ -36,15 +33,13 @@ const createOrganization = async (req, res) => {
         msg: "Organization already exists with this name.",
       });
     }
-    const organization = await Organization.create({
+    const orgData = await Organization.create({
       ...req.body,
       adminId: req.uid,
     });
-    return res
-      .status(200)
-      .json({ msg: "New Organization is Created.", data: organization });
+    return res.status(200).json({ success: true, orgData });
   } catch (error) {
-    console.error(error.message);
+    next(error);
   }
 };
 
@@ -63,7 +58,10 @@ const getOrganization = async (req, res) => {
       .status(200)
       .json({ msg: "Fetched organization data.", data: organizationData });
   } catch (error) {
-    console.error(error.message);
+    res.status(500).json({
+      msg: "Server Error",
+      error: error.message,
+    });
   }
 };
 
@@ -87,7 +85,10 @@ const editOrganization = async (req, res) => {
       .status(200)
       .json({ msg: "Updated organization", data: updateOrganization });
   } catch (error) {
-    console.error(error.message);
+    res.status(500).json({
+      msg: "Server Error",
+      error: error.message,
+    });
   }
 };
 
@@ -130,8 +131,10 @@ const deleteOrganization = async (req, res) => {
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
-    console.error(error.message);
-    res.status(500).json({ msg: "Server error", error: error.message });
+    res.status(500).json({
+      msg: "Server Error",
+      error: error.message,
+    });
   }
 };
 

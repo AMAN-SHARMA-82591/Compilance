@@ -161,7 +161,7 @@ const ProfileSkeleton = () => {
   return (
     <Box sx={{ flexGrow: 1, padding: 3 }}>
       <Grid container justifyContent="center">
-        <Grid item>
+        <Grid>
           <Card
             sx={{
               width: 290,

@@ -18,10 +18,11 @@ import { authAdminRole } from "../../../Common/Constants";
 
 function CreateTaskDialog({ open, handleOpenTaskDialog }) {
   const dispatch = useDispatch();
-  const [orgData, setOrgData] = useState([]);
+  // const [orgData, setOrgData] = useState([]);
   const profileData = useSelector(
     (store) => store.basicInformation?.data?.profile || null
   );
+  const orgData = useSelector((store) => store.organizationData?.data || []);
 
   const initialValues = {
     status: "",
@@ -32,16 +33,16 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
     orgId: authAdminRole.includes(profileData.role) ? "" : null,
   };
 
-  const handleFetchOrgData = useCallback(async () => {
-    const data = await fetchOrgData();
-    setOrgData(data);
-  }, []);
+  // const handleFetchOrgData = useCallback(async () => {
+  //   const data = await fetchOrgData();
+  //   setOrgData(data);
+  // }, []);
 
-  useEffect(() => {
-    if (profileData && authAdminRole.includes(profileData.role)) {
-      handleFetchOrgData();
-    }
-  }, [profileData, handleFetchOrgData]);
+  // useEffect(() => {
+  //   if (profileData && authAdminRole.includes(profileData.role)) {
+  //     handleFetchOrgData();
+  //   }
+  // }, [profileData, handleFetchOrgData]);
 
   const { values, errors, handleSubmit, handleChange, handleReset } = useFormik(
     {
@@ -63,12 +64,12 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
 
   return (
     <>
-      <Dialog open={open} maxWidth="md" fullWidth>
+      <Dialog open={open} maxWidth="md" keepMounted={false} fullWidth>
         <DialogTitle>Create Task</DialogTitle>
         <DialogContent>
           <Grid container spacing={3}>
             {authAdminRole.includes(profileData.role) && (
-              <Grid item="true" size={12} className="profile-details-item">
+              <Grid size={12} className="profile-details-item">
                 <label htmlFor="organization">Organization</label>
                 <TextField
                   select
@@ -81,7 +82,7 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
                   onChange={handleChange}
                 >
                   {!isEmpty(orgData) &&
-                    orgData.data.map((org) => (
+                    orgData.map((org) => (
                       <MenuItem key={org._id} value={org._id}>
                         {org.name && org.name}
                       </MenuItem>

@@ -208,7 +208,7 @@ function PeopleDetails(props) {
       <div className="profile-main-section">
         <p>Profile Details</p>
         <Grid container spacing={3} className="profile-details-section">
-          <Grid item size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Name</p>
             {!editProfile ? (
               <p>{profileDetails?.name}</p>
@@ -227,7 +227,7 @@ function PeopleDetails(props) {
               </>
             )}
           </Grid>
-          <Grid item size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Email</p>
             {!editProfile ? (
               <p>{profileDetails?.email}</p>
@@ -244,7 +244,7 @@ function PeopleDetails(props) {
               />
             )}
           </Grid>
-          <Grid item size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Department</p>
             {!editProfile ? (
               <p>{profileDetails?.department}</p>
@@ -259,7 +259,7 @@ function PeopleDetails(props) {
               />
             )}
           </Grid>
-          <Grid item size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Designation</p>
             {!editProfile ? (
               <p>{profileDetails?.designation}</p>
@@ -274,7 +274,7 @@ function PeopleDetails(props) {
               />
             )}
           </Grid>
-          <Grid item size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Location</p>
             {!editProfile ? (
               <p>{profileDetails?.location}</p>
@@ -289,7 +289,7 @@ function PeopleDetails(props) {
               />
             )}
           </Grid>
-          <Grid item size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Phone Number</p>
             {!editProfile ? (
               <p>{profileDetails?.phone_number}</p>
