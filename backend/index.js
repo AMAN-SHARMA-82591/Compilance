@@ -6,11 +6,14 @@ const userRouter = require("./Routes/User");
 const taskRouter = require("./Routes/Tasks");
 const connectDB = require("./db/connect");
 const cors = require("cors");
-const app = express();
+const dbErrorHandler = require("./middleware/dbErrorHandler");
 
+const app = express();
 const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
+
 //To get data in json format!
 app.use(express.json({ extended: false }));
+
 app.use("/uploads", express.static("images"));
 app.use(
   cors({
@@ -25,14 +28,11 @@ app.use(
   })
 );
 
-app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(err.status || 500).json({ message: "Something Went Wrong!!" });
-});
-
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
 app.use("/tasks", taskRouter);
+
+app.use(dbErrorHandler);
 
 const start = async () => {
   try {

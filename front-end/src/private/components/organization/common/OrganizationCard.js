@@ -1,11 +1,4 @@
-import React from "react";
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import { Card, CardContent, IconButton, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
 import DeleteBox from "@mui/icons-material/Delete";
 
@@ -20,38 +13,46 @@ function OrganizationCard({ data, setOpenDeleteDialog, setDeleteProfileId }) {
         boxShadow: 3,
         borderRadius: 2,
         textAlign: "center",
+        position: "relative",
+        cursor: "pointer",
+        transition: "box-shadow 0.3s, transform 0.3s",
+        "&:hover": {
+          boxShadow: 6,
+          transform: "translateY(-4px) scale(1.02)",
+        },
+        m: "0 auto",
+        mt: 4,
       }}
+      onClick={() => navigate(`/organization/${data._id}`)}
     >
-      <CardActionArea
+      <IconButton
         sx={{
-          p: 2,
-          width: "100%",
+          position: "absolute",
+          top: 10,
+          right: 10,
+          zIndex: 2,
+          background: "rgba(255,255,255,0.85)",
+          "&:hover": { background: "rgba(255,0,0,0.08)" },
         }}
-        className="organization_box"
-        onClick={() => navigate(`/organization/${data._id}`)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setDeleteProfileId(data._id);
+          setOpenDeleteDialog(true);
+        }}
       >
-        <IconButton
-          className="delete_icon_button"
-          onClick={(e) => {
-            e.stopPropagation();
-            setDeleteProfileId(data._id);
-            setOpenDeleteDialog(true);
-          }}
-        >
-          <DeleteBox color="error" />
-        </IconButton>
-        <CardContent>
-          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-            {data.name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            {data.description || "No description provided"}
-          </Typography>
-          <Typography variant="body2" sx={{ mt: 1, color: "gray" }}>
-            {data.city}, {data.state}, {data.country}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
+        <DeleteBox color="error" />
+      </IconButton>
+      <CardContent sx={{ pt: 5, pb: 3 }}>
+        <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
+          {data.name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          {data.description || "No description provided"}
+        </Typography>
+        <Typography variant="body2" sx={{ color: "gray" }}>
+          {data.city}, {data.state}, {data.country}
+        </Typography>
+      </CardContent>
     </Card>
   );
 }

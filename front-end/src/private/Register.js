@@ -10,38 +10,80 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import modernImage from "../images/vecteezy_modern-abstract-background-illustration_34720880.jpg";
 import { toastSuccess } from "./Common/ToastContainer";
 
 const styles = () => ({
   root: {
+    minHeight: "100vh",
+    width: "100vw",
+    background: "linear-gradient(120deg, #1976d2 60%, #fff 100%)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "100vh",
-    backgroundColor: "#1f2842",
   },
   paper: {
-    padding: "50px",
-    width: "100%",
-    maxWidth: "500px",
+    display: "flex",
+    flexDirection: "row",
+    width: "800px",
+    minHeight: "480px",
+    boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+    borderRadius: "18px",
+    overflow: "hidden",
+    background: "#fff",
   },
   container: {
-    textAlign: "center",
-    width: "100%",
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    padding: "48px 32px",
+    background: "#fff",
   },
   typography: {
-    color: "#1976d3",
+    color: "#1976d2",
+    fontWeight: 700,
+    marginBottom: "16px",
+    textAlign: "center",
+    padding: "20px 0px",
   },
   textField: {
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: "rgba(14, 13, 13, 0.41)",
+        borderColor: "#1976d2",
       },
       "&:hover fieldset": {
-        borderColor: "#1976d3",
+        borderColor: "#1565c0",
       },
     },
+  },
+  loginImage: {
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+  },
+  button: {
+    height: "50px",
+    marginBottom: "16px",
+    fontWeight: 600,
+    fontSize: "16px",
+    letterSpacing: "1px",
+  },
+  registerButton: {
+    marginTop: "12px",
+    fontWeight: 600,
+    fontSize: "16px",
+    letterSpacing: "1px",
+    color: "#1976d2",
+    border: "none",
+    textAlign: "center",
+    textDecoration: "none",
   },
 });
 
@@ -56,13 +98,16 @@ function Register({ classes }) {
   });
   const [error, setError] = useState(false);
 
-  async function handleRegisterSubmit() {
+  async function handleRegisterSubmit(e) {
+    e.preventDefault();
     const { name, email, password } = textInput;
-    if (!/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(textInput.email)) {
+    if (!/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(email)) {
       setError(true);
+      return;
     }
-    if (!textInput.email || !textInput.password || !textInput.name) {
+    if (!name || !email || !password) {
       alert("Name, Email & Password is REQUIRED!");
+      return;
     }
     setLoading(true);
     try {
@@ -71,11 +116,7 @@ function Register({ classes }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-        }),
+        body: JSON.stringify({ name, email, password }),
       })
         .then((resp) => resp.json())
         .catch((error) => console.error(error));
@@ -89,14 +130,14 @@ function Register({ classes }) {
       }
     } catch (error) {
       console.error(error);
+      setLoading(false);
     }
   }
 
   function handleNameInputChange(event) {
     setTextInput({
+      ...textInput,
       name: event.target.value,
-      email: textInput.email,
-      password: textInput.password,
     });
   }
 
@@ -105,101 +146,87 @@ function Register({ classes }) {
       setError(false);
     }
     setTextInput({
-      name: textInput.name,
+      ...textInput,
       email: event.target.value,
-      password: textInput.password,
     });
   }
 
   function handlePasswordInputChange(event) {
     setTextInput({
-      name: textInput.name,
-      email: textInput.email,
+      ...textInput,
       password: event.target.value,
     });
   }
 
   return (
     <div className={classes.root}>
-      <Paper classes={{ root: classes.paper }} variant="outlined" elevation={2}>
+      <Paper classes={{ root: classes.paper }} variant="outlined" elevation={6}>
         <form className={classes.container} onSubmit={handleRegisterSubmit}>
-          <Grid container={true} spacing={3}>
-            <Grid item={true} size={12}>
-              <Typography variant="h2" className={classes.typography}>
-                Register Form
-              </Typography>
-            </Grid>
-            <Grid item={true} size={12}>
-              <Typography className={classes.typography} variant="h5">
-                Name
-              </Typography>
-              <TextField
-                name="name"
-                variant="outlined"
-                className={classes.textField}
-                value={textInput.name}
-                onChange={(e) => handleNameInputChange(e)}
-                fullWidth={true}
-              />
-            </Grid>
-            <Grid item={true} size={12}>
-              <Typography className={classes.typography} variant="h5">
-                Email
-              </Typography>
-              <TextField
-                name="email"
-                variant="outlined"
-                error={Boolean(error)}
-                helperText={
-                  Boolean(error)
-                    ? "Email is incorrect, example: abc1@gmail.com"
-                    : ""
-                }
-                className={classes.textField}
-                value={textInput.email}
-                onChange={(e) => handleEmailInputChange(e)}
-                fullWidth={true}
-              />
-            </Grid>
-            <Grid item={true} size={12}>
-              <Typography className={classes.typography} variant="h5">
-                Password
-              </Typography>
-              <TextField
-                name="password"
-                variant="outlined"
-                type="password"
-                className={classes.textField}
-                value={textInput.password}
-                onChange={(e) => handlePasswordInputChange(e)}
-                fullWidth={true}
-              />
-            </Grid>
-            <Grid item={true} size={12} style={{ marginTop: 30 }}>
-              <Button
-                type="submit"
-                variant="contained"
-                style={{ height: "50px" }}
-                color="primary"
-                fullWidth={true}
-              >
-                {loading ? (
-                  <CircularProgress sx={{ color: "white" }} />
-                ) : (
-                  "Submit"
-                )}
-              </Button>
-              <Button
-                component={Link}
-                color="primary"
-                style={{ height: "50px", marginTop: 20 }}
-                to="/login"
-              >
-                Log In
-              </Button>
-            </Grid>
-          </Grid>
+          <Typography variant="h4" className={classes.typography}>
+            Register
+          </Typography>
+          <TextField
+            fullWidth
+            name="name"
+            label="Name"
+            variant="outlined"
+            value={textInput.name}
+            onChange={handleNameInputChange}
+            style={{ marginBottom: "10px" }}
+            classes={{ root: classes.textField }}
+          />
+          <TextField
+            fullWidth
+            label="Email"
+            name="email"
+            variant="outlined"
+            error={Boolean(error)}
+            value={textInput.email}
+            style={{ marginBottom: "10px" }}
+            onChange={handleEmailInputChange}
+            classes={{ root: classes.textField }}
+            helperText={
+              Boolean(error)
+                ? "Email is incorrect, example: abc1@gmail.com"
+                : ""
+            }
+          />
+          <TextField
+            fullWidth
+            label="Password"
+            type="password"
+            name="password"
+            variant="outlined"
+            value={textInput.password}
+            style={{ marginBottom: "10px" }}
+            classes={{ root: classes.textField }}
+            onChange={handlePasswordInputChange}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            className={classes.button}
+            disabled={loading}
+          >
+            {loading ? (
+              <CircularProgress size={24} sx={{ color: "white" }} />
+            ) : (
+              "Register"
+            )}
+          </Button>
+          <Link to="/login" className={classes.registerButton}>
+            Log In
+          </Link>
         </form>
+        <div className={classes.loginImage}>
+          <img
+            src={modernImage}
+            className={classes.image}
+            alt="register-illustration"
+          />
+        </div>
       </Paper>
     </div>
   );

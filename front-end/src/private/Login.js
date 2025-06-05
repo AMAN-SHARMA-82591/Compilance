@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as PropTypes from "prop-types";
 import { compose } from "ramda";
 import withStyles from "@mui/styles/withStyles";
-import { Link, useNavigate } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import {
   Button,
   Paper,
@@ -11,37 +11,81 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import modernImage from "../images/vecteezy_modern-abstract-background-illustration_34720880.jpg";
 import { toastError, toastSuccess } from "./Common/ToastContainer";
 
 const styles = () => ({
   root: {
+    minHeight: "100vh",
+    width: "100vw",
+    background: "linear-gradient(120deg, #1976d2 60%, #fff 100%)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "100vh",
-    backgroundColor: "#1f2842",
   },
   paper: {
-    padding: "50px",
-    width: "100%",
-    maxWidth: "500px",
+    display: "flex",
+    flexDirection: "row",
+    width: "800px",
+    minHeight: "480px",
+    boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+    borderRadius: "18px",
+    overflow: "hidden",
+    background: "#fff",
   },
   container: {
-    textAlign: "center",
-    width: "100%",
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    padding: "48px 32px",
+    background: "#fff",
   },
   typography: {
-    color: "#1976d3",
+    color: "#1976d2",
+    fontWeight: 700,
+    marginBottom: "16px",
+    textAlign: "center",
+    padding: "20px 0px",
   },
   textField: {
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: "rgba(14, 13, 13, 0.41)",
+        borderColor: "#1976d2",
       },
       "&:hover fieldset": {
-        borderColor: "#1976d3",
+        borderColor: "#1565c0",
       },
     },
+  },
+  loginImage: {
+    flex: 1,
+    background: "#1976d2",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+  },
+  button: {
+    height: "50px",
+    margin: "16px 0",
+    fontWeight: 600,
+    fontSize: "16px",
+    letterSpacing: "1px",
+  },
+  registerButton: {
+    marginTop: "12px",
+    fontWeight: 600,
+    fontSize: "16px",
+    letterSpacing: "1px",
+    color: "#1976d2",
+    border: "none",
+    textAlign: "center",
+    textDecoration: "none",
   },
 });
 
@@ -52,7 +96,8 @@ function Login({ classes }) {
   const [textInput, setTextInput] = useState({ email: "", password: "" });
   const [error, setError] = useState(false);
 
-  async function handleLoginSubmit() {
+  async function handleLoginSubmit(e) {
+    e.preventDefault();
     if (!/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(textInput.email)) {
       setError(true);
     }
@@ -94,73 +139,65 @@ function Login({ classes }) {
   function handlePasswordInputChange(event) {
     setTextInput({ email: textInput.email, password: event.target.value });
   }
-
   return (
     <div className={classes.root}>
-      <Paper classes={{ root: classes.paper }} elevation={4} variant="outlined">
+      <Paper classes={{ root: classes.paper }} elevation={6} variant="outlined">
         <form className={classes.container} onSubmit={handleLoginSubmit}>
-          <Grid container spacing={3}>
-            <Grid size={12}>
-              <Typography variant="h2" className={classes.typography}>
-                Login Form
-              </Typography>
-            </Grid>
-            <Grid size={12}>
-              <Typography className={classes.typography} variant="h5">
-                Email
-              </Typography>
-              <TextField
-                variant="outlined"
-                error={Boolean(error)}
-                helperText={
-                  Boolean(error)
-                    ? "Email is incorrect, example: abc1@gmail.com"
-                    : ""
-                }
-                className={classes.textField}
-                value={textInput.email}
-                onChange={(e) => handleEmailInputChange(e)}
-                fullWidth={true}
-              />
-            </Grid>
-            <Grid size={12}>
-              <Typography className={classes.typography} variant="h5">
-                Password
-              </Typography>
-              <TextField
-                variant="outlined"
-                type="password"
-                className={classes.textField}
-                value={textInput.password}
-                onChange={(e) => handlePasswordInputChange(e)}
-                fullWidth={true}
-              />
-            </Grid>
-            <Grid size={12} style={{ marginTop: 30 }}>
-              <Button
-                type="submit"
-                variant="contained"
-                style={{ height: "50px" }}
-                color="primary"
-                fullWidth={true}
-              >
-                {loading ? (
-                  <CircularProgress sx={{ color: "white" }} />
-                ) : (
-                  "Submit"
-                )}
-              </Button>
-              <Button
-                component={Link}
-                color="primary"
-                style={{ height: "50px", marginTop: 20 }}
-                to="/register"
-              >
-                Register A New User
-              </Button>
-            </Grid>
-          </Grid>
+          <Typography variant="h4" className={classes.typography}>
+            Login
+          </Typography>
+          <TextField
+            fullWidth
+            name="email"
+            label="Email"
+            variant="outlined"
+            error={Boolean(error)}
+            value={textInput.email}
+            className={classes.textField}
+            style={{ marginBottom: "10px" }}
+            onChange={handleEmailInputChange}
+            helperText={
+              Boolean(error)
+                ? "Email is incorrect, example: abc1@gmail.com"
+                : ""
+            }
+          />
+          <TextField
+            fullWidth
+            type="password"
+            name="password"
+            label="Password"
+            variant="outlined"
+            value={textInput.password}
+            className={classes.textField}
+            style={{ marginBottom: "10px" }}
+            onChange={handlePasswordInputChange}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            className={classes.button}
+            disabled={loading}
+          >
+            {loading ? (
+              <CircularProgress size={24} sx={{ color: "white" }} />
+            ) : (
+              "Login"
+            )}
+          </Button>
+          <Link to="/register" className={classes.registerButton}>
+            Register A New User
+          </Link>
         </form>
+        <div className={classes.loginImage}>
+          <img
+            src={modernImage}
+            className={classes.image}
+            alt="login-illustration"
+          />
+        </div>
       </Paper>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as Yup from "yup";
 import Avatar from "@mui/material/Avatar";
 import { isEmpty } from "lodash";
@@ -12,7 +12,6 @@ import DeleteBox from "@mui/icons-material/Delete";
 import PageHeader from "../../Common/PageHeader";
 import { ConfirmDialogBox } from "../../Common/DialogBox";
 import { toastError } from "../../Common/ToastContainer";
-import { fetchOrgData } from "../../Common/ApiUtils";
 import { authAdminRole } from "../../Common/Constants";
 import { useSelector } from "react-redux";
 
@@ -29,9 +28,9 @@ function Index() {
   const profileData = useSelector(
     (store) => store.basicInformation?.data?.profile
   );
+  const organizationData = useSelector((store) => store.organizationData?.data);
   const navigate = useNavigate();
   const [peopleList, setPeopleList] = useState([]);
-  const [orgData, setOrgData] = useState([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deleteProfileId, setDeleteProfileId] = useState(null);
   const [openCreate, setOpenCreate] = useState(false);
@@ -62,11 +61,6 @@ function Index() {
     if (!isEmpty(response.data)) setPeopleList(response?.data?.profileList);
   }, []);
 
-  const handleFetchOrgData = useCallback(async () => {
-    const data = await fetchOrgData();
-    setOrgData(data);
-  }, []);
-
   const handleDeletUserProfile = async () => {
     if (deleteProfileId) {
       const response = await axiosInstance.delete(
@@ -82,8 +76,7 @@ function Index() {
 
   useEffect(() => {
     handleFetchUserProfiles();
-    handleFetchOrgData();
-  }, [handleFetchUserProfiles, handleFetchOrgData]);
+  }, [handleFetchUserProfiles]);
 
   const handleOpenCreateUser = () => {
     setOpenCreate(true);
@@ -145,7 +138,7 @@ function Index() {
       />
       <div className="people-create-main">
         <Grid container spacing={3} className="profile-details-section">
-          <Grid item="true" size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Name</p>
             <TextField
               fullWidth
@@ -158,7 +151,7 @@ function Index() {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item="true" size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Email</p>
             <TextField
               fullWidth
@@ -171,7 +164,7 @@ function Index() {
               helperText={errors.email}
             />
           </Grid>
-          <Grid item="true" size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Organization</p>
             <TextField
               select
@@ -183,15 +176,15 @@ function Index() {
               value={values.orgId}
               onChange={handleChange}
             >
-              {!isEmpty(orgData) &&
-                orgData.data.map((org) => (
+              {!isEmpty(organizationData) &&
+                organizationData.map((org) => (
                   <MenuItem key={org._id} value={org._id}>
                     {org.name && org.name}
                   </MenuItem>
                 ))}
             </TextField>
           </Grid>
-          <Grid item="true" size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Phone Number</p>
             <TextField
               fullWidth
@@ -204,7 +197,7 @@ function Index() {
               helperText={errors.phone_number}
             />
           </Grid>
-          <Grid item="true" size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Department</p>
             <TextField
               fullWidth
@@ -217,7 +210,7 @@ function Index() {
               helperText={errors.department}
             />
           </Grid>
-          <Grid item="true" size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Designation</p>
             <TextField
               fullWidth
@@ -230,7 +223,7 @@ function Index() {
               helperText={errors.designation}
             />
           </Grid>
-          <Grid item="true" size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Company</p>
             <TextField
               fullWidth

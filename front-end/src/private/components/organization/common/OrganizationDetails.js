@@ -88,7 +88,7 @@ function OrganizationDetails(props) {
       />
       <div className="profile-main-section">
         <Grid container spacing={3} className="profile-details-section">
-          <Grid item="true" size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Name</p>
             {!editProfile ? (
               <p>{orgDetails?.name}</p>
@@ -107,7 +107,7 @@ function OrganizationDetails(props) {
               </>
             )}
           </Grid>
-          <Grid item="true" size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Address</p>
             {!editProfile ? (
               <p>{orgDetails?.address}</p>
@@ -124,7 +124,7 @@ function OrganizationDetails(props) {
               />
             )}
           </Grid>
-          <Grid item="true" size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Country</p>
             {!editProfile ? (
               <p>{orgDetails?.country}</p>
@@ -147,7 +147,7 @@ function OrganizationDetails(props) {
               </TextField>
             )}
           </Grid>
-          <Grid item="true" size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>State</p>
             {!editProfile ? (
               <p>{orgDetails?.state}</p>
@@ -167,7 +167,7 @@ function OrganizationDetails(props) {
               </TextField>
             )}
           </Grid>
-          <Grid item="true" size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>City</p>
             {!editProfile ? (
               <p>{orgDetails?.city}</p>
@@ -187,7 +187,7 @@ function OrganizationDetails(props) {
               </TextField>
             )}
           </Grid>
-          <Grid item="true" size={6} className="profile-details-item">
+          <Grid size={6} className="profile-details-item">
             <p>Description</p>
             {!editProfile ? (
               <p>{orgDetails?.description}</p>

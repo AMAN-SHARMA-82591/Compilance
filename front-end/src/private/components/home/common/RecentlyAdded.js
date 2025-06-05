@@ -41,7 +41,7 @@ function RecentlyAdded({ classes, history }) {
         ) : (
           <>
             {data.taskList.slice(0, 4).map((task, i) => (
-              <Grid key={i} item xs={12}>
+              <Grid key={i} size={12}>
                 <TaskField data={task} />
               </Grid>
             ))}

@@ -11,17 +11,16 @@ import {
 import Grid from "@mui/material/Grid2";
 import { createTask } from "../../../../store/store";
 import { useFormik } from "formik";
-import { fetchOrgData } from "../../../Common/ApiUtils";
-import { useCallback, useEffect, useState } from "react";
 import { isEmpty } from "lodash";
 import { authAdminRole } from "../../../Common/Constants";
 
 function CreateTaskDialog({ open, handleOpenTaskDialog }) {
   const dispatch = useDispatch();
-  const [orgData, setOrgData] = useState([]);
+  // const [orgData, setOrgData] = useState([]);
   const profileData = useSelector(
     (store) => store.basicInformation?.data?.profile || null
   );
+  const orgData = useSelector((store) => store.organizationData?.data || []);
 
   const initialValues = {
     status: "",
@@ -32,18 +31,18 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
     orgId: authAdminRole.includes(profileData.role) ? "" : null,
   };
 
-  const handleFetchOrgData = useCallback(async () => {
-    const data = await fetchOrgData();
-    setOrgData(data);
-  }, []);
+  // const handleFetchOrgData = useCallback(async () => {
+  //   const data = await fetchOrgData();
+  //   setOrgData(data);
+  // }, []);
 
-  useEffect(() => {
-    if (profileData && authAdminRole.includes(profileData.role)) {
-      handleFetchOrgData();
-    }
-  }, [profileData, handleFetchOrgData]);
+  // useEffect(() => {
+  //   if (profileData && authAdminRole.includes(profileData.role)) {
+  //     handleFetchOrgData();
+  //   }
+  // }, [profileData, handleFetchOrgData]);
 
-  const { values, errors, handleSubmit, handleChange, handleReset } = useFormik(
+  const { values, handleSubmit, handleChange, handleReset } = useFormik(
     {
       initialValues: initialValues,
       onSubmit: (values) => {
@@ -63,12 +62,18 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
 
   return (
     <>
-      <Dialog open={open} maxWidth="md" fullWidth>
+      <Dialog
+        fullWidth
+        open={open}
+        maxWidth="md"
+        keepMounted={false}
+        onClose={handleCloseCreateTask}
+      >
         <DialogTitle>Create Task</DialogTitle>
         <DialogContent>
           <Grid container spacing={3}>
             {authAdminRole.includes(profileData.role) && (
-              <Grid item="true" size={12} className="profile-details-item">
+              <Grid size={12} className="profile-details-item">
                 <label htmlFor="organization">Organization</label>
                 <TextField
                   select
@@ -81,7 +86,7 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
                   onChange={handleChange}
                 >
                   {!isEmpty(orgData) &&
-                    orgData.data.map((org) => (
+                    orgData.map((org) => (
                       <MenuItem key={org._id} value={org._id}>
                         {org.name && org.name}
                       </MenuItem>
@@ -123,17 +128,6 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
               />
             </Grid>
             <Grid size={12}>
-              <label htmlFor="description">Description</label>
-              <TextField
-                fullWidth
-                size="small"
-                name="description"
-                value={values.description}
-                placeholder="Description"
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid size={12}>
               <label htmlFor="type">Type</label>
               <TextField
                 select
@@ -164,6 +158,19 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
                 <MenuItem value="critical">Critical</MenuItem>
                 <MenuItem value="minor">Minor</MenuItem>
               </TextField>
+            </Grid>
+            <Grid size={12}>
+              <label htmlFor="description">Description</label>
+              <TextField
+                fullWidth
+                multiline
+                rows={3}
+                size="small"
+                name="description"
+                value={values.description}
+                placeholder="Description"
+                onChange={handleChange}
+              />
             </Grid>
           </Grid>
         </DialogContent>
