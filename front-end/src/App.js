@@ -25,7 +25,7 @@ function App() {
   // const [login, setLogin] = useState(false);
   const dispatch = useDispatch();
   const profileData = useSelector(
-    (state) => state.basicInformation?.data?.profile || null
+    (state) => state.basicInformation?.data?.profile
   );
 
   const token = localStorage.getItem("token");

@@ -5,9 +5,7 @@ import { Typography, Paper, Box } from "@mui/material";
 const RequireOrganization = ({ children }) => {
   const location = useLocation();
   const profile = useSelector((state) => state.basicInformation?.data?.profile);
-  const organizations = useSelector(
-    (state) => state.organizationData?.data || []
-  );
+  const organizations = useSelector((state) => state.organizationData?.data);
 
   if (location.pathname === "/organization") {
     return children;

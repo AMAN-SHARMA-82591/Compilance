@@ -1,24 +1,21 @@
-import { useEffect, useState } from "react";
+// import { useState } from "react";
 import { NavLink } from "react-router";
 import { Drawer, Tooltip } from "@mui/material";
 import HouseIcon from "@mui/icons-material/House";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import CorporateFareIcon from "@mui/icons-material/CorporateFare";
 import List from "@mui/icons-material/List";
-import axiosInstance from "../Common/AxiosInstance";
 import { authAdminRole } from "../Common/Constants";
 import logo from "../../images/logo.png";
 import { useSelector } from "react-redux";
 
 function LeftBar() {
-  const [hasOrganization, setHasOrganization] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [hasOrganization, setHasOrganization] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const profileData = useSelector(
     (state) => state.basicInformation?.data?.profile
   );
-  const organizations = useSelector(
-    (state) => state.organizationData?.data || []
-  );
+  const organizations = useSelector((state) => state.organizationData?.data);
 
   // useEffect(() => {
   //   const checkOrganization = async () => {
@@ -69,7 +66,7 @@ function LeftBar() {
     );
   };
 
-  if (loading) return null;
+  // if (loading) return null;
 
   return (
     <Drawer variant="permanent" anchor="left">

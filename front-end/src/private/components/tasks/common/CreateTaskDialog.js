@@ -11,8 +11,6 @@ import {
 import Grid from "@mui/material/Grid2";
 import { createTask } from "../../../../store/store";
 import { useFormik } from "formik";
-import { fetchOrgData } from "../../../Common/ApiUtils";
-import { useCallback, useEffect, useState } from "react";
 import { isEmpty } from "lodash";
 import { authAdminRole } from "../../../Common/Constants";
 
@@ -44,7 +42,7 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
   //   }
   // }, [profileData, handleFetchOrgData]);
 
-  const { values, errors, handleSubmit, handleChange, handleReset } = useFormik(
+  const { values, handleSubmit, handleChange, handleReset } = useFormik(
     {
       initialValues: initialValues,
       onSubmit: (values) => {
@@ -64,7 +62,13 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
 
   return (
     <>
-      <Dialog open={open} maxWidth="md" keepMounted={false} fullWidth>
+      <Dialog
+        fullWidth
+        open={open}
+        maxWidth="md"
+        keepMounted={false}
+        onClose={handleCloseCreateTask}
+      >
         <DialogTitle>Create Task</DialogTitle>
         <DialogContent>
           <Grid container spacing={3}>
@@ -124,17 +128,6 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
               />
             </Grid>
             <Grid size={12}>
-              <label htmlFor="description">Description</label>
-              <TextField
-                fullWidth
-                size="small"
-                name="description"
-                value={values.description}
-                placeholder="Description"
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid size={12}>
               <label htmlFor="type">Type</label>
               <TextField
                 select
@@ -165,6 +158,19 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
                 <MenuItem value="critical">Critical</MenuItem>
                 <MenuItem value="minor">Minor</MenuItem>
               </TextField>
+            </Grid>
+            <Grid size={12}>
+              <label htmlFor="description">Description</label>
+              <TextField
+                fullWidth
+                multiline
+                rows={3}
+                size="small"
+                name="description"
+                value={values.description}
+                placeholder="Description"
+                onChange={handleChange}
+              />
             </Grid>
           </Grid>
         </DialogContent>

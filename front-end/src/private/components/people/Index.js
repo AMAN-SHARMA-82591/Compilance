@@ -12,7 +12,6 @@ import DeleteBox from "@mui/icons-material/Delete";
 import PageHeader from "../../Common/PageHeader";
 import { ConfirmDialogBox } from "../../Common/DialogBox";
 import { toastError } from "../../Common/ToastContainer";
-import { fetchOrgData } from "../../Common/ApiUtils";
 import { authAdminRole } from "../../Common/Constants";
 import { useSelector } from "react-redux";
 
@@ -27,11 +26,9 @@ const validationSchema = Yup.object({
 function Index() {
   let content;
   const profileData = useSelector(
-    (store) => store.basicInformation?.data?.profile || null
+    (store) => store.basicInformation?.data?.profile
   );
-  const organizationData = useSelector(
-    (store) => store.organizationData?.data || []
-  );
+  const organizationData = useSelector((store) => store.organizationData?.data);
   const navigate = useNavigate();
   const [peopleList, setPeopleList] = useState([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);

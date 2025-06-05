@@ -12,7 +12,7 @@ import CreateOrganizationDialog from "./common/CreateOrganizationDialog";
 function Index() {
   const dispatch = useDispatch();
   const { isLoading, data: orgList } = useSelector(
-    (state) => state.organizationData || {}
+    (state) => state.organizationData
   );
   const [deleteProfileId, setDeleteProfileId] = useState(null);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);

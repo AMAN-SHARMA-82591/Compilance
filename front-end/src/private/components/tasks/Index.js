@@ -14,11 +14,9 @@ import PageHeader from "../../Common/PageHeader";
 function Index() {
   const dispatch = useDispatch();
   const [createTaskDialog, setCreateTaskDialog] = useState(false);
-  const { taskList, isLoading } = useSelector((state) => ({
-    taskList: state.taskList?.data?.taskList || [],
-    isLoading: state.taskList?.isLoading || false,
-  }));
-  const taskFilterType = useSelector((state) => state.taskFilterType);
+  const taskList = useSelector((state) => state.taskList?.data?.taskList || []);
+  const isLoading = useSelector((state) => state.taskList?.isLoading || false);
+  const taskFilterType = useSelector((state) => state.taskFilterType || null);
 
   useEffect(() => {
     return () => {

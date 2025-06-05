@@ -104,7 +104,13 @@ function CreateOrganizationDialog({ open, handleOrganizationDialog }) {
 
   return (
     <>
-      <Dialog keepMounted={false} open={open} maxWidth="sm" fullWidth>
+      <Dialog
+        fullWidth
+        open={open}
+        maxWidth="sm"
+        keepMounted={false}
+        onClose={handleCloseCreateTask}
+      >
         <DialogTitle>Create Organization</DialogTitle>
         <DialogContent>
           <Grid container spacing={3}>
