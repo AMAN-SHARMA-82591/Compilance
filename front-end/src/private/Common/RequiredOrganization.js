@@ -5,13 +5,15 @@ import { Typography, Paper, Box } from "@mui/material";
 const RequireOrganization = ({ children }) => {
   const location = useLocation();
   const profile = useSelector((state) => state.basicInformation?.data?.profile);
-  const organizations = useSelector((state) => state.organizationData?.data);
+  const { data: organizations, isLoading } = useSelector(
+    (state) => state.organizationData
+  );
 
   if (location.pathname === "/organization") {
     return children;
   }
 
-  if (profile?.role === 1 || organizations.length > 0) {
+  if (profile?.role === 1 || organizations.length > 0 || profile?.orgId) {
     return children;
   }
 

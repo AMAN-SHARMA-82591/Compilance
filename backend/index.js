@@ -1,9 +1,9 @@
 require("dotenv").config();
 require("express-async-errors");
 const express = require("express");
-const authRouter = require("./Routes/Authentication");
-const userRouter = require("./Routes/User");
-const taskRouter = require("./Routes/Tasks");
+const authRouter = require("./Routes/Authentication.routes");
+const userRouter = require("./Routes/User.routes");
+const taskRouter = require("./Routes/Tasks.routes");
 const connectDB = require("./db/connect");
 const cors = require("cors");
 const dbErrorHandler = require("./middleware/dbErrorHandler");

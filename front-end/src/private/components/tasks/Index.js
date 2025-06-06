@@ -77,12 +77,11 @@ function Index() {
         title="Tasks"
         buttonTitle="Create Task"
         onClick={handleOpenCreateTaskDialog}
-      >
-        <CreateTaskDialog
-          open={createTaskDialog}
-          handleOpenTaskDialog={handleOpenCreateTaskDialog}
-        />
-      </PageHeader>
+      />
+      <CreateTaskDialog
+        open={createTaskDialog}
+        handleOpenTaskDialog={handleOpenCreateTaskDialog}
+      />
       <div className="task-filter-main">
         <div className="filter-main">
           <p>Filters</p>

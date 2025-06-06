@@ -20,6 +20,10 @@ const profileSchema = new mongoose.Schema(
       ],
       unique: true,
     },
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     image: {
       type: String,
       unique: false,
@@ -44,14 +48,6 @@ const profileSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-    },
-    orgId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
-    },
-    adminId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
     },
     role: {
       type: Number,

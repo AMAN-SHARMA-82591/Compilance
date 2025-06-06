@@ -5,6 +5,10 @@ export const fetchOrganizationList = createAsyncThunk(
   "organization/fetch",
   async () => {
     const response = await axiosInstance.get("/users/organization");
+    if (!localStorage.getItem("selectedOrgId")) {
+      localStorage.setItem("selectedOrgId", response.data.data[0]._id);
+    }
+
     return response.data;
   }
 );
@@ -31,37 +35,48 @@ const organizationListSlice = createSlice({
     data: [],
     error: null,
     isLoading: false,
+    selectedOrgId: localStorage.getItem("selectedOrgId") || "",
+  },
+  reducers: {
+    setSelectedOrgId: (state, action) => {
+      state.selectedOrgId = action.payload;
+      localStorage.setItem("selectedOrgId", action.payload);
+    },
   },
   extraReducers(builder) {
     builder.addCase(fetchOrganizationList.pending, (state) => {
       state.isLoading = true;
+      state.error = null;
     });
     builder.addCase(fetchOrganizationList.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.data = action.payload.organization;
+      state.data = action.payload.data;
     });
     builder.addCase(fetchOrganizationList.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error;
     });
+
     builder.addCase(createOrganization.pending, (state) => {
       state.isLoading = true;
+      state.error = null;
     });
     builder.addCase(createOrganization.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.data.push(action.payload.orgData);
+      state.data = [...state.data, action.payload.orgData];
     });
     builder.addCase(createOrganization.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error;
     });
+
     builder.addCase(deleteOrganization.pending, (state) => {
       state.isLoading = true;
+      state.error = null;
     });
     builder.addCase(deleteOrganization.fulfilled, (state, action) => {
-      const taskIndex = state.data.indexOf(action.payload);
       state.isLoading = false;
-      state.data.splice(taskIndex, 1);
+      state.data = state.data.filter((org) => org._id !== action.payload._id);
     });
     builder.addCase(deleteOrganization.rejected, (state, action) => {
       state.isLoading = false;
@@ -70,4 +85,5 @@ const organizationListSlice = createSlice({
   },
 });
 
+export const { setSelectedOrgId } = organizationListSlice.actions;
 export const organizationListReducer = organizationListSlice.reducer;

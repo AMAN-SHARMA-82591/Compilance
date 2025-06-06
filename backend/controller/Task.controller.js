@@ -1,10 +1,10 @@
 require("dotenv").config();
-const Organization = require("../model/Organization");
-const Task = require("../model/Task");
+const Organization = require("../model/Organization.model");
+const Task = require("../model/Task.model");
 const { validationResult } = require("express-validator");
-const { profile } = require("./User");
+// const { profile } = require("./User.controller");
 const { default: mongoose } = require("mongoose");
-const { authAdminRole } = require("../utils/constants");
+// const { authAdminRole } = require("../utils/constants");
 
 const taskList = async (req, res) => {
   const { uid, oid, user } = req;
@@ -22,7 +22,7 @@ const taskList = async (req, res) => {
     if (user.profile.role === 1) {
       query = {};
     } else if (user.profile.role === 2) {
-      const organizationList = await Organization.find({ adminId: uid })
+      const organizationList = await Organization.find({ _id: oid })
         .select("_id")
         .lean();
 
@@ -83,18 +83,17 @@ const progressOverviewData = async (req, res) => {
   } catch (error) {}
 };
 
-const createTask = async (req, res) => {
+const createTask = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      msg: "Errors",
+      errors: errors.array(),
+    });
+  }
   const { uid, oid } = req;
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        msg: "Errors",
-        errors: errors.array(),
-      });
-    }
-
     const orgId = req.body.orgId || oid;
     if (orgId && !mongoose.Types.ObjectId.isValid(orgId)) {
       return res.status(400).json({
@@ -103,15 +102,15 @@ const createTask = async (req, res) => {
       });
     }
 
-    const organization = await Organization.findById(orgId)
-      .select("_id")
-      .lean();
-    if (!organization) {
-      return res.status(400).json({
-        error: true,
-        msg: "Organization Not Found!",
-      });
-    }
+    // const organization = await Organization.findById(orgId)
+    //   .select("_id")
+    //   .lean();
+    // if (!organization) {
+    //   return res.status(400).json({
+    //     error: true,
+    //     msg: "Organization Not Found!",
+    //   });
+    // }
 
     const taskDetails = {
       ...req.body,
@@ -121,8 +120,7 @@ const createTask = async (req, res) => {
     const newTask = await Task.create(taskDetails);
     res.status(200).json({ success: true, newTask });
   } catch (error) {
-    console.error(error.message);
-    return res.status(500).json({ message: "Something went wrong" });
+    next(error);
   }
 };
 

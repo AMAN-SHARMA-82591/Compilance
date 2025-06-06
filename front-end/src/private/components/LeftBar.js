@@ -1,43 +1,49 @@
-// import { useState } from "react";
-import { NavLink } from "react-router";
-import { Drawer, Tooltip } from "@mui/material";
+import { NavLink, useNavigate } from "react-router";
+import {
+  Button,
+  Dialog,
+  Drawer,
+  Tooltip,
+  MenuItem,
+  TextField,
+  IconButton,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+} from "@mui/material";
+import { useState } from "react";
+import { isEmpty } from "lodash";
+import { useDispatch, useSelector } from "react-redux";
 import HouseIcon from "@mui/icons-material/House";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import CorporateFareIcon from "@mui/icons-material/CorporateFare";
+import SettingsIcon from "@mui/icons-material/Settings";
 import List from "@mui/icons-material/List";
 import { authAdminRole } from "../Common/Constants";
 import logo from "../../images/logo.png";
-import { useSelector } from "react-redux";
+import { setSelectedOrgId } from "../../store/store";
 
 function LeftBar() {
-  // const [hasOrganization, setHasOrganization] = useState(false);
-  // const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [openDialog, setOpenDialog] = useState(false);
+  const organizations = useSelector((state) => state.organizationData?.data);
   const profileData = useSelector(
     (state) => state.basicInformation?.data?.profile
   );
-  const organizations = useSelector((state) => state.organizationData?.data);
+  const selectedOrg = useSelector(
+    (state) => state.organizationData.selectedOrgId
+  );
 
-  // useEffect(() => {
-  //   const checkOrganization = async () => {
-  //     try {
-  //       const response = await axiosInstance.get("/organization");
-  //       setHasOrganization(response.data.length > 0);
-  //     } catch (error) {
-  //       console.error("Error checking organization:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  const handleChangeOrganization = async (event) => {
+    const orgId = event.target.value;
+    dispatch(setSelectedOrgId(orgId));
+    setOpenDialog(false);
+    await navigate("/home");
+    window.location.reload();
+  };
 
-  //   if (profileData?.role === 2) {
-  //     // Check if user is sub-admin
-  //     checkOrganization();
-  //   } else {
-  //     setHasOrganization(true); // Enable all routes for other roles
-  //   }
-  // }, [profileData]);
-
-  const renderNavLink = (to, icon, tooltip) => {
+  const renderNavLink = (to, icon, tooltip = "") => {
     const isDisabled =
       profileData?.role === 2 &&
       !organizations.length > 0 &&
@@ -48,7 +54,7 @@ function LeftBar() {
         title={
           isDisabled
             ? "Create an organization first to access this feature"
-            : ""
+            : tooltip
         }
         placement="right"
       >
@@ -69,33 +75,78 @@ function LeftBar() {
   // if (loading) return null;
 
   return (
-    <Drawer variant="permanent" anchor="left">
-      <div className="main-menu-section">
-        <div
-          style={{ marginTop: 20, display: "flex", justifyContent: "center" }}
-        >
-          <img src={logo} style={{ width: 40, height: 40 }} alt="main-log" />
-        </div>
-        <div className="home-logo-contents">
-          <ul className="unordered-list-items">
-            {renderNavLink("/home", <HouseIcon fontSize="large" />, "Home")}
-            {renderNavLink(
-              "/people",
-              <PeopleAltIcon fontSize="large" />,
-              "People"
-            )}
-            {profileData &&
-              authAdminRole.includes(profileData.role) &&
-              renderNavLink(
-                "/organization",
-                <CorporateFareIcon fontSize="large" />,
-                "Organization"
+    <>
+      <Drawer variant="permanent" anchor="left">
+        <div className="main-menu-section">
+          <div
+            style={{ marginTop: 20, display: "flex", justifyContent: "center" }}
+          >
+            <img src={logo} style={{ width: 40, height: 40 }} alt="main-log" />
+          </div>
+          <div className="home-logo-contents">
+            <ul className="unordered-list-items">
+              {renderNavLink("/home", <HouseIcon fontSize="large" />, "Home")}
+              {renderNavLink(
+                "/people",
+                <PeopleAltIcon fontSize="large" />,
+                "People"
               )}
-            {renderNavLink("/tasks", <List fontSize="large" />, "Tasks")}
-          </ul>
+              {profileData &&
+                authAdminRole.includes(profileData.role) &&
+                renderNavLink(
+                  "/organization",
+                  <CorporateFareIcon fontSize="large" />,
+                  "Organization"
+                )}
+              {renderNavLink("/tasks", <List fontSize="large" />, "Tasks")}
+              <IconButton
+                style={{ background: "white" }}
+                size="large"
+                onClick={() => setOpenDialog(true)}
+              >
+                <SettingsIcon />
+              </IconButton>
+            </ul>
+          </div>
         </div>
-      </div>
-    </Drawer>
+      </Drawer>
+      <Dialog
+        maxWidth="sm"
+        fullWidth
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+      >
+        <DialogTitle>Change Organization</DialogTitle>
+        <DialogContent>
+          <TextField
+            select
+            fullWidth
+            size="small"
+            name="country"
+            value={selectedOrg}
+            onChange={handleChangeOrganization}
+          >
+            {!isEmpty(organizations) &&
+              organizations.map((org) => (
+                <MenuItem key={org._id} value={org._id}>
+                  {org.name && org.name}
+                </MenuItem>
+              ))}
+          </TextField>
+        </DialogContent>
+        <DialogActions
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            padding: "10px 25px",
+          }}
+        >
+          <Button variant="outlined" onClick={() => setOpenDialog(false)}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 

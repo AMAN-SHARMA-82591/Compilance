@@ -72,12 +72,18 @@ function Index() {
         title="Organization"
         buttonTitle="Create Organization"
         onClick={handleOpenOrganizationDialog}
-      >
-        <CreateOrganizationDialog
-          open={openCreateDialog}
-          handleOrganizationDialog={handleOpenOrganizationDialog}
-        />
-      </PageHeader>
+      />
+      <CreateOrganizationDialog
+        open={openCreateDialog}
+        handleOrganizationDialog={handleOpenOrganizationDialog}
+      />
+      <ConfirmDialogBox
+        submitBtnText="Delete"
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+        onSubmit={() => handleDeleteUserProfile()}
+        text="Do you want to remove these elements from this report?"
+      />
       <div
         style={{
           padding: "20px",
@@ -87,13 +93,6 @@ function Index() {
         }}
       >
         {renderContent()}
-        <ConfirmDialogBox
-          submitBtnText="Delete"
-          open={openDeleteDialog}
-          onClose={() => setOpenDeleteDialog(false)}
-          onSubmit={() => handleDeleteUserProfile()}
-          text="Do you want to remove these elements from this report?"
-        />
       </div>
     </>
   );

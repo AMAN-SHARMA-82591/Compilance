@@ -1,30 +1,42 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const Organization = require("../model/Organization");
-const Profile = require("../model/Profile");
-const Task = require("../model/Task");
-const Authentication = require("../model/Authentication");
+const Organization = require("../model/Organization.model");
+const Profile = require("../model/Profile.model");
+const Task = require("../model/Task.model");
+const User = require("../model/Authentication.model");
+const UserOrgMap = require("../model/UserOrganizationMapping.model");
 
-const organizationList = async (req, res) => {
+const organizationList = async (req, res, next) => {
   try {
     const userRole = req.user.profile.role;
-    let organization;
+    let orgMap;
     if (userRole === 1) {
-      organization = await Organization.find().select("-roles").lean();
+      orgMap = await UserOrgMap.find().lean();
     } else {
-      organization = await Organization.find({
-        adminId: req.uid,
+      orgMap = await UserOrgMap.find({
+        userId: req.uid,
       })
-        .select("-roles")
-        .lean();
+        .lean()
+        .select("orgId -_id");
     }
-    res.status(200).json({ msg: "Fetched organization list.", organization });
+    const organizationIds = orgMap.map((org) => org.orgId);
+    if (!organizationIds.length) {
+      res.status(400).json({ success: false, msg: "No organization found." });
+    }
+    const organization = await Organization.find({
+      _id: { $in: organizationIds },
+    });
+    res.status(200).json({
+      success: true,
+      msg: "Fetched organization list.",
+      data: organization,
+    });
   } catch (error) {
     next(error);
   }
 };
 
-const createOrganization = async (req, res) => {
+const createOrganization = async (req, res, next) => {
   try {
     const isExists = await Organization.findOne({ name: req.body.name }).lean();
     if (isExists) {
@@ -35,7 +47,11 @@ const createOrganization = async (req, res) => {
     }
     const orgData = await Organization.create({
       ...req.body,
-      adminId: req.uid,
+    });
+    await UserOrgMap.create({
+      userId: req.uid,
+      orgId: orgData._id,
+      role: req.user.profile.role,
     });
     return res.status(200).json({ success: true, orgData });
   } catch (error) {
@@ -114,7 +130,7 @@ const deleteOrganization = async (req, res) => {
       .session(session);
     const userIds = profileIds.map((profile) => profile.userId);
     await Profile.deleteMany({ orgId: id }).session(session);
-    await Authentication.deleteMany({ _id: { $in: userIds } }).session(session);
+    await User.deleteMany({ _id: { $in: userIds } }).session(session);
 
     // Delete Tasks
     await Task.deleteMany({ orgId: id }).session(session);
@@ -122,12 +138,15 @@ const deleteOrganization = async (req, res) => {
     // Delete Organization
     await Organization.findOneAndDelete({ _id: id }).session(session);
 
+    // Delete Organization Mapping
+    await UserOrgMap.findOneAndDelete({ userId: id }).session(session);
+
     await session.commitTransaction();
     session.endSession();
 
     return res
       .status(200)
-      .json({ success: true, msg: "Organization Deleted." });
+      .json({ success: true, msg: "Organization Deleted.", _id: id });
   } catch (error) {
     await session.abortTransaction();
     session.endSession();

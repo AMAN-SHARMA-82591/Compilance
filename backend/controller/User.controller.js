@@ -1,15 +1,13 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
-const User = require("../model/Authentication");
-const Profile = require("../model/Profile");
-const { createNewUser } = require("./Authentication");
+const User = require("../model/Authentication.model");
+const Profile = require("../model/Profile.model");
+const { createNewUser } = require("./Authentication.controller");
 const { validationResult } = require("express-validator");
 const { authAdminRole } = require("../utils/constants");
-
+const userOrgMap = require("../model/UserOrganizationMapping.model");
 
 // learn about exicts() method. This can improve api retrieval performance
-
-
 
 // List of Users
 const users = async (req, res) => {
@@ -69,58 +67,23 @@ const getProfile = async (req, res) => {
 };
 
 const profileList = async (req, res) => {
-  const { uid } = req;
-  const userRole = req.user.profile.role;
+  const orgId = req.oid;
   const limit = parseInt(req.query.limit) || 20;
   const fields = req.query.fields
     ? req.query.fields.split(" ")
     : ["name", "email", "role"];
   try {
-    let profileList;
-    if (userRole === 1) {
-      profileList = await Profile.find().select(fields).limit(limit).lean();
-    } else if (userRole === 2) {
-      profileList = await Profile.aggregate([
-        {
-          $lookup: {
-            from: "organizations",
-            localField: "orgId",
-            foreignField: "_id",
-            as: "organization",
-          },
-        },
-        {
-          $unwind: {
-            path: "$organization",
-            preserveNullAndEmptyArrays: true,
-          },
-        },
-        {
-          $match: {
-            $or: [
-              { "organization.adminId": new mongoose.Types.ObjectId(uid) },
-              { userId: new mongoose.Types.ObjectId(uid) },
-            ],
-            role: { $ne: 1 },
-          },
-        },
-        {
-          $project: fields.reduce(
-            (acc, field) => {
-              acc[field] = 1;
-              return acc;
-            },
-            { _id: 1 }
-          ),
-        },
-        { $limit: limit },
-      ]);
-    } else {
-      profileList = await Profile.find({ role: { $ne: 1 } })
-        .select(fields)
-        .limit(limit)
-        .lean();
-    }
+    // Going to add aggregation in future
+    const orgRelatedProfiles = await userOrgMap
+      .find({ orgId })
+      .lean()
+      .select("-_id userId");
+    const profileList = await Profile.find({
+      userId: { $in: orgRelatedProfiles.map((value) => value.userId) },
+    })
+      .select(fields)
+      .limit(limit);
+
     return res.status(200).json({
       success: true,
       profileList,
@@ -131,18 +94,17 @@ const profileList = async (req, res) => {
   }
 };
 
-const createProfile = async (req, res) => {
+const createProfile = async (req, res, next) => {
   const { name, email, orgId, ...entity } = req.body;
-  const userId = req.uid;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      msg: "Errors",
+      errors: errors.array(),
+    });
+  }
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        msg: "Errors",
-        errors: errors.array(),
-      });
-    }
     let user = await User.findOne({ email }).select("_id").lean();
     if (user) {
       return res
@@ -150,22 +112,31 @@ const createProfile = async (req, res) => {
         .json({ success: false, msg: "User already exists." });
     }
     const username = email.match(/^[^@]+/)[0];
-    const newProfile = await createNewUser(
-      res,
-      name,
-      email,
-      username,
-      0,
+    const userData = await createNewUser(name, email, username, 0);
+    await userOrgMap.create({
+      userId: userData.userId,
       orgId,
-      userId
-    );
-    if (!newProfile) {
-      return res.status(400).json({ msg: "Something went wrong" });
-    }
-    res.status(200).json({ message: "New Profile Created", newProfile });
+      role: 0,
+    });
+    // const isUserExists = await userOrgMap.findOne({
+    //   userId: userData.userId,
+    // });
+    // if (isUserExists) {
+    //   res.status(400).json({
+    //     success: false,
+    //     msg: "User Already Exists in a different organization",
+    //   });
+    // }
+
+    res.status(200).json({ success: true, message: "New Profile Created" });
   } catch (error) {
-    console.error("Server Error:", error);
-    res.status(500).send("Server Error");
+    if (
+      error.message === "Profile already exists with similar email-address" ||
+      error.message === "You cannot create admin"
+    ) {
+      return res.status(400).json({ success: false, msg: error.message });
+    }
+    next(error);
   }
 };
 

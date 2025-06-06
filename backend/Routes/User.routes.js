@@ -10,16 +10,19 @@ const {
   updateProfile,
   deleteProfile,
   updateProfileImage,
-} = require("../controller/User");
-const auth = require("../middleware/auth");
-const { checkRoleAccess } = require("../middleware/organization");
+} = require("../controller/User.controller");
+const auth = require("../middleware/auth.middleware");
+const {
+  checkRoleAccess,
+  checkOrganization,
+} = require("../middleware/organization.middleware");
 const {
   organizationList,
   createOrganization,
   getOrganization,
   editOrganization,
   deleteOrganization,
-} = require("../controller/Organization");
+} = require("../controller/Organization.controller");
 const { profileValidator } = require("../helper/userValidator");
 
 const storage = multer.diskStorage({
@@ -57,8 +60,8 @@ router.get("/profile/me", auth, profile);
 // router.get('/profile', auth, profileList);
 router
   .route("/profile")
-  .get(auth, profileList)
-  .post(auth, profileValidator, createProfile);
+  .get(auth, checkOrganization, profileList)
+  .post(auth, profileValidator, checkOrganization, createProfile);
 router.patch(
   "/profile/image/:id",
   auth,
@@ -67,8 +70,8 @@ router.patch(
 );
 router
   .route("/profile/:id")
-  .get(auth, getProfile)
-  .patch(auth, updateProfile)
-  .delete(auth, checkRoleAccess, deleteProfile);
+  .get(auth, checkOrganization, getProfile)
+  .patch(auth, checkOrganization, updateProfile)
+  .delete(auth, checkOrganization, checkRoleAccess, deleteProfile);
 
 module.exports = router;

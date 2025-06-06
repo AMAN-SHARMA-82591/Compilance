@@ -34,6 +34,7 @@ const taskListSlice = createSlice({
   extraReducers(builder) {
     builder.addCase(fetchTaskList.pending, (state) => {
       state.isLoading = true;
+      state.error = null;
     });
     builder.addCase(fetchTaskList.fulfilled, (state, action) => {
       state.isLoading = false;
@@ -43,19 +44,23 @@ const taskListSlice = createSlice({
       state.isLoading = false;
       state.error = action.error;
     });
+
     builder.addCase(createTask.pending, (state) => {
       state.isLoading = true;
+      state.error = null;
     });
     builder.addCase(createTask.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.data.taskList.push(action.payload);
+      state.data.taskList = [...state.data.taskList, action.payload.newTask];
     });
     builder.addCase(createTask.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error;
     });
+
     builder.addCase(deleteTask.pending, (state) => {
       state.isLoading = true;
+      state.error = null;
     });
     builder.addCase(deleteTask.fulfilled, (state, action) => {
       const taskIndex = state.data.taskList.indexOf(action.payload);
@@ -66,8 +71,10 @@ const taskListSlice = createSlice({
       state.isLoading = false;
       state.error = action.error;
     });
+
     builder.addCase(editTask.pending, (state) => {
       state.isLoading = true;
+      state.error = null;
     });
     builder.addCase(editTask.fulfilled, (state, action) => {
       const data = action.payload;

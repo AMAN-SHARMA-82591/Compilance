@@ -1,7 +1,7 @@
 const express = require("express");
-const { login, register } = require("../controller/Authentication");
-const auth = require("../middleware/auth");
-const organization = require("../middleware/organization");
+const { login, register } = require("../controller/Authentication.controller");
+const auth = require("../middleware/auth.middleware");
+const organization = require("../middleware/organization.middleware");
 const {
   permissionAddValidator,
   permissionDeleteValidator,
@@ -13,9 +13,9 @@ const {
   getPermission,
   createPermission,
   deletePermission,
-} = require("../controller/admin/permissionController");
-const { onlyAdminAccess } = require("../middleware/adminMiddleware");
-const { createRole, getRoles } = require("../controller/admin/roleController");
+} = require("../controller/admin/permission.controller");
+const { onlyAdminAccess } = require("../middleware/admin.middleware");
+const { createRole, getRoles } = require("../controller/admin/role.controller");
 const {
   userLoginValidator,
   userRegisterValidator,
