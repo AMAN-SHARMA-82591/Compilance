@@ -1,9 +1,9 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const Organization = require("../model/Organization");
-const Profile = require("../model/Profile");
-const Task = require("../model/Task");
-const Authentication = require("../model/Authentication");
+const Organization = require("../model/Organization.model");
+const Profile = require("../model/Profile.model");
+const Task = require("../model/Task.model");
+const Authentication = require("../model/Authentication.model");
 
 const organizationList = async (req, res, next) => {
   try {

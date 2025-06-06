@@ -1,7 +1,7 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const User = require("../model/Authentication");
-const Profile = require("../model/Profile");
+const User = require("../model/Authentication.model");
+const Profile = require("../model/Profile.model");
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 
@@ -61,7 +61,6 @@ const createNewUser = async (
       email,
       password,
       role,
-      orgId,
       adminId,
     });
     const salt = await bcrypt.genSalt(10);
@@ -75,7 +74,6 @@ const createNewUser = async (
       phone_number: null,
       department: null,
       designation: null,
-      orgId,
       adminId,
       skills: null,
       company: null,
@@ -92,7 +90,7 @@ const createNewUser = async (
   }
 };
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
   const { name, email, password } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -116,8 +114,7 @@ const register = async (req, res) => {
     });
     res.status(201).json({ msg: "Registered Successfully", token });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: true, msg: "Something weng wrong!" });
+    next(error);
   }
 };
 

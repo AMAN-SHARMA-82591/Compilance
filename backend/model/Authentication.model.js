@@ -24,11 +24,6 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       default: 2, // 0 - user, 1 - admin, 2 - sub-admin - 5 - guest
     },
-    orgId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
-      default: null,
-    },
     adminId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

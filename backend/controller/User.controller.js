@@ -1,15 +1,12 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
-const User = require("../model/Authentication");
-const Profile = require("../model/Profile");
+const User = require("../model/Authentication.model");
+const Profile = require("../model/Profile.model");
 const { createNewUser } = require("./Authentication.controller");
 const { validationResult } = require("express-validator");
 const { authAdminRole } = require("../utils/constants");
 
-
 // learn about exicts() method. This can improve api retrieval performance
-
-
 
 // List of Users
 const users = async (req, res) => {
@@ -156,7 +153,6 @@ const createProfile = async (req, res) => {
       email,
       username,
       0,
-      orgId,
       userId
     );
     if (!newProfile) {

@@ -1,6 +1,6 @@
 require("dotenv").config();
-const Organization = require("../model/Organization");
-const Task = require("../model/Task");
+const Organization = require("../model/Organization.model");
+const Task = require("../model/Task.model");
 const { validationResult } = require("express-validator");
 const { profile } = require("./User.controller");
 const { default: mongoose } = require("mongoose");
