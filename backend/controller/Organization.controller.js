@@ -5,7 +5,7 @@ const Profile = require("../model/Profile");
 const Task = require("../model/Task");
 const Authentication = require("../model/Authentication");
 
-const organizationList = async (req, res) => {
+const organizationList = async (req, res, next) => {
   try {
     const userRole = req.user.profile.role;
     let organization;
@@ -24,7 +24,7 @@ const organizationList = async (req, res) => {
   }
 };
 
-const createOrganization = async (req, res) => {
+const createOrganization = async (req, res, next) => {
   try {
     const isExists = await Organization.findOne({ name: req.body.name }).lean();
     if (isExists) {
@@ -127,7 +127,7 @@ const deleteOrganization = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, msg: "Organization Deleted." });
+      .json({ success: true, msg: "Organization Deleted.", _id: id });
   } catch (error) {
     await session.abortTransaction();
     session.endSession();

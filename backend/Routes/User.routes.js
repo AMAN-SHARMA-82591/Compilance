@@ -10,16 +10,16 @@ const {
   updateProfile,
   deleteProfile,
   updateProfileImage,
-} = require("../controller/User");
-const auth = require("../middleware/auth");
-const { checkRoleAccess } = require("../middleware/organization");
+} = require("../controller/User.controller");
+const auth = require("../middleware/auth.middleware");
+const { checkRoleAccess } = require("../middleware/organization.middleware");
 const {
   organizationList,
   createOrganization,
   getOrganization,
   editOrganization,
   deleteOrganization,
-} = require("../controller/Organization");
+} = require("../controller/Organization.controller");
 const { profileValidator } = require("../helper/userValidator");
 
 const storage = multer.diskStorage({

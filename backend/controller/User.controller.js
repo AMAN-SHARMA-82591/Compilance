@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const User = require("../model/Authentication");
 const Profile = require("../model/Profile");
-const { createNewUser } = require("./Authentication");
+const { createNewUser } = require("./Authentication.controller");
 const { validationResult } = require("express-validator");
 const { authAdminRole } = require("../utils/constants");
 
@@ -162,7 +162,7 @@ const createProfile = async (req, res) => {
     if (!newProfile) {
       return res.status(400).json({ msg: "Something went wrong" });
     }
-    res.status(200).json({ message: "New Profile Created", newProfile });
+    res.status(200).json({ success: true, message: "New Profile Created" });
   } catch (error) {
     console.error("Server Error:", error);
     res.status(500).send("Server Error");

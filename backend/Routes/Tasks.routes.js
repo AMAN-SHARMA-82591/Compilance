@@ -1,5 +1,5 @@
 const express = require("express");
-const auth = require("../middleware/auth");
+const auth = require("../middleware/auth.middleware");
 const {
   taskList,
   createTask,
@@ -7,8 +7,8 @@ const {
   deleteTask,
   updateTask,
   progressOverviewData,
-} = require("../controller/Task");
-const { checkOrganization } = require("../middleware/organization");
+} = require("../controller/Task.controller");
+const { checkOrganization } = require("../middleware/organization.middleware");
 const { taskValidator } = require("../helper/taskValidator");
 
 const router = express.Router();

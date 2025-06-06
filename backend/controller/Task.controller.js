@@ -2,7 +2,7 @@ require("dotenv").config();
 const Organization = require("../model/Organization");
 const Task = require("../model/Task");
 const { validationResult } = require("express-validator");
-const { profile } = require("./User");
+const { profile } = require("./User.controller");
 const { default: mongoose } = require("mongoose");
 const { authAdminRole } = require("../utils/constants");
 
