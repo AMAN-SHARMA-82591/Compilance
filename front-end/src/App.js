@@ -27,6 +27,9 @@ function App() {
   const profileData = useSelector(
     (state) => state.basicInformation?.data?.profile
   );
+  const selectedOrgId = useSelector(
+    (state) => state.organizationData.selectedOrgId
+  );
 
   const token = localStorage.getItem("token");
   useEffect(() => {
@@ -38,11 +41,12 @@ function App() {
         window.location.reload();
       } else {
         dispatch(setData(decodedToken));
-        dispatch(fetchTaskList());
         dispatch(fetchOrganizationList());
+        dispatch(fetchTaskList());
       }
     }
-  }, [dispatch, token]);
+    //Still not rendering the whole page. Fix it after Dinner
+  }, [dispatch, token, selectedOrgId]);
   return (
     <>
       <Routes>

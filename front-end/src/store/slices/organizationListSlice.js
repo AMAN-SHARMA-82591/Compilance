@@ -5,6 +5,10 @@ export const fetchOrganizationList = createAsyncThunk(
   "organization/fetch",
   async () => {
     const response = await axiosInstance.get("/users/organization");
+    if (!localStorage.getItem("selectedOrgId")) {
+      localStorage.setItem("selectedOrgId", response.data.data[0]._id);
+    }
+
     return response.data;
   }
 );
@@ -31,6 +35,13 @@ const organizationListSlice = createSlice({
     data: [],
     error: null,
     isLoading: false,
+    selectedOrgId: localStorage.getItem("selectedOrgId") || "",
+  },
+  reducers: {
+    setSelectedOrgId: (state, action) => {
+      state.selectedOrgId = action.payload;
+      localStorage.setItem("selectedOrgId", action.payload);
+    },
   },
   extraReducers(builder) {
     builder.addCase(fetchOrganizationList.pending, (state) => {
@@ -39,7 +50,7 @@ const organizationListSlice = createSlice({
     });
     builder.addCase(fetchOrganizationList.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.data = action.payload.organization;
+      state.data = action.payload.data;
     });
     builder.addCase(fetchOrganizationList.rejected, (state, action) => {
       state.isLoading = false;
@@ -74,4 +85,5 @@ const organizationListSlice = createSlice({
   },
 });
 
+export const { setSelectedOrgId } = organizationListSlice.actions;
 export const organizationListReducer = organizationListSlice.reducer;

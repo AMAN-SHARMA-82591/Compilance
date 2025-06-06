@@ -42,17 +42,15 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
   //   }
   // }, [profileData, handleFetchOrgData]);
 
-  const { values, handleSubmit, handleChange, handleReset } = useFormik(
-    {
-      initialValues: initialValues,
-      onSubmit: (values) => {
-        dispatch(createTask(values));
-        handleReset();
-        // setOpen(false);
-        handleOpenTaskDialog();
-      },
-    }
-  );
+  const { values, handleSubmit, handleChange, handleReset } = useFormik({
+    initialValues: initialValues,
+    onSubmit: (values) => {
+      dispatch(createTask(values));
+      handleReset();
+      // setOpen(false);
+      handleOpenTaskDialog();
+    },
+  });
 
   const handleCloseCreateTask = () => {
     // setOpen(false);
@@ -127,7 +125,7 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
                 onChange={handleChange}
               />
             </Grid>
-            <Grid size={12}>
+            <Grid size={6}>
               <label htmlFor="type">Type</label>
               <TextField
                 select
@@ -143,7 +141,7 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
                 <MenuItem value="epic">Epic</MenuItem>
               </TextField>
             </Grid>
-            <Grid size={12}>
+            <Grid size={6}>
               <label htmlFor="priority">Priority</label>
               <TextField
                 select

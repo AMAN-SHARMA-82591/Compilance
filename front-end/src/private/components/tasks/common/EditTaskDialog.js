@@ -105,18 +105,7 @@ function EditTaskDialog({ id }) {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid size={12}>
-                <label htmlFor="description">Description</label>
-                <TextField
-                  fullWidth
-                  size="small"
-                  name="description"
-                  value={values.description}
-                  placeholder="Description"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid size={12}>
+              <Grid size={6}>
                 <label htmlFor="type">Type</label>
                 <TextField
                   select
@@ -132,7 +121,7 @@ function EditTaskDialog({ id }) {
                   <MenuItem value="epic">Epic</MenuItem>
                 </TextField>
               </Grid>
-              <Grid size={12}>
+              <Grid size={6}>
                 <label htmlFor="priority">Priority</label>
                 <TextField
                   select
@@ -147,6 +136,19 @@ function EditTaskDialog({ id }) {
                   <MenuItem value="critical">Critical</MenuItem>
                   <MenuItem value="minor">Minor</MenuItem>
                 </TextField>
+              </Grid>
+              <Grid size={12}>
+                <label htmlFor="description">Description</label>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={3}
+                  size="small"
+                  name="description"
+                  value={values.description}
+                  placeholder="Description"
+                  onChange={handleChange}
+                />
               </Grid>
             </Grid>
           </DialogContent>

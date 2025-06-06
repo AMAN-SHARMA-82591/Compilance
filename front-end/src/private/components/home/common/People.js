@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { compose } from "ramda";
 import withStyles from "@mui/styles/withStyles";
 import { Typography } from "@mui/material";

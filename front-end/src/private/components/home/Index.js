@@ -1,4 +1,4 @@
-import React from "react";
+import { useCallback, useEffect, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import Donut from "./common/Donut";
 import People from "./common/People";
@@ -6,6 +6,7 @@ import People from "./common/People";
 import "../../../App.css";
 import ProgressOverview from "./in-progress/ProgressOverview";
 import Tasks from "./common/Tasks";
+import axiosInstance from "../../Common/AxiosInstance";
 // import PlanMeeting from './common/PlanMeeting'
 
 const styles = makeStyles(() => ({
@@ -25,16 +26,41 @@ const styles = makeStyles(() => ({
 }));
 
 function Index() {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({
+    overdue: 0,
+    upcoming: 0,
+    in_progress: 0,
+    total: 0,
+  });
+
+  const getProgressOverviewCount = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await axiosInstance.get("/tasks/progressOverview");
+      if (response.data) {
+        setData(response.data);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    getProgressOverviewCount();
+  }, [getProgressOverviewCount]);
+
   const classes = styles();
   return (
     <main className={classes.mainMenu}>
       <section className={classes.section1}>
-        <ProgressOverview />
+        <ProgressOverview data={data} loading={loading} />
         <Tasks />
         {/* <PlanMeeting /> */}
       </section>
       <section className={classes.section2}>
-        <Donut />
+        <Donut data={data} />
         <People />
         {/* <RecentlyAdded /> */}
       </section>

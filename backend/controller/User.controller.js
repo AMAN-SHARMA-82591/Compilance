@@ -5,7 +5,7 @@ const Profile = require("../model/Profile.model");
 const { createNewUser } = require("./Authentication.controller");
 const { validationResult } = require("express-validator");
 const { authAdminRole } = require("../utils/constants");
-const userMap = require("../model/UserOrganizationMapping.model");
+const userOrgMap = require("../model/UserOrganizationMapping.model");
 
 // learn about exicts() method. This can improve api retrieval performance
 
@@ -67,58 +67,23 @@ const getProfile = async (req, res) => {
 };
 
 const profileList = async (req, res) => {
-  const { uid } = req;
-  const userRole = req.user.profile.role;
+  const orgId = req.oid;
   const limit = parseInt(req.query.limit) || 20;
   const fields = req.query.fields
     ? req.query.fields.split(" ")
     : ["name", "email", "role"];
   try {
-    let profileList;
-    if (userRole === 1) {
-      profileList = await Profile.find().select(fields).limit(limit).lean();
-    } else if (userRole === 2) {
-      profileList = await Profile.aggregate([
-        {
-          $lookup: {
-            from: "organizations",
-            localField: "orgId",
-            foreignField: "_id",
-            as: "organization",
-          },
-        },
-        {
-          $unwind: {
-            path: "$organization",
-            preserveNullAndEmptyArrays: true,
-          },
-        },
-        {
-          $match: {
-            $or: [
-              { "organization.adminId": new mongoose.Types.ObjectId(uid) },
-              { userId: new mongoose.Types.ObjectId(uid) },
-            ],
-            role: { $ne: 1 },
-          },
-        },
-        {
-          $project: fields.reduce(
-            (acc, field) => {
-              acc[field] = 1;
-              return acc;
-            },
-            { _id: 1 }
-          ),
-        },
-        { $limit: limit },
-      ]);
-    } else {
-      profileList = await Profile.find({ role: { $ne: 1 } })
-        .select(fields)
-        .limit(limit)
-        .lean();
-    }
+    // Going to add aggregation in future
+    const orgRelatedProfiles = await userOrgMap
+      .find({ orgId })
+      .lean()
+      .select("-_id userId");
+    const profileList = await Profile.find({
+      userId: { $in: orgRelatedProfiles.map((value) => value.userId) },
+    })
+      .select(fields)
+      .limit(limit);
+
     return res.status(200).json({
       success: true,
       profileList,
@@ -148,12 +113,12 @@ const createProfile = async (req, res, next) => {
     }
     const username = email.match(/^[^@]+/)[0];
     const userData = await createNewUser(name, email, username, 0);
-    await userMap.create({
+    await userOrgMap.create({
       userId: userData.userId,
       orgId,
       role: 0,
     });
-    // const isUserExists = await userMap.findOne({
+    // const isUserExists = await userOrgMap.findOne({
     //   userId: userData.userId,
     // });
     // if (isUserExists) {

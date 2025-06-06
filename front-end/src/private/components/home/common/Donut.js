@@ -1,11 +1,11 @@
 import React from "react";
 import Chart from "react-apexcharts";
 
-function Donut() {
+function Donut({ data }) {
   const state = {
     options: {},
-    series: [17, 25, 31],
-    labels: [0, 1, 2],
+    series: [data.overdue || 5, data.upcoming || 0, data.in_progress || 0],
+    labels: ["Overdue", "Upcoming", "In-Progress"],
   };
 
   return (

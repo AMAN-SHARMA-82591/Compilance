@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
+// const UserOrganizationMappingModel = require("../model/UserOrganizationMapping.model");
 require("dotenv").config();
 
-module.exports = function (req, res, next) {
+module.exports = async function (req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
     return res.status(401).json({ msg: "No Token, authorization denied" });

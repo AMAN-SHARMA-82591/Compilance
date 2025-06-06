@@ -9,4 +9,21 @@ const axiosInstance = axios.create({
   },
 });
 
+// Add a request interceptor
+axiosInstance.interceptors.request.use(
+  (config) => {
+    // Get orgId from Redux, Context, or localStorage
+    let orgId = null;
+    // Example for Redux:
+    try {
+      orgId = localStorage.getItem("selectedOrgId");
+    } catch {}
+
+    if (orgId) {
+      config.headers["orgid"] = orgId;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 export default axiosInstance;
