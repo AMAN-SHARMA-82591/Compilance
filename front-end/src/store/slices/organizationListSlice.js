@@ -35,6 +35,7 @@ const organizationListSlice = createSlice({
   extraReducers(builder) {
     builder.addCase(fetchOrganizationList.pending, (state) => {
       state.isLoading = true;
+      state.error = null;
     });
     builder.addCase(fetchOrganizationList.fulfilled, (state, action) => {
       state.isLoading = false;
@@ -44,24 +45,27 @@ const organizationListSlice = createSlice({
       state.isLoading = false;
       state.error = action.error;
     });
+
     builder.addCase(createOrganization.pending, (state) => {
       state.isLoading = true;
+      state.error = null;
     });
     builder.addCase(createOrganization.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.data.push(action.payload.orgData);
+      state.data = [...state.data, action.payload.orgData];
     });
     builder.addCase(createOrganization.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error;
     });
+
     builder.addCase(deleteOrganization.pending, (state) => {
       state.isLoading = true;
+      state.error = null;
     });
     builder.addCase(deleteOrganization.fulfilled, (state, action) => {
-      const taskIndex = state.data.indexOf(action.payload);
       state.isLoading = false;
-      state.data.splice(taskIndex, 1);
+      state.data = state.data.filter((org) => org._id !== action.payload._id);
     });
     builder.addCase(deleteOrganization.rejected, (state, action) => {
       state.isLoading = false;

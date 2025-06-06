@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Button,
   Dialog,
@@ -9,7 +8,7 @@ import {
 
 const ConfirmDialogBox = ({ open, text, onClose, onSubmit, submitBtnText }) => {
   return (
-    <Dialog open={open} keepMounted={true} onClose={() => onClose()}>
+    <Dialog open={open} keepMounted={false} onClose={() => onClose()}>
       <DialogContent sx={{ padding: 4 }}>
         <Typography>{text && text}</Typography>
       </DialogContent>
