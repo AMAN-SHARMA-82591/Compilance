@@ -5,6 +5,7 @@ const Profile = require("../model/Profile.model");
 const { createNewUser } = require("./Authentication.controller");
 const { validationResult } = require("express-validator");
 const { authAdminRole } = require("../utils/constants");
+const userMap = require("../model/UserOrganizationMapping.model");
 
 // learn about exicts() method. This can improve api retrieval performance
 
@@ -128,18 +129,17 @@ const profileList = async (req, res) => {
   }
 };
 
-const createProfile = async (req, res) => {
+const createProfile = async (req, res, next) => {
   const { name, email, orgId, ...entity } = req.body;
-  const userId = req.uid;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      msg: "Errors",
+      errors: errors.array(),
+    });
+  }
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        msg: "Errors",
-        errors: errors.array(),
-      });
-    }
     let user = await User.findOne({ email }).select("_id").lean();
     if (user) {
       return res
@@ -147,21 +147,31 @@ const createProfile = async (req, res) => {
         .json({ success: false, msg: "User already exists." });
     }
     const username = email.match(/^[^@]+/)[0];
-    const newProfile = await createNewUser(
-      res,
-      name,
-      email,
-      username,
-      0,
-      userId
-    );
-    if (!newProfile) {
-      return res.status(400).json({ msg: "Something went wrong" });
-    }
+    const userData = await createNewUser(name, email, username, 0);
+    await userMap.create({
+      userId: userData.userId,
+      orgId,
+      role: 0,
+    });
+    // const isUserExists = await userMap.findOne({
+    //   userId: userData.userId,
+    // });
+    // if (isUserExists) {
+    //   res.status(400).json({
+    //     success: false,
+    //     msg: "User Already Exists in a different organization",
+    //   });
+    // }
+
     res.status(200).json({ success: true, message: "New Profile Created" });
   } catch (error) {
-    console.error("Server Error:", error);
-    res.status(500).send("Server Error");
+    if (
+      error.message === "Profile already exists with similar email-address" ||
+      error.message === "You cannot create admin"
+    ) {
+      return res.status(400).json({ success: false, msg: error.message });
+    }
+    next(error);
   }
 };
 

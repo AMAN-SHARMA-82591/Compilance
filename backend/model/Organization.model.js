@@ -25,15 +25,6 @@ const organizationSchema = new mongoose.Schema(
     description: {
       type: String,
     },
-    adminId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: [true, "Sub Admin ID is required"],
-    },
-    roles: {
-      type: [Number],
-      default: [0, 1, 2],
-    },
   },
   {
     strict: "throw",

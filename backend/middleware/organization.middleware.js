@@ -1,15 +1,27 @@
+const UserOrgMap = require("../model/UserOrganizationMapping.model");
 const { authAdminRole } = require("../utils/constants");
 
-const checkOrganization = function (req, res, next) {
+const checkOrganization = async function (req, res, next) {
   const { profile } = req.user;
+  const orgId = req.query.orgId || req.body.orgId || req.params.orgId;
   try {
-    if (!profile.orgId && !authAdminRole.includes(profile.role)) {
-      return res.status(401).json({ msg: "Organization is not been created" });
+    if (!orgId && !authAdminRole.includes(profile.role)) {
+      return res.status(401).json({
+        msg: "Organization is not been created. Please create an organization first.",
+      });
     }
-    req.oid = profile.orgId;
+    const mapping = await UserOrgMap.findOne({ userId: req.uid, orgId })
+      .lean()
+      .select("_id");
+    if (!mapping) {
+      return res
+        .status(403)
+        .json({ msg: "You are not a member of this organization." });
+    }
+    req.oid = orgId;
     return next();
   } catch (error) {
-    res.status(401).json({ msg: "Something weng wrong!" });
+    next(error);
   }
 };
 
@@ -23,7 +35,7 @@ const checkRoleAccess = function (req, res, next) {
     }
     return next();
   } catch (error) {
-    res.status(401).json({ msg: "Something went wrong!" });
+    next(error);
   }
 };
 
