@@ -1,19 +1,33 @@
 import { NavLink, useLocation } from "react-router";
 import { useSelector } from "react-redux";
-import { Typography, Paper, Box } from "@mui/material";
+import { Typography, Paper, Box, CircularProgress } from "@mui/material";
 
 const RequireOrganization = ({ children }) => {
   const location = useLocation();
-  const profile = useSelector((state) => state.basicInformation?.data?.profile);
   const { data: organizations, isLoading } = useSelector(
     (state) => state.organizationData
   );
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "80vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   if (location.pathname === "/organization") {
     return children;
   }
 
-  if (profile?.role === 1 || organizations.length > 0 || profile?.orgId) {
+  if (organizations.length > 0) {
     return children;
   }
 

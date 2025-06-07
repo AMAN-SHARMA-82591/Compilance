@@ -1,4 +1,4 @@
-const taskFilterReducer = (state = {}, action) => {
+const taskFilterReducer = (state = null, action) => {
   switch (action.type) {
     case "taskFilter":
       return action.payload;

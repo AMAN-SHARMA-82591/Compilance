@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as Yup from "yup";
 import {
   Button,
@@ -16,24 +16,30 @@ import jsImage from "../../../../images/defaultImg.png";
 // import { useDispatch } from 'react-redux';
 // import { setProfileData } from "../../../../store/store";
 import { useParams } from "react-router";
+import { toastError } from "../../../Common/ToastContainer";
+import { handleApiError } from "../../../Common/ErrorHandler";
+import { useSelector } from "react-redux";
 
-function PeopleDetails(props) {
-  // const dispatch = useDispatch();
+const validationSchema = Yup.object({
+  email: Yup.string().email().required("Email Field is required"),
+  phone_number: Yup.string()
+    .matches(/^\d{10}$/, "Phone number must be exactly 10 digits")
+    .notRequired(),
+  name: Yup.string()
+    .required("Name Field is required")
+    .min(3, "Name must be at least 3 charachter long"),
+});
+
+function PeopleDetails() {
+  const profileId = useSelector(
+    (state) => state.basicInformation?.data?.profile?._id || null
+  );
   const [imageURL, setImageURL] = useState(null);
   const [error, setError] = useState(false);
   const [profileDetails, setProfileDetails] = useState(null);
   const [editProfile, setEditProfile] = useState(false);
   const [profileImageDialog, setProfileImageDialog] = useState(false);
   const { id: peopleId } = useParams();
-  const validationSchema = Yup.object({
-    email: Yup.string().email().required("Email Field is required"),
-    phone_number: Yup.string()
-      .matches(/^\d{10}$/, "Phone number must be exactly 10 digits")
-      .notRequired(),
-    name: Yup.string()
-      .required("Name Field is required")
-      .min(3, "Name must be at least 3 charachter long"),
-  });
 
   const initialValues = {
     company: "",
@@ -44,7 +50,6 @@ function PeopleDetails(props) {
     website: "",
     location: "",
     status: "",
-    organization: "",
     skills: [],
     bio: "",
   };
@@ -54,15 +59,20 @@ function PeopleDetails(props) {
       initialValues: initialValues,
       validationSchema,
       onSubmit: async (values) => {
-        const response = await axiosInstance.patch(
-          `/users/profile/${profileDetails._id}`,
-          values
-        );
-        if (response.data) {
-          setProfileDetails({ ...profileDetails, ...values });
-          // dispatch(fetchLoggedProfile());
+        try {
+          const response = await axiosInstance.patch(
+            `/users/profile/${profileDetails._id}`,
+            values
+          );
+          if (response.data) {
+            setProfileDetails({ ...profileDetails, ...values });
+            // dispatch(fetchLoggedProfile());
+          }
+          setEditProfile(false);
+        } catch (error) {
+          const { message } = handleApiError(error);
+          toastError(message);
         }
-        setEditProfile(false);
       },
     });
 
@@ -91,7 +101,6 @@ function PeopleDetails(props) {
       website: profileDetails.website || "",
       location: profileDetails.location || "",
       status: profileDetails.status || "",
-      organization: profileDetails.organization || "",
       skills: profileDetails.skill || [],
       bio: profileDetails.bio || "",
     });
@@ -141,12 +150,21 @@ function PeopleDetails(props) {
       <div className="profile-header-section">
         <div className="profile-image">
           <div>
-            <img
-              alt={profileDetails?.image}
-              src={profileDetails?.image || jsImage}
-              // src={`${BASE_URL}${profileDetails?.image}` || jsImage}
-              onClick={handleChangeProfileImage}
-            />
+            {profileId === peopleId ? (
+              <img
+                alt={profileDetails?.image}
+                src={profileDetails?.image || jsImage}
+                style={{ cursor: "pointer" }}
+                // src={`${BASE_URL}${profileDetails?.image}` || jsImage}
+                onClick={handleChangeProfileImage}
+              />
+            ) : (
+              <img
+                alt={profileDetails?.image}
+                src={profileDetails?.image || jsImage}
+              />
+            )}
+
             <Dialog keepMounted={false} open={profileImageDialog}>
               <DialogTitle>Change Profile Picture</DialogTitle>
               <DialogContent>
@@ -181,29 +199,31 @@ function PeopleDetails(props) {
             </Dialog>
           </div>
         </div>
-        <div className="profile-edit-options">
-          {editProfile ? (
-            <>
-              <button
-                className="people-button"
-                onClick={handleCloseProfileEdit}
-              >
-                Cancel
+        {profileId === peopleId && (
+          <div className="profile-edit-options">
+            {editProfile ? (
+              <>
+                <button
+                  className="people-button"
+                  onClick={handleCloseProfileEdit}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="people-button"
+                  type="submit"
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </button>
+              </>
+            ) : (
+              <button className="people-button" onClick={handleOpenProfileEdit}>
+                Edit
               </button>
-              <button
-                className="people-button"
-                type="submit"
-                onClick={handleSubmit}
-              >
-                Submit
-              </button>
-            </>
-          ) : (
-            <button className="people-button" onClick={handleOpenProfileEdit}>
-              Edit
-            </button>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
       <div className="profile-main-section">
         <p>Profile Details</p>

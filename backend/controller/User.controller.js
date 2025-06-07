@@ -66,7 +66,7 @@ const getProfile = async (req, res) => {
   }
 };
 
-const profileList = async (req, res) => {
+const profileList = async (req, res, next) => {
   const orgId = req.oid;
   const limit = parseInt(req.query.limit) || 20;
   const fields = req.query.fields
@@ -89,8 +89,7 @@ const profileList = async (req, res) => {
       profileList,
     });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Server Error");
+    next(error);
   }
 };
 
@@ -112,22 +111,12 @@ const createProfile = async (req, res, next) => {
         .json({ success: false, msg: "User already exists." });
     }
     const username = email.match(/^[^@]+/)[0];
-    const userData = await createNewUser(name, email, username, 0);
+    const userData = await createNewUser(name, email, username, 0, entity);
     await userOrgMap.create({
       userId: userData.userId,
       orgId,
       role: 0,
     });
-    // const isUserExists = await userOrgMap.findOne({
-    //   userId: userData.userId,
-    // });
-    // if (isUserExists) {
-    //   res.status(400).json({
-    //     success: false,
-    //     msg: "User Already Exists in a different organization",
-    //   });
-    // }
-
     res.status(200).json({ success: true, message: "New Profile Created" });
   } catch (error) {
     if (
@@ -140,9 +129,18 @@ const createProfile = async (req, res, next) => {
   }
 };
 
-const updateProfile = async (req, res) => {
+const updateProfile = async (req, res, next) => {
   const id = req.params.id;
+  const { uid } = req;
   try {
+    if (id !== uid) {
+      return res
+        .status(403)
+        .json({
+          success: false,
+          message: "You are not authorized to update this profile",
+        });
+    }
     const updatedProfile = await Profile.findByIdAndUpdate(id, req.body, {
       runValidators: true,
     }).lean();
@@ -153,11 +151,11 @@ const updateProfile = async (req, res) => {
       .status(200)
       .json({ message: "Profile has been updated.", data: updatedProfile });
   } catch (error) {
-    res.status(500).send(error);
+    next(error);
   }
 };
 
-const deleteProfile = async (req, res) => {
+const deleteProfile = async (req, res, next) => {
   const { id } = req.params;
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -196,8 +194,7 @@ const deleteProfile = async (req, res) => {
     // Abort the transaction in case of error
     await session.abortTransaction();
     session.endSession();
-    console.error("Error deleting profile and user:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    next(error);
   }
 };
 

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { isEmpty } from "lodash";
 import { taskFilterAction } from "../../../store/store";
-import { Button, TextField } from "@mui/material";
+import { Button, IconButton, TextField, Tooltip } from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
 import { deleteTask } from "../../../store/store";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CreateTaskDialog from "./common/CreateTaskDialog";
@@ -13,16 +14,21 @@ import PageHeader from "../../Common/PageHeader";
 
 function Index() {
   const dispatch = useDispatch();
+  const [searchTerm, setSearchTerm] = useState("");
   const [createTaskDialog, setCreateTaskDialog] = useState(false);
-  const taskList = useSelector((state) => state.taskList?.data?.taskList || []);
-  const isLoading = useSelector((state) => state.taskList?.isLoading || false);
   const taskFilterType = useSelector((state) => state.taskFilterType || null);
+  const isLoading = useSelector((state) => state.taskList?.isLoading || false);
+  const taskList = useSelector((state) => state.taskList?.data?.taskList || []);
 
-  useEffect(() => {
-    return () => {
-      dispatch(taskFilterAction(""));
-    };
-  });
+  const filteredTaskList = taskFilterType
+    ? taskList.filter((task) => task.status === taskFilterType)
+    : taskList;
+
+  const searchedTaskList = searchTerm
+    ? filteredTaskList.filter((task) =>
+        task.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : filteredTaskList;
 
   const handleDeleteTask = (task) => {
     dispatch(deleteTask(task));
@@ -36,14 +42,18 @@ function Index() {
     dispatch(taskFilterAction(filterType));
   };
 
+  const handleClearFilterType = () => {
+    dispatch(taskFilterAction(""));
+  };
+
   let content;
   if (isLoading) {
     content = [...Array(5)].map((_, index) => <TableSkeleton key={index} />);
   } else {
     content = (
       <tbody>
-        {!isEmpty(taskList) &&
-          taskList.map((task, key) => (
+        {!isEmpty(searchedTaskList) &&
+          searchedTaskList.map((task, key) => (
             <tr key={key}>
               <td className="status-cell">{formatStatus(task.status)}</td>
               <td className="title-cell">{task.title}</td>
@@ -71,6 +81,7 @@ function Index() {
       </tbody>
     );
   }
+
   return (
     <>
       <PageHeader
@@ -111,6 +122,13 @@ function Index() {
           >
             Total
           </Button>
+          {taskFilterType && (
+            <Tooltip title="Clear Filter">
+              <IconButton size="small" onClick={handleClearFilterType}>
+                <ClearIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </div>
         <div className="search-main">
           <p>Search</p>
@@ -118,13 +136,8 @@ function Index() {
             size="small"
             variant="outlined"
             placeholder="Search"
-            // inputProps={{
-            //   startAdornment: (
-            //     <InputAdornment position='start'>
-            //       <Search />
-            //     </InputAdornment>
-            //   )
-            // }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>

@@ -39,7 +39,25 @@ const login = async (req, res, next) => {
   }
 };
 
-const createNewUser = async (name, email, password, role = 0) => {
+const createNewUser = async (
+  name,
+  email,
+  password,
+  role = 0,
+  dataInit = {}
+) => {
+  const profileDefaults = {
+    phone_number: null,
+    department: null,
+    designation: null,
+    skills: null,
+    company: null,
+    image: null,
+    website: null,
+    location: null,
+    status: null,
+    bio: null,
+  };
   if (role && role === 1) {
     throw new Error("You cannot create admin");
   }
@@ -62,16 +80,8 @@ const createNewUser = async (name, email, password, role = 0) => {
       name: newUser.name,
       email: newUser.email,
       role: newUser.role,
-      phone_number: null,
-      department: null,
-      designation: null,
-      skills: null,
-      company: null,
-      image: null,
-      website: null,
-      location: null,
-      status: null,
-      bio: null,
+      ...profileDefaults,
+      ...dataInit,
     });
     return userProfile;
   } catch (error) {

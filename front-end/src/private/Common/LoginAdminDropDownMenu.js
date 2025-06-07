@@ -1,4 +1,3 @@
-import React from "react";
 import { List, ListItem } from "@mui/material";
 import { Link } from "react-router";
 import { getRoleLabel, truncateText } from "./formatHelpers";
@@ -16,18 +15,12 @@ function LoginAdminDropDownMenu({ handleClosePopover, profileDetails }) {
           <p>{getRoleLabel(profileDetails?.role)}</p>
         </div>
         <List>
-          <ListItem
-            onClick={handleClosePopover}
-            button={true}
-            component={Link}
-            to="/home"
-          >
+          <ListItem onClick={handleClosePopover} component={Link} to="/home">
             Home
           </ListItem>
           {/* <ListItem onClick={handleClosePopover} button={true} component={Link} to='/profileDetails'>Profile</ListItem> */}
           <ListItem
             onClick={handleLogout}
-            button={true}
             style={{ color: "red", fontWeight: "bold", cursor: "pointer" }}
           >
             Logout
