@@ -36,8 +36,7 @@ const taskList = async (req, res, next) => {
 const progressOverviewData = async (req, res, next) => {
   const { uid, oid } = req;
   try {
-    const query = { userId: uid, orgId: oid };
-
+    const query = { orgId: oid };
     const overdue = await Task.countDocuments({
       ...query,
       status: "overdue",

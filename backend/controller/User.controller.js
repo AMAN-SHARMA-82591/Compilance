@@ -6,6 +6,9 @@ const { createNewUser } = require("./Authentication.controller");
 const { validationResult } = require("express-validator");
 const { authAdminRole } = require("../utils/constants");
 const userOrgMap = require("../model/UserOrganizationMapping.model");
+const cloudinary = require("../utils/cloudinary");
+const streamifier = require("streamifier");
+const fs = require("fs");
 
 // learn about exicts() method. This can improve api retrieval performance
 
@@ -67,22 +70,43 @@ const getProfile = async (req, res) => {
 };
 
 const profileList = async (req, res, next) => {
-  const orgId = req.oid;
+  const { uid, oid } = req;
   const limit = parseInt(req.query.limit) || 20;
   const fields = req.query.fields
     ? req.query.fields.split(" ")
-    : ["name", "email", "role"];
+    : ["name", "email", "role", "image"];
   try {
-    // Going to add aggregation in future
     const orgRelatedProfiles = await userOrgMap
-      .find({ orgId })
+      .find({ orgId: oid })
       .lean()
       .select("-_id userId");
-    const profileList = await Profile.find({
-      userId: { $in: orgRelatedProfiles.map((value) => value.userId) },
-    })
-      .select(fields)
-      .limit(limit);
+
+    const userIds = orgRelatedProfiles.map((value) => value.userId);
+
+    const pipeline = [
+      { $match: { userId: { $in: userIds } } },
+      {
+        $addFields: {
+          sortPriority: {
+            $switch: {
+              branches: [
+                { case: { $eq: ["$role", 2] }, then: 0 },
+                {
+                  case: { $eq: ["$userId", new mongoose.Types.ObjectId(uid)] },
+                  then: 0,
+                },
+              ],
+              default: 2,
+            },
+          },
+        },
+      },
+      { $sort: { sortPriority: 1 } },
+      { $limit: limit },
+      { $project: fields.reduce((acc, field) => ({ ...acc, [field]: 1 }), {}) },
+    ];
+
+    const profileList = await Profile.aggregate(pipeline);
 
     return res.status(200).json({
       success: true,
@@ -130,16 +154,28 @@ const createProfile = async (req, res, next) => {
 };
 
 const updateProfile = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      msg: "Errors",
+      errors: errors.array(),
+    });
+  }
   const id = req.params.id;
-  const { uid } = req;
+  const { user } = req;
   try {
-    if (id !== uid) {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "You are not authorized to update this profile",
-        });
+    if (id !== user.profile._id) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to update this profile",
+      });
+    }
+    if (req.body.email !== user.profile.email) {
+      return res.status(403).json({
+        success: false,
+        message: "Cannot update email-address",
+      });
     }
     const updatedProfile = await Profile.findByIdAndUpdate(id, req.body, {
       runValidators: true,
@@ -198,14 +234,41 @@ const deleteProfile = async (req, res, next) => {
   }
 };
 
-const updateProfileImage = async (req, res) => {
+const updateProfileImage = async (req, res, next) => {
   const id = req.params.id;
   try {
-    const imagePath = `/uploads/${req.file.filename}`;
-    await Profile.findByIdAndUpdate({ _id: id }, { image: imagePath });
-    res.status(200).json({ message: "Image is uploaded", image: imagePath });
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    // Upload buffer to Cloudinary
+    const streamUpload = (buffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "profile_images", public_id: id },
+          (error, result) => {
+            if (result) {
+              resolve(result);
+            } else {
+              reject(error);
+            }
+          }
+        );
+        // fs.createReadStream(buffer).pipe(stream);
+        streamifier.createReadStream(buffer).pipe(stream);
+      });
+    };
+
+    const result = await streamUpload(req.file.buffer);
+
+    // Save Cloudinary URL to profile
+    await Profile.findByIdAndUpdate(id, { image: result.secure_url });
+
+    res
+      .status(200)
+      .json({ message: "Image uploaded", image: result.secure_url });
   } catch (error) {
-    res.status(500).send(error);
+    next(error);
   }
 };
 

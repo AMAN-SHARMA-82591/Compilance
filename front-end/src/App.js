@@ -24,9 +24,7 @@ import RequireOrganization from "./private/Common/RequiredOrganization";
 function App() {
   // const [login, setLogin] = useState(false);
   const dispatch = useDispatch();
-  const profileData = useSelector(
-    (state) => state.basicInformation?.data?.profile
-  );
+  const profileData = useSelector((state) => state.basicInformation?.profile);
   const selectedOrgId = useSelector(
     (state) => state.organizationData.selectedOrgId
   );
@@ -40,12 +38,11 @@ function App() {
         localStorage.removeItem("token");
         window.location.reload();
       } else {
-        dispatch(setData(decodedToken));
+        dispatch(setData(decodedToken.profile));
         dispatch(fetchOrganizationList());
         dispatch(fetchTaskList());
       }
     }
-    //Still not rendering the whole page. Fix it after Dinner
   }, [dispatch, token, selectedOrgId]);
   return (
     <>

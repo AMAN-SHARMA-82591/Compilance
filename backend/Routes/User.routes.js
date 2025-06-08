@@ -1,5 +1,4 @@
 const express = require("express");
-const multer = require("multer");
 const {
   profile,
   users,
@@ -24,18 +23,7 @@ const {
   deleteOrganization,
 } = require("../controller/Organization.controller");
 const { profileValidator } = require("../helper/userValidator");
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "images/");
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now();
-    cb(null, uniqueSuffix + file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
+const upload = require("../middleware/multer.middleware");
 
 const router = express.Router();
 
@@ -46,7 +34,7 @@ router.get("/me", auth, getUser);
 // Organization Routes
 router
   .route("/organization")
-  .get(auth, checkRoleAccess, organizationList)
+  .get(auth, organizationList)
   .post(auth, checkRoleAccess, createOrganization);
 router
   .route("/organization/:id")
@@ -62,16 +50,11 @@ router
   .route("/profile")
   .get(auth, checkOrganization, profileList)
   .post(auth, profileValidator, checkOrganization, createProfile);
-router.patch(
-  "/profile/image/:id",
-  auth,
-  upload.single("image"),
-  updateProfileImage
-);
+router.post("/profile/image/:id", auth, upload, updateProfileImage);
 router
   .route("/profile/:id")
   .get(auth, checkOrganization, getProfile)
-  .patch(auth, checkOrganization, updateProfile)
+  .patch(auth, profileValidator, checkOrganization, updateProfile)
   .delete(auth, checkOrganization, checkRoleAccess, deleteProfile);
 
 module.exports = router;

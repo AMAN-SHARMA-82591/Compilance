@@ -28,7 +28,7 @@ function TopBar({ classes }) {
   const location = useLocation();
   const [show, setShow] = useState(null);
   const profileDetails = useSelector(
-    (state) => state.basicInformation?.data?.profile
+    (state) => state.basicInformation?.profile
   );
 
   function handleOpenPopover(event) {

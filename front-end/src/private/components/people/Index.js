@@ -25,9 +25,7 @@ const validationSchema = Yup.object({
 
 function Index() {
   let content;
-  const profileData = useSelector(
-    (store) => store.basicInformation?.data?.profile
-  );
+  const profileData = useSelector((store) => store.basicInformation?.profile);
   const organizationData = useSelector((store) => store.organizationData?.data);
   const navigate = useNavigate();
   const [peopleList, setPeopleList] = useState([]);
@@ -91,7 +89,9 @@ function Index() {
     content = peopleList.map((people) => (
       <div
         key={people._id}
-        className="profile-box"
+        className={`profile-box ${
+          profileData._id === people._id && "active"
+        }`}
         onClick={() => navigate(`/people/${people._id}`)}
       >
         {profileData.role !== 0 && !authAdminRole.includes(people.role) && (
@@ -110,7 +110,7 @@ function Index() {
         <div style={{ marginLeft: 15 }}>
           <p>{people.name}</p>
           <p>{people.email}</p>
-          <p>{people.department || "User"}</p>
+          <p>{people.role === 2 ? "Admin" : "User"}</p>
         </div>
       </div>
     ));

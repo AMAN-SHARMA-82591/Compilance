@@ -7,8 +7,8 @@ const taskRouter = require("./Routes/Tasks.routes");
 const connectDB = require("./db/connect");
 const cors = require("cors");
 const dbErrorHandler = require("./middleware/dbErrorHandler");
-
 const app = express();
+
 const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
 
 //To get data in json format!
