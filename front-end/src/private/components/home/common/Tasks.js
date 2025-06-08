@@ -53,7 +53,21 @@ function Tasks() {
             </Grid>
           ))
         ) : (
-          <Typography variant="body1">No tasks found.</Typography>
+          <Typography
+            style={{
+              width: "100%",
+              color: "#888",
+              padding: "15px",
+              marginTop: "20px",
+              borderRadius: "8px",
+              fontStyle: "italic",
+              textAlign: "center",
+              background: "rgba(0, 0, 0, 0.05)",
+            }}
+            variant="h6"
+          >
+            No tasks found.
+          </Typography>
         )}
       </Grid>
     </main>

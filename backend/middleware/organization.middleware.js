@@ -19,7 +19,7 @@ const checkOrganization = async function (req, res, next) {
         .status(403)
         .json({ msg: "You are not a member of this organization." });
     }
-    req.oid = mapping.orgId;
+    req.oid = orgId;
     return next();
   } catch (error) {
     next(error);

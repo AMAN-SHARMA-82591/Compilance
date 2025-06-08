@@ -2,7 +2,13 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { isEmpty } from "lodash";
 import { taskFilterAction } from "../../../store/store";
-import { Button, IconButton, TextField, Tooltip } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import { deleteTask } from "../../../store/store";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -52,7 +58,7 @@ function Index() {
   } else {
     content = (
       <tbody>
-        {!isEmpty(searchedTaskList) &&
+        {!isEmpty(searchedTaskList) ? (
           searchedTaskList.map((task, key) => (
             <tr key={key}>
               <td className="status-cell">{formatStatus(task.status)}</td>
@@ -77,7 +83,26 @@ function Index() {
                 </Button>
               </td>
             </tr>
-          ))}
+          ))
+        ) : (
+          <tr>
+            <td colSpan={5}>
+              <Typography
+                style={{
+                  color: "#888",
+                  padding: "15px",
+                  borderRadius: "8px",
+                  fontStyle: "italic",
+                  textAlign: "center",
+                  background: "rgba(0, 0, 0, 0.05)",
+                }}
+                variant="h6"
+              >
+                No tasks found.
+              </Typography>
+            </td>
+          </tr>
+        )}
       </tbody>
     );
   }

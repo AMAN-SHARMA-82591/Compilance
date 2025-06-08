@@ -5,6 +5,7 @@ import { getRoleLabel, truncateText } from "./formatHelpers";
 function LoginAdminDropDownMenu({ handleClosePopover, profileDetails }) {
   function handleLogout() {
     localStorage.removeItem("token");
+    localStorage.removeItem("selectedOrgId");
     window.location.reload(false);
   }
   return (

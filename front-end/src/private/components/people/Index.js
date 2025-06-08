@@ -144,7 +144,7 @@ function Index() {
               fullWidth
               size="small"
               name="name"
-              placeholder="Title"
+              placeholder="Name"
               error={errors.name}
               value={values.name}
               helperText={errors.name}

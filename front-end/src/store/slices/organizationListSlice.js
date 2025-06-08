@@ -35,7 +35,7 @@ const organizationListSlice = createSlice({
     data: [],
     error: null,
     isLoading: false,
-    selectedOrgId: localStorage.getItem("selectedOrgId") || "",
+    selectedOrgId: "",
   },
   reducers: {
     setSelectedOrgId: (state, action) => {
@@ -63,6 +63,7 @@ const organizationListSlice = createSlice({
     });
     builder.addCase(createOrganization.fulfilled, (state, action) => {
       state.isLoading = false;
+      state.selectedOrgId = action.payload.orgData._id;
       state.data = [...state.data, action.payload.orgData];
     });
     builder.addCase(createOrganization.rejected, (state, action) => {

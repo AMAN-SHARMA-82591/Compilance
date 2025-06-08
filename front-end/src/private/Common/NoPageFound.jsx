@@ -1,13 +1,11 @@
-import React from "react";
-
 function NoPageFound() {
   return (
-    <div className="grid h-screen px-4 bg-white place-content-center">
-      <div className="text-center">
+    <div className="no-page-found-container">
+      <div className="no-page-found-content">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1024 768"
-          className="w-auto h-56 mx-auto text-black sm:h-64"
+          className="no-page-found-svg"
         >
           <g fill="none" fillRule="evenodd">
             <g fill="#FF5678">
@@ -22,15 +20,10 @@ function NoPageFound() {
             </g>
           </g>
         </svg>
-
-        <h1 className="mt-6 text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          Uh-oh! 404 Error
-        </h1>
-
-        <p className="mt-4 text-gray-500">We can't find that page.</p>
+        ;<h1 className="no-page-found-title">Uh-oh! 404 Error</h1>
+        <p className="no-page-found-message">We can't find that page.</p>
       </div>
     </div>
   );
 }
-
 export default NoPageFound;

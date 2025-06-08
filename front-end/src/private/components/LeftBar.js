@@ -104,6 +104,7 @@ function LeftBar() {
             <IconButton
               style={{ background: "white" }}
               size="large"
+              disabled={isEmpty(organizations)}
               onClick={() => setOpenDialog(true)}
             >
               <SettingsIcon />

@@ -592,7 +592,7 @@ body {
   /* flex-direction: row;
   align-items: flex-start; */
   justify-content: space-between;
-  padding: 5px 20px;
+  padding: 5px 30px;
   background-color: #f8f9fa; /* Light gray background */
 }
 
@@ -1020,7 +1020,7 @@ input {
 }
 
 .profile-box.active {
-  border: 1px solid #27272e;
+  border-bottom: 2px solid #0606967a;
 }
 
 .profile-box:hover {
@@ -1115,6 +1115,46 @@ input {
   background-color: rgba(196, 188, 188, 0.322);
   border-radius: 5px;
   padding: 10px 0px;
+}
+
+/* -------------- Page Not Found -----------------*/
+
+.no-page-found-container {
+  min-height: 80vh;
+  width: 90vw;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-page-found-content {
+  text-align: center;
+  padding: 40px 24px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+}
+
+.no-page-found-svg {
+  width: 320px;
+  height: 220px;
+  margin: 0 auto 24px auto;
+  display: block;
+}
+
+.no-page-found-title {
+  margin-top: 24px;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #222;
+  letter-spacing: 1px;
+}
+
+.no-page-found-message {
+  margin-top: 16px;
+  color: #666;
+  font-size: 1.2rem;
 }
 
 @media (max-width: 768px) {

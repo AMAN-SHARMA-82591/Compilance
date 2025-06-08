@@ -11,7 +11,7 @@ const login = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({
       success: false,
-      msg: "Errors",
+      message: "Errors",
       errors: errors.array(),
     });
   }
@@ -19,21 +19,24 @@ const login = async (req, res, next) => {
     const user = await User.findOne({ email }).lean();
     //compare password
     if (!user) {
-      return res
-        .status(400)
-        .json({ msg: "User Not Found. Please Check you email-address." });
+      return res.status(400).json({
+        success: false,
+        message: "User not found. Please check your email address.",
+      });
     }
     const profile = await Profile.findOne({ userId: user._id });
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res
         .status(401)
-        .json({ success: false, msg: "Invalid Credentials" });
+        .json({ success: false, message: "Invalid Credentials" });
     }
     const token = jwt.sign({ profile }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    res.status(201).json({ success: true, msg: "Login Successfully", token });
+    res
+      .status(201)
+      .json({ success: true, message: "Login Successfully", token });
   } catch (error) {
     next(error);
   }
@@ -95,7 +98,7 @@ const register = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({
       success: false,
-      msg: "Errors",
+      message: "Errors",
       errors: errors.array(),
     });
   }
@@ -104,19 +107,19 @@ const register = async (req, res, next) => {
     if (user) {
       return res
         .status(400)
-        .json({ success: false, msg: "User already exists!" });
+        .json({ success: false, message: "User already exists!" });
     }
     const profile = await createNewUser(name, email, password, 2);
     const token = jwt.sign({ profile }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    res.status(201).json({ msg: "Registered Successfully", token });
+    res.status(201).json({ message: "Registered Successfully", token });
   } catch (error) {
     if (
       error.message === "Profile already exists with similar email-address" ||
       error.message === "You cannot create admin"
     ) {
-      return res.status(400).json({ success: false, msg: error.message });
+      return res.status(400).json({ success: false, message: error.message });
     }
     next(error);
   }

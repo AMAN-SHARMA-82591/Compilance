@@ -97,7 +97,7 @@ function CreateOrganizationDialog({ open, handleOrganizationDialog }) {
   //   handleFetchCountry();
   // }, [handleFetchCountry]);
 
-  const handleCloseCreateTask = () => {
+  const handleCloseCreateOrg = () => {
     resetForm();
     handleOrganizationDialog();
   };
@@ -109,7 +109,7 @@ function CreateOrganizationDialog({ open, handleOrganizationDialog }) {
         open={open}
         maxWidth="sm"
         keepMounted={false}
-        onClose={handleCloseCreateTask}
+        onClose={handleCloseCreateOrg}
       >
         <DialogTitle>Create Organization</DialogTitle>
         <DialogContent>
@@ -224,7 +224,7 @@ function CreateOrganizationDialog({ open, handleOrganizationDialog }) {
           </Grid>
         </DialogContent>
         <DialogActions style={{ margin: "", justifyContent: "flex-start" }}>
-          <Button variant="outlined" onClick={handleCloseCreateTask}>
+          <Button variant="outlined" onClick={handleCloseCreateOrg}>
             Close
           </Button>
           <Button variant="contained" onClick={handleSubmit}>
