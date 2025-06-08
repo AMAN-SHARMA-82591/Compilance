@@ -78,6 +78,11 @@ const organizationListSlice = createSlice({
     builder.addCase(deleteOrganization.fulfilled, (state, action) => {
       state.isLoading = false;
       state.data = state.data.filter((org) => org._id !== action.payload._id);
+      if (state.data.length > 0) {
+        state.selectedOrgId = state.data[0]._id;
+      } else {
+        state.selectedOrgId = "";
+      }
     });
     builder.addCase(deleteOrganization.rejected, (state, action) => {
       state.isLoading = false;
