@@ -1,28 +1,49 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { isEmpty } from "lodash";
 import { taskFilterAction } from "../../../store/store";
-import { Button, TextField } from "@mui/material";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Button,
+  IconButton,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ClearIcon from "@mui/icons-material/Clear";
 import { deleteTask } from "../../../store/store";
-import DeleteIcon from "@mui/icons-material/Delete";
 import CreateTaskDialog from "./common/CreateTaskDialog";
-import EditTaskDialog from "./common/EditTaskDialog";
-import { formatStatus } from "../../Common/formatHelpers";
 import { TableSkeleton } from "../../Common/Skeleton";
 import PageHeader from "../../Common/PageHeader";
+import TaskRow from "./common/TaskRow";
 
 function Index() {
   const dispatch = useDispatch();
+  const [searchTerm, setSearchTerm] = useState("");
   const [createTaskDialog, setCreateTaskDialog] = useState(false);
-  const taskList = useSelector((state) => state.taskList?.data?.taskList || []);
-  const isLoading = useSelector((state) => state.taskList?.isLoading || false);
+  const [archieveOpen, setArchieveOpen] = useState(false); // Accordion state
   const taskFilterType = useSelector((state) => state.taskFilterType || null);
+  const {
+    isLoading,
+    data: { taskList },
+  } = useSelector((state) => state.taskList);
 
-  useEffect(() => {
-    return () => {
-      dispatch(taskFilterAction(""));
-    };
-  });
+  const filteredTaskList = taskFilterType
+    ? taskList.filter(
+        (task) => task.status === taskFilterType && task.userId !== null
+      )
+    : taskList.filter((task) => task.userId !== null);
+
+  const searchedTaskList = searchTerm
+    ? filteredTaskList.filter((task) =>
+        task.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : filteredTaskList;
+
+  const archieveTaskList = taskList.filter((task) => task.userId === null);
 
   const handleDeleteTask = (task) => {
     dispatch(deleteTask(task));
@@ -36,41 +57,96 @@ function Index() {
     dispatch(taskFilterAction(filterType));
   };
 
+  const handleClearFilterType = () => {
+    dispatch(taskFilterAction(""));
+  };
+
   let content;
   if (isLoading) {
     content = [...Array(5)].map((_, index) => <TableSkeleton key={index} />);
   } else {
     content = (
       <tbody>
-        {!isEmpty(taskList) &&
-          taskList.map((task, key) => (
-            <tr key={key}>
-              <td className="status-cell">{formatStatus(task.status)}</td>
-              <td className="title-cell">{task.title}</td>
-              <td className="description-cell">{task.description}</td>
-              <td className="type-cell">{formatStatus(task.type)}</td>
-              <td className="actions-cell">
-                <EditTaskDialog id={task._id} />
-                <Button
-                  color="error"
-                  variant="outlined"
+        {!isEmpty(searchedTaskList) ? (
+          searchedTaskList.map((task) => (
+            <TaskRow key={task._id} task={task} onDelete={handleDeleteTask} />
+          ))
+        ) : (
+          <tr>
+            <td colSpan={5}>
+              <Typography
+                style={{
+                  color: "#888",
+                  padding: "15px",
+                  borderRadius: "8px",
+                  fontStyle: "italic",
+                  textAlign: "center",
+                  background: "rgba(0, 0, 0, 0.05)",
+                }}
+                variant="h6"
+              >
+                No tasks found.
+              </Typography>
+            </td>
+          </tr>
+        )}
+        {!isEmpty(archieveTaskList) && (
+          <tr>
+            <td colSpan={5} style={{ padding: 0, border: "none" }}>
+              <Accordion
+                expanded={archieveOpen}
+                onChange={() => setArchieveOpen((prev) => !prev)}
+                sx={{
+                  boxShadow: "none",
+                  background: "transparent",
+                  "&:before": { display: "none" },
+                  marginTop: 2,
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="archieve-content"
+                  id="archieve-header"
                   sx={{
-                    borderColor: "red",
-                    color: "red",
-                    "&:hover": {
-                      backgroundColor: "red",
-                      color: "white",
-                    },
+                    background: "rgba(0,0,0,0.05)",
+                    borderRadius: "8px",
+                    minHeight: "48px",
                   }}
                 >
-                  <DeleteIcon onClick={() => handleDeleteTask(task)} />
-                </Button>
-              </td>
-            </tr>
-          ))}
+                  <Typography
+                    style={{
+                      color: "#888",
+                      fontStyle: "italic",
+                      fontWeight: 600,
+                      width: "100%",
+                      textAlign: "center",
+                    }}
+                    variant="h6"
+                  >
+                    Archive ({archieveTaskList.length})
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails sx={{ padding: 0 }}>
+                  <table style={{ width: "100%" }}>
+                    <tbody>
+                      {archieveTaskList.map((task) => (
+                        <TaskRow
+                          key={task._id}
+                          task={task}
+                          onDelete={handleDeleteTask}
+                        />
+                      ))}
+                    </tbody>
+                  </table>
+                </AccordionDetails>
+              </Accordion>
+            </td>
+          </tr>
+        )}
       </tbody>
     );
   }
+
   return (
     <>
       <PageHeader
@@ -111,6 +187,13 @@ function Index() {
           >
             Total
           </Button>
+          {taskFilterType && (
+            <Tooltip title="Clear Filter">
+              <IconButton size="small" onClick={handleClearFilterType}>
+                <ClearIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </div>
         <div className="search-main">
           <p>Search</p>
@@ -118,13 +201,8 @@ function Index() {
             size="small"
             variant="outlined"
             placeholder="Search"
-            // inputProps={{
-            //   startAdornment: (
-            //     <InputAdornment position='start'>
-            //       <Search />
-            //     </InputAdornment>
-            //   )
-            // }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>

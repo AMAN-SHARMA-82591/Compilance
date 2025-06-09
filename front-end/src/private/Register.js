@@ -11,7 +11,8 @@ import {
   CircularProgress,
 } from "@mui/material";
 import modernImage from "../images/vecteezy_modern-abstract-background-illustration_34720880.jpg";
-import { toastSuccess } from "./Common/ToastContainer";
+import { toastError, toastSuccess } from "./Common/ToastContainer";
+import { handleApiError } from "./Common/ErrorHandler";
 
 const styles = () => ({
   root: {
@@ -110,28 +111,33 @@ function Register({ classes }) {
       return;
     }
     setLoading(true);
-    try {
-      const res = await fetch(`${baseURL}/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
+    await fetch(`${baseURL}/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, password }),
+    })
+      .then(async (resp) => {
+        const data = await resp.json();
+        if (!resp.ok) {
+          throw new Error(data.message || "login failed");
+        }
+        return data;
       })
-        .then((resp) => resp.json())
-        .catch((error) => console.error(error));
-      if (res && res.token) {
+      .then(async (response) => {
         toastSuccess("New user registered.");
-        localStorage.setItem("token", `Bearer ${res.token}`);
+        localStorage.setItem("token", `Bearer ${response.token}`);
         await navigate("/organization");
         window.location.reload();
         setLoading(false);
         setTextInput({ name: "", email: "", password: "" });
-      }
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-    }
+      })
+      .catch((error) => {
+        const { message } = handleApiError(error);
+        return toastError(message);
+      })
+      .finally(() => setLoading(false));
   }
 
   function handleNameInputChange(event) {

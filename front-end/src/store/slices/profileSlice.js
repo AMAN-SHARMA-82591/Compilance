@@ -20,19 +20,19 @@ export const fetchLoggedProfile = createAsyncThunk(
 const profileSlice = createSlice({
   name: "profile",
   initialState: {
-    data: null,
+    profile: null,
     error: null,
     isLoading: false,
   },
   reducers: {
     setData: (state, action) => {
-      state.data = action.payload;
+      state.profile = action.payload;
     },
     setProfileData: (state, action) => {
-      state.data.profile = action.payload;
+      state.profile = action.payload;
     },
     clearData: (state) => {
-      state.data = null;
+      state.profile = null;
     },
   },
   extraReducers(builder) {
@@ -41,7 +41,7 @@ const profileSlice = createSlice({
     });
     builder.addCase(fetchLoggedProfile.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.data.profile = action.payload;
+      state.profile = action.payload;
     });
     builder.addCase(fetchLoggedProfile.rejected, (state, action) => {
       state.isLoading = false;

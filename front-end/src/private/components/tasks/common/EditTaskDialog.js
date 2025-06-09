@@ -14,6 +14,8 @@ import { useFormik } from "formik";
 import { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import axiosInstance from "../../../Common/AxiosInstance";
+import { handleApiError } from "../../../Common/ErrorHandler";
+import { toastError } from "../../../Common/ToastContainer";
 
 function EditTaskDialog({ id }) {
   const dispatch = useDispatch();
@@ -26,6 +28,7 @@ function EditTaskDialog({ id }) {
     type: "",
     priority: "",
   };
+
   const { values, handleSubmit, handleChange, handleReset, setValues } =
     useFormik({
       initialValues: initialValues,
@@ -35,21 +38,27 @@ function EditTaskDialog({ id }) {
         setOpen(false);
       },
     });
+
   const handleOpenTask = async () => {
     setLoading(true);
-    const response = await axiosInstance.get(`/tasks/${id}`);
-    if (response.data) {
-      setLoading(false);
-      setValues({
-        type: response.data.type,
-        title: response.data.title,
-        status: response.data.status,
-        priority: response.data.priority,
-        description: response.data.description,
-      });
-      setOpen(true);
-    } else {
-      setLoading(true);
+    try {
+      const response = await axiosInstance.get(`/tasks/${id}`);
+      if (response.data) {
+        setLoading(false);
+        setValues({
+          type: response.data.taskData.type,
+          title: response.data.taskData.title,
+          status: response.data.taskData.status,
+          priority: response.data.taskData.priority,
+          description: response.data.taskData.description,
+        });
+        setOpen(true);
+      } else {
+        setLoading(true);
+      }
+    } catch (error) {
+      const { message } = handleApiError;
+      toastError(message);
     }
   };
 

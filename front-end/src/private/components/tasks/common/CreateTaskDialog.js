@@ -18,7 +18,7 @@ function CreateTaskDialog({ open, handleOpenTaskDialog }) {
   const dispatch = useDispatch();
   // const [orgData, setOrgData] = useState([]);
   const profileData = useSelector(
-    (store) => store.basicInformation?.data?.profile || null
+    (store) => store.basicInformation?.profile || null
   );
   const orgData = useSelector((store) => store.organizationData?.data || []);
 

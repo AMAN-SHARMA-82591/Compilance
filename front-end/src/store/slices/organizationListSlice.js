@@ -5,10 +5,6 @@ export const fetchOrganizationList = createAsyncThunk(
   "organization/fetch",
   async () => {
     const response = await axiosInstance.get("/users/organization");
-    if (!localStorage.getItem("selectedOrgId")) {
-      localStorage.setItem("selectedOrgId", response.data.data[0]._id);
-    }
-
     return response.data;
   }
 );
@@ -35,7 +31,7 @@ const organizationListSlice = createSlice({
     data: [],
     error: null,
     isLoading: false,
-    selectedOrgId: localStorage.getItem("selectedOrgId") || "",
+    selectedOrgId: "",
   },
   reducers: {
     setSelectedOrgId: (state, action) => {
@@ -49,8 +45,13 @@ const organizationListSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchOrganizationList.fulfilled, (state, action) => {
+      const orgData = action.payload.data;
       state.isLoading = false;
-      state.data = action.payload.data;
+      state.data = orgData;
+      if (!localStorage.getItem("selectedOrgId")) {
+        localStorage.setItem("selectedOrgId", orgData[0]._id);
+        state.selectedOrgId = orgData[0]._id;
+      }
     });
     builder.addCase(fetchOrganizationList.rejected, (state, action) => {
       state.isLoading = false;
@@ -63,6 +64,7 @@ const organizationListSlice = createSlice({
     });
     builder.addCase(createOrganization.fulfilled, (state, action) => {
       state.isLoading = false;
+      state.selectedOrgId = action.payload.orgData._id;
       state.data = [...state.data, action.payload.orgData];
     });
     builder.addCase(createOrganization.rejected, (state, action) => {
@@ -77,6 +79,11 @@ const organizationListSlice = createSlice({
     builder.addCase(deleteOrganization.fulfilled, (state, action) => {
       state.isLoading = false;
       state.data = state.data.filter((org) => org._id !== action.payload._id);
+      if (state.data.length > 0) {
+        state.selectedOrgId = state.data[0]._id;
+      } else {
+        state.selectedOrgId = "";
+      }
     });
     builder.addCase(deleteOrganization.rejected, (state, action) => {
       state.isLoading = false;

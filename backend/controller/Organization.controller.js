@@ -21,12 +21,12 @@ const organizationList = async (req, res, next) => {
     }
     const organizationIds = orgMap.map((org) => org.orgId);
     if (!organizationIds.length) {
-      res.status(400).json({ success: false, msg: "No organization found." });
+      return res.status(200).json({ success: true, data: [] });
     }
     const organization = await Organization.find({
       _id: { $in: organizationIds },
-    });
-    res.status(200).json({
+    }).lean();
+    return res.status(200).json({
       success: true,
       msg: "Fetched organization list.",
       data: organization,
@@ -113,9 +113,10 @@ const deleteOrganization = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    const organization = await Organization.findOne({ _id: id }).session(
-      session
-    );
+    const organization = await Organization.findOne({ _id: id })
+      .session(session)
+      .lean()
+      .select("_id");
     if (!organization) {
       await session.abortTransaction();
       session.endSession();
@@ -124,12 +125,12 @@ const deleteOrganization = async (req, res) => {
         .json({ success: false, msg: "Organization not found!" });
     }
 
-    // Delete Profile and users attached with organization
-    const profileIds = await Profile.find({ orgId: id })
-      .select("_id userId")
-      .session(session);
-    const userIds = profileIds.map((profile) => profile.userId);
-    await Profile.deleteMany({ orgId: id }).session(session);
+    const orgMap = await UserOrgMap.find({ orgId: id, role: 0 })
+      .lean()
+      .select("-_id userId");
+    const userIds = orgMap.map((org) => org.userId);
+    // // Delete Profile and users attached with organization
+    await Profile.deleteMany({ userId: { $in: userIds } }).session(session);
     await User.deleteMany({ _id: { $in: userIds } }).session(session);
 
     // Delete Tasks
@@ -139,7 +140,9 @@ const deleteOrganization = async (req, res) => {
     await Organization.findOneAndDelete({ _id: id }).session(session);
 
     // Delete Organization Mapping
-    await UserOrgMap.findOneAndDelete({ userId: id }).session(session);
+    await UserOrgMap.deleteMany({
+      orgId: id,
+    }).session(session);
 
     await session.commitTransaction();
     session.endSession();

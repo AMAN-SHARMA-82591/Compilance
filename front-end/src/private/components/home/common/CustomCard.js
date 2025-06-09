@@ -7,6 +7,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/system";
 import { Avatar } from "@mui/material";
+import { useNavigate } from "react-router";
 
 export const StyledCard = styled(Card)(() => ({
   maxWidth: "20vw",
@@ -21,14 +22,16 @@ export const StyledCard = styled(Card)(() => ({
 }));
 
 function CustomCard({ data }) {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuClose = () => {
+  const handleMenuClose = async () => {
     setAnchorEl(null);
+    await navigate(`/people/${data._id}`);
   };
   return (
     <StyledCard>
@@ -48,9 +51,10 @@ function CustomCard({ data }) {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleMenuClose}>Edit</MenuItem>
+        <MenuItem onClick={handleMenuClose}>Details</MenuItem>
+        {/* <MenuItem onClick={handleMenuClose}>Edit</MenuItem>
         <MenuItem onClick={handleMenuClose}>Delete</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Share</MenuItem>
+        <MenuItem onClick={handleMenuClose}>Share</MenuItem> */}
       </Menu>
     </StyledCard>
   );

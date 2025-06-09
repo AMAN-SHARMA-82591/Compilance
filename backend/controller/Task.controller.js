@@ -1,40 +1,23 @@
 require("dotenv").config();
-const Organization = require("../model/Organization.model");
 const Task = require("../model/Task.model");
 const { validationResult } = require("express-validator");
 // const { profile } = require("./User.controller");
 const { default: mongoose } = require("mongoose");
 // const { authAdminRole } = require("../utils/constants");
 
-const taskList = async (req, res) => {
-  const { uid, oid, user } = req;
+const taskList = async (req, res, next) => {
+  const { oid } = req;
   try {
     const page = parseInt(req.query.page) - 1 || 0;
     const limit = parseInt(req.query.limit) || 20;
     const search = req.query.search || "";
     const filter = req.query.filter || "";
 
-    let query = {
+    const query = {
+      orgId: oid,
       title: { $regex: search, $options: "i" },
       type: { $regex: filter, $options: "i" },
     };
-
-    if (user.profile.role === 1) {
-      query = {};
-    } else if (user.profile.role === 2) {
-      const organizationList = await Organization.find({ _id: oid })
-        .select("_id")
-        .lean();
-
-      const orgIds = organizationList.map((org) => org._id);
-
-      query = {
-        orgId: { $in: orgIds },
-      };
-    } else {
-      query.orgId = oid;
-    }
-
     const taskList = await Task.find(query)
       .skip(page * limit)
       .limit(limit)
@@ -46,21 +29,14 @@ const taskList = async (req, res) => {
       length: taskList.length,
     });
   } catch (error) {
-    console.error(error.message);
-    res.json({ message: "Error", error: error.message });
+    next(error);
   }
 };
 
-const progressOverviewData = async (req, res) => {
-  const { uid, oid, user } = req;
+const progressOverviewData = async (req, res, next) => {
+  const { uid, oid } = req;
   try {
-    let query = { userId: uid, orgId: oid };
-
-    if (user.profile.role === 1) {
-      query = {};
-    } else if (user.profile.role === 2) {
-      query = { userId: uid };
-    }
+    const query = { orgId: oid };
     const overdue = await Task.countDocuments({
       ...query,
       status: "overdue",
@@ -74,13 +50,15 @@ const progressOverviewData = async (req, res) => {
       status: "in-progress",
     });
     const totalCount = await Task.countDocuments(query);
-    res.json({
+    res.status(200).json({
       overdue: overdue,
       upcoming: upcomingCount,
       in_progress: inProgressCount,
       total: totalCount,
     });
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 const createTask = async (req, res, next) => {
@@ -124,8 +102,8 @@ const createTask = async (req, res, next) => {
   }
 };
 
-const getTask = async (req, res) => {
-  const { uid } = req;
+const getTask = async (req, res, next) => {
+  const { oid } = req;
   try {
     const {
       params: { id },
@@ -133,16 +111,19 @@ const getTask = async (req, res) => {
     const taskData = await Task.findOne({
       _id: id,
       orgId: oid,
-      rootUserId: uid,
     }).lean();
-    res.status(200).json(taskData);
+    if (!taskData) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Task not found" });
+    }
+    res.status(200).json({ success: true, taskData });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Server Error");
+    next(error);
   }
 };
 
-const deleteTask = async (req, res) => {
+const deleteTask = async (req, res, next) => {
   const {
     params: { id: taskId },
     uid,
@@ -152,34 +133,42 @@ const deleteTask = async (req, res) => {
     const taskData = await Task.findOne({
       _id: taskId,
       orgId: oid,
-      rootUserId: uid,
     });
     if (!taskData) {
       res.status(404).json({ message: `Task not found with Id ${taskId}` });
     }
     await taskData.deleteOne();
-    res.status(200).json({ message: "Deleted" });
+    res
+      .status(200)
+      .json({ success: true, message: "Task entity deleted.", id: taskId });
   } catch (error) {
-    console.error("Error deleting Task: ", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    next(error);
   }
 };
 
-const updateTask = async (req, res) => {
+const updateTask = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      msg: "Errors",
+      errors: errors.array(),
+    });
+  }
   const {
     params: { id: taskId },
     uid,
+    oid,
   } = req;
   try {
     const task = await Task.findOneAndUpdate(
-      { taskId, rootUserId: uid, orgId: oid },
+      { id: taskId, userId: uid, orgId: oid },
       req.body,
       { new: true, runValidators: true }
     ).lean();
     res.status(200).json({ success: true, task });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Server Error");
+    next(error);
   }
 };
 

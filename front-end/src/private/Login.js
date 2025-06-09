@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import modernImage from "../images/vecteezy_modern-abstract-background-illustration_34720880.jpg";
 import { toastError, toastSuccess } from "./Common/ToastContainer";
+import { handleApiError } from "./Common/ErrorHandler";
 
 const styles = () => ({
   root: {
@@ -104,7 +105,7 @@ function Login({ classes }) {
       return toastError("Email & Password is REQUIRED!");
     }
     setLoading(true);
-    const res = await fetch(`${baseURL}/auth/login`, {
+    await fetch(`${baseURL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -114,18 +115,25 @@ function Login({ classes }) {
         password: textInput.password,
       }),
     })
-      .then((resp) => resp.json())
-      .catch((error) => console.error(error));
-    if (res && res.token) {
-      toastSuccess("Login Successful");
-      localStorage.setItem("token", `Bearer ${res.token}`);
-      await navigate("/home");
-      window.location.reload();
-      setTextInput({ email: "", password: "" });
-    } else {
-      toastError("Invalid Credentials");
-    }
-    setLoading(false);
+      .then(async (resp) => {
+        const data = await resp.json();
+        if (!resp.ok) {
+          throw new Error(data.message || "login failed");
+        }
+        return data;
+      })
+      .then(async (response) => {
+        toastSuccess("Login Successful");
+        localStorage.setItem("token", `Bearer ${response.token}`);
+        await navigate("/home");
+        window.location.reload();
+        setTextInput({ email: "", password: "" });
+      })
+      .catch((error) => {
+        const { message } = handleApiError(error);
+        return toastError(message);
+      })
+      .finally(() => setLoading(false));
   }
 
   function handleEmailInputChange(event) {

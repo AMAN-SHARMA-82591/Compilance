@@ -28,12 +28,8 @@ function LeftBar() {
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
   const organizations = useSelector((state) => state.organizationData?.data);
-  const profileData = useSelector(
-    (state) => state.basicInformation?.data?.profile
-  );
-  const selectedOrg = useSelector(
-    (state) => state.organizationData.selectedOrgId
-  );
+  const profileData = useSelector((state) => state.basicInformation?.profile);
+  const selectedOrg = localStorage.getItem("selectedOrgId");
 
   const handleChangeOrganization = async (event) => {
     const orgId = event.target.value;
@@ -99,14 +95,18 @@ function LeftBar() {
                   "Organization"
                 )}
               {renderNavLink("/tasks", <List fontSize="large" />, "Tasks")}
-              <IconButton
-                style={{ background: "white" }}
-                size="large"
-                onClick={() => setOpenDialog(true)}
-              >
-                <SettingsIcon />
-              </IconButton>
             </ul>
+          </div>
+          {/* Settings button at the bottom */}
+          <div className="leftbar-settings-btn">
+            <IconButton
+              style={{ background: "white" }}
+              size="large"
+              disabled={isEmpty(organizations)}
+              onClick={() => setOpenDialog(true)}
+            >
+              <SettingsIcon />
+            </IconButton>
           </div>
         </div>
       </Drawer>

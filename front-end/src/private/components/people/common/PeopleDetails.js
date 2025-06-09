@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as Yup from "yup";
 import {
   Button,
@@ -9,31 +9,38 @@ import {
   DialogContent,
   CircularProgress,
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
 import { useFormik } from "formik";
-import axiosInstance from "../../../Common/AxiosInstance";
-import jsImage from "../../../../images/defaultImg.png";
-// import { useDispatch } from 'react-redux';
-// import { setProfileData } from "../../../../store/store";
+import Grid from "@mui/material/Grid2";
 import { useParams } from "react-router";
+import jsImage from "../../../../images/defaultImg.png";
+import axiosInstance from "../../../Common/AxiosInstance";
+import { toastError } from "../../../Common/ToastContainer";
+import { handleApiError } from "../../../Common/ErrorHandler";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLoggedProfile } from "../../../../store/slices/profileSlice";
 
-function PeopleDetails(props) {
-  // const dispatch = useDispatch();
-  const [imageURL, setImageURL] = useState(null);
+const validationSchema = Yup.object({
+  email: Yup.string().email().required("Email Field is required"),
+  phone_number: Yup.string()
+    .matches(/^\d{10}$/, "Phone number must be exactly 10 digits")
+    .notRequired(),
+  name: Yup.string()
+    .required("Name Field is required")
+    .min(3, "Name must be at least 3 charachter long"),
+});
+
+function PeopleDetails() {
+  const dispatch = useDispatch();
+  const profileId = useSelector(
+    (state) => state.basicInformation?.profile?._id || null
+  );
   const [error, setError] = useState(false);
+  const [imageURL, setImageURL] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [profileDetails, setProfileDetails] = useState(null);
   const [editProfile, setEditProfile] = useState(false);
   const [profileImageDialog, setProfileImageDialog] = useState(false);
   const { id: peopleId } = useParams();
-  const validationSchema = Yup.object({
-    email: Yup.string().email().required("Email Field is required"),
-    phone_number: Yup.string()
-      .matches(/^\d{10}$/, "Phone number must be exactly 10 digits")
-      .notRequired(),
-    name: Yup.string()
-      .required("Name Field is required")
-      .min(3, "Name must be at least 3 charachter long"),
-  });
 
   const initialValues = {
     company: "",
@@ -44,7 +51,6 @@ function PeopleDetails(props) {
     website: "",
     location: "",
     status: "",
-    organization: "",
     skills: [],
     bio: "",
   };
@@ -54,15 +60,20 @@ function PeopleDetails(props) {
       initialValues: initialValues,
       validationSchema,
       onSubmit: async (values) => {
-        const response = await axiosInstance.patch(
-          `/users/profile/${profileDetails._id}`,
-          values
-        );
-        if (response.data) {
-          setProfileDetails({ ...profileDetails, ...values });
-          // dispatch(fetchLoggedProfile());
+        try {
+          const response = await axiosInstance.patch(
+            `/users/profile/${profileDetails._id}`,
+            values
+          );
+          if (response.data) {
+            setProfileDetails({ ...profileDetails, ...values });
+            dispatch(fetchLoggedProfile());
+          }
+          setEditProfile(false);
+        } catch (error) {
+          const { message } = handleApiError(error);
+          toastError(message);
         }
-        setEditProfile(false);
       },
     });
 
@@ -76,7 +87,10 @@ function PeopleDetails(props) {
   }, [fetchData]);
 
   const handleChangeProfileImage = () => {
-    setProfileImageDialog(!profileImageDialog);
+    setError(false);
+    setImageURL(null);
+    setImagePreview(null);
+    setProfileImageDialog((profileImageDialog) => !profileImageDialog);
   };
 
   const handleOpenProfileEdit = () => {
@@ -91,7 +105,6 @@ function PeopleDetails(props) {
       website: profileDetails.website || "",
       location: profileDetails.location || "",
       status: profileDetails.status || "",
-      organization: profileDetails.organization || "",
       skills: profileDetails.skill || [],
       bio: profileDetails.bio || "",
     });
@@ -103,29 +116,36 @@ function PeopleDetails(props) {
   };
 
   const handleImageChange = (event) => {
-    // const reader = new FileReader();
     const imageFile = event.target.files[0];
     if (imageFile.size > 70000) {
       setError(true);
+      setImagePreview(null);
     } else {
       setError(false);
+      setImageURL(imageFile);
+      setImagePreview(URL.createObjectURL(imageFile));
     }
-    setImageURL(imageFile);
   };
 
   const handleSubmitImage = async () => {
     const formData = new FormData();
     formData.append("image", imageURL);
-    const response = await axiosInstance.patch(
-      `users/profile/image/${profileDetails._id}`,
-      formData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
+    try {
+      const response = await axiosInstance.post(
+        `users/profile/image/${profileDetails._id}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      if (response.data) {
+        setProfileDetails({ ...profileDetails, image: response.data.image });
+        dispatch(fetchLoggedProfile());
+        handleChangeProfileImage();
       }
-    );
-    setProfileDetails({ ...profileDetails, image: response.data.image });
-    // dispatch(fetchLoggedProfile());
-    handleChangeProfileImage();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   if (!profileDetails) {
@@ -141,22 +161,66 @@ function PeopleDetails(props) {
       <div className="profile-header-section">
         <div className="profile-image">
           <div>
-            <img
-              alt={profileDetails?.image}
-              src={profileDetails?.image || jsImage}
-              // src={`${BASE_URL}${profileDetails?.image}` || jsImage}
-              onClick={handleChangeProfileImage}
-            />
-            <Dialog keepMounted={false} open={profileImageDialog}>
+            {profileId === peopleId ? (
+              <img
+                alt={profileDetails?.image}
+                src={profileDetails?.image || jsImage}
+                style={{ cursor: "pointer" }}
+                // src={`${BASE_URL}${profileDetails?.image}` || jsImage}
+                onClick={handleChangeProfileImage}
+              />
+            ) : (
+              <img
+                alt={profileDetails?.image}
+                src={profileDetails?.image || jsImage}
+              />
+            )}
+
+            <Dialog
+              fullWidth
+              maxWidth="xs"
+              keepMounted={false}
+              open={profileImageDialog}
+            >
               <DialogTitle>Change Profile Picture</DialogTitle>
               <DialogContent>
+                {imagePreview && (
+                  <img
+                    src={imagePreview}
+                    alt="preview-img"
+                    style={{
+                      width: 180,
+                      height: 180,
+                      margin: "20px auto 10px auto",
+                      display: "block",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                    }}
+                  />
+                )}
                 <input
                   accept="image/*"
                   type="file"
                   onChange={handleImageChange}
+                  style={{
+                    display: "block",
+                    margin: "20px auto",
+                    padding: "10px",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                    cursor: "pointer",
+                  }}
                 />
                 {error && (
-                  <p style={{ color: "red" }}>
+                  <p
+                    style={{
+                      color: "red",
+                      textAlign: "center",
+                      marginTop: "10px",
+                    }}
+                  >
                     Image size exceeds. Pick another one
                   </p>
                 )}
@@ -181,29 +245,31 @@ function PeopleDetails(props) {
             </Dialog>
           </div>
         </div>
-        <div className="profile-edit-options">
-          {editProfile ? (
-            <>
-              <button
-                className="people-button"
-                onClick={handleCloseProfileEdit}
-              >
-                Cancel
+        {profileId === peopleId && (
+          <div className="profile-edit-options">
+            {editProfile ? (
+              <>
+                <button
+                  className="people-button"
+                  onClick={handleCloseProfileEdit}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="people-button"
+                  type="submit"
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </button>
+              </>
+            ) : (
+              <button className="people-button" onClick={handleOpenProfileEdit}>
+                Edit
               </button>
-              <button
-                className="people-button"
-                type="submit"
-                onClick={handleSubmit}
-              >
-                Submit
-              </button>
-            </>
-          ) : (
-            <button className="people-button" onClick={handleOpenProfileEdit}>
-              Edit
-            </button>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
       <div className="profile-main-section">
         <p>Profile Details</p>
@@ -233,14 +299,11 @@ function PeopleDetails(props) {
               <p>{profileDetails?.email}</p>
             ) : (
               <TextField
+                disabled
                 fullWidth
                 size="small"
                 name="email"
-                placeholder="Email"
-                error={errors.email}
-                value={values.email}
-                onChange={handleChange}
-                helperText={errors.email}
+                value={profileDetails?.email || null}
               />
             )}
           </Grid>
