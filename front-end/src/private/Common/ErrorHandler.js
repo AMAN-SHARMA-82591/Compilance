@@ -1,15 +1,4 @@
-import axiosInstance from "./AxiosInstance";
-import { toastError } from "./ToastContainer";
-
-export const handleApiError = async (error) => {
-  if (error.response.status === 401) {
-    toastError("Your sesion has expired. Please log-in again");
-    await axiosInstance.post("/auth/logout");
-    localStorage.removeItem("token");
-    setTimeout(() => {
-      window.location.href = "/login";
-    }, 3000);
-  }
+export const handleApiError = (error) => {
   if (error.response) {
     const { status, data } = error.response;
     return {

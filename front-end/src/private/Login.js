@@ -125,7 +125,7 @@ function Login({ classes }) {
       })
       .then(async (response) => {
         toastSuccess("Login Successful");
-        localStorage.setItem("token", `Bearer ${response.token}`);
+        localStorage.setItem("uid", response.uid);
         await navigate("/home");
         window.location.reload();
         setTextInput({ email: "", password: "" });

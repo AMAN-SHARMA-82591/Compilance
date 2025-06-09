@@ -38,22 +38,21 @@ const getUser = async (req, res) => {
 };
 
 // Logged In Profile Details
-const profile = async (req, res) => {
+const getUserProfile = async (req, res, next) => {
   try {
-    const profile = await Profile.findOne({ _id: req.user.id });
+    const profile = await Profile.findOne({ userId: req.user.id });
     if (!profile) {
       return res
         .status(400)
         .json({ message: "There is no profile for this user." });
     }
-    res.status(200).json(profile);
+    res.status(200).json({ success: true, profile });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Server Error");
+    next(error);
   }
 };
 
-const getProfile = async (req, res) => {
+const getProfile = async (req, res, next) => {
   try {
     const {
       params: { id },
@@ -61,12 +60,13 @@ const getProfile = async (req, res) => {
 
     const profileData = await Profile.findById({ _id: id }).lean();
     if (!profileData) {
-      return res.status(404).send({ message: "User not found" });
+      return res
+        .status(404)
+        .send({ success: false, message: "User not found" });
     }
     return res.status(200).json(profileData);
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Server Error");
+    next(error);
   }
 };
 
@@ -289,12 +289,12 @@ const updateProfileImage = async (req, res, next) => {
 
 module.exports = {
   users,
-  profile,
   getUser,
   profileList,
   getProfile,
   updateProfile,
   createProfile,
   deleteProfile,
+  getUserProfile,
   updateProfileImage,
 };

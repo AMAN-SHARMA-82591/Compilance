@@ -9,7 +9,7 @@ function LoginAdminDropDownMenu({ handleClosePopover, profileDetails }) {
   async function handleLogout() {
     try {
       await axiosInstance.post("/auth/logout");
-      localStorage.removeItem("token");
+      localStorage.removeItem("uid");
       localStorage.removeItem("selectedOrgId");
       window.location.reload(false);
     } catch (error) {

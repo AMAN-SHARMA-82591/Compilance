@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTaskList, setData } from "./store/store";
+import { fetchLoggedProfile, fetchTaskList } from "./store/store";
 import { fetchOrganizationList } from "./store/slices/organizationListSlice";
 import AppRoutes from "./private/Common/AppRoutes";
 import "./App.css";
@@ -11,21 +10,20 @@ function App() {
   const selectedOrgId = useSelector(
     (state) => state.organizationData.selectedOrgId
   );
-  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("uid");
 
   useEffect(() => {
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      dispatch(setData(decodedToken.profile));
+    if (userId) {
+      dispatch(fetchLoggedProfile());
       dispatch(fetchOrganizationList());
       if (selectedOrgId) {
         localStorage.setItem("selectedOrgId", selectedOrgId);
         dispatch(fetchTaskList());
       }
     }
-  }, [dispatch, token, selectedOrgId]);
+  }, [dispatch, userId, selectedOrgId]);
 
-  return <AppRoutes token={token} />;
+  return <AppRoutes userId={userId} />;
 }
 
 export default App;

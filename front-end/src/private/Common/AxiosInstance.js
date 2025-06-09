@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toastError } from "./ToastContainer";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL || "http://localhost:5000",
@@ -8,16 +9,13 @@ const axiosInstance = axios.create({
   },
 });
 
-// Add a request interceptor
+// Request interceptor (for orgId)
 axiosInstance.interceptors.request.use(
   (config) => {
-    // Get orgId from Redux, Context, or localStorage
     let orgId = null;
-    // Example for Redux:
     try {
       orgId = localStorage.getItem("selectedOrgId");
     } catch {}
-
     if (orgId) {
       config.headers["orgid"] = orgId;
     }
@@ -25,4 +23,21 @@ axiosInstance.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+// RESPONSE INTERCEPTOR for 401 handling
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      toastError("Your session has expired. Please log-in again");
+      localStorage.removeItem("uid");
+      localStorage.removeItem("selectedOrgId");
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 3000);
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default axiosInstance;

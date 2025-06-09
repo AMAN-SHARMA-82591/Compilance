@@ -1,6 +1,5 @@
 const express = require("express");
 const {
-  profile,
   users,
   getUser,
   profileList,
@@ -8,6 +7,7 @@ const {
   createProfile,
   updateProfile,
   deleteProfile,
+  getUserProfile,
   updateProfileImage,
 } = require("../controller/User.controller");
 const auth = require("../middleware/auth.middleware");
@@ -44,7 +44,7 @@ router
 
 // User Routes
 // router.get('/profile/me', auth, organization, profile);
-router.get("/profile/me", auth, profile);
+router.get("/profile/me", auth, checkOrganization, getUserProfile);
 // router.get('/profile', auth, profileList);
 router
   .route("/profile")
