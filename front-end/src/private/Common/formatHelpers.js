@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import * as R from 'ramda';
 
 export const formatStatus = (status) => {
     return _.chain(status)

@@ -30,7 +30,7 @@ const getUser = async (req, res) => {
   try {
     const userData = await User.findOne({ _id: uid }).lean();
 
-    res.status(200).json({ success: true, msg: userData });
+    res.status(200).json({ success: true, message: userData });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error");
@@ -40,11 +40,11 @@ const getUser = async (req, res) => {
 // Logged In Profile Details
 const profile = async (req, res) => {
   try {
-    const profile = await Profile.findOne({ _id: req.user.profile._id });
+    const profile = await Profile.findOne({ _id: req.user.id });
     if (!profile) {
       return res
         .status(400)
-        .json({ msg: "There is no profile for this user." });
+        .json({ message: "There is no profile for this user." });
     }
     res.status(200).json(profile);
   } catch (error) {
@@ -124,7 +124,7 @@ const createProfile = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({
       success: false,
-      msg: "Errors",
+      message: "Errors",
       errors: errors.array(),
     });
   }
@@ -133,7 +133,7 @@ const createProfile = async (req, res, next) => {
     if (user) {
       return res
         .status(400)
-        .json({ success: false, msg: "User already exists." });
+        .json({ success: false, message: "User already exists." });
     }
     const username = email.match(/^[^@]+/)[0];
     const userData = await createNewUser(name, email, username, 0, entity);
@@ -148,7 +148,7 @@ const createProfile = async (req, res, next) => {
       error.message === "Profile already exists with similar email-address" ||
       error.message === "You cannot create admin"
     ) {
-      return res.status(400).json({ success: false, msg: error.message });
+      return res.status(400).json({ success: false, message: error.message });
     }
     next(error);
   }
@@ -159,7 +159,7 @@ const updateProfile = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({
       success: false,
-      msg: "Errors",
+      message: "Errors",
       errors: errors.array(),
     });
   }

@@ -116,6 +116,7 @@ function Register({ classes }) {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({ name, email, password }),
     })
       .then(async (resp) => {

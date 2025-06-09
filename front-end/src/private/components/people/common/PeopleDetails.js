@@ -45,7 +45,7 @@ function PeopleDetails() {
   const initialValues = {
     company: "",
     name: "",
-    phone_number: null,
+    phone_number: "",
     department: "",
     email: "",
     website: "",
@@ -98,7 +98,7 @@ function PeopleDetails() {
     setValues({
       company: profileDetails.company || "",
       name: profileDetails.name || "",
-      phone_number: profileDetails.phone_number || null,
+      phone_number: profileDetails.phone_number || "",
       department: profileDetails.department || "",
       designation: profileDetails.designation || "",
       email: profileDetails.email || "",

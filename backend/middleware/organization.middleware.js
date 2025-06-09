@@ -2,12 +2,13 @@ const UserOrgMap = require("../model/UserOrganizationMapping.model");
 const { authAdminRole } = require("../utils/constants");
 
 const checkOrganization = async function (req, res, next) {
-  const { profile } = req.user;
+  const { role } = req.user;
   const orgId = req.headers.orgid;
   try {
-    if (!orgId && !authAdminRole.includes(profile.role)) {
+    if (!orgId && !authAdminRole.includes(role)) {
       return res.status(401).json({
-        msg: "Organization is not been created. Please create an organization first.",
+        message:
+          "Organization is not been created. Please create an organization first.",
       });
     }
 
@@ -17,7 +18,7 @@ const checkOrganization = async function (req, res, next) {
     if (!mapping.orgId) {
       return res
         .status(403)
-        .json({ msg: "You are not a member of this organization." });
+        .json({ message: "You are not a member of this organization." });
     }
     req.oid = orgId;
     return next();
@@ -27,12 +28,12 @@ const checkOrganization = async function (req, res, next) {
 };
 
 const checkRoleAccess = function (req, res, next) {
-  const { profile } = req.user;
+  const { role } = req.user;
   try {
-    if (profile.role === 0) {
+    if (role === 0) {
       return res
         .status(403)
-        .json({ msg: "Access denied. Insufficient permissions." });
+        .json({ message: "Access denied. Insufficient permissions." });
     }
     return next();
   } catch (error) {

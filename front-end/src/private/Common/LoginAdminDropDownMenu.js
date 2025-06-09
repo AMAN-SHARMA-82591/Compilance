@@ -1,9 +1,11 @@
 import { List, ListItem } from "@mui/material";
 import { Link } from "react-router";
 import { getRoleLabel, truncateText } from "./formatHelpers";
+import axiosInstance from "./AxiosInstance";
 
 function LoginAdminDropDownMenu({ handleClosePopover, profileDetails }) {
-  function handleLogout() {
+  async function handleLogout() {
+    await axiosInstance.post("/auth/logout");
     localStorage.removeItem("token");
     localStorage.removeItem("selectedOrgId");
     window.location.reload(false);

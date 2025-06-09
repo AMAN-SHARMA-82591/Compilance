@@ -8,13 +8,13 @@ const getRoles = async (req, res) => {
     });
     return res.status(200).json({
       success: true,
-      msg: "Roles Fetched successfully.",
+      message: "Roles Fetched successfully.",
       data: rolesData,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      msg: error.message,
+      message: error.message,
     });
   }
 };
@@ -26,7 +26,7 @@ const createRole = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(200).json({
         success: false,
-        msg: "Errors",
+        message: "Errors",
         errors: errors.array(),
       });
     }
@@ -37,13 +37,13 @@ const createRole = async (req, res) => {
     const roleData = await role.save();
     return res.status(200).json({
       success: true,
-      msg: "Role created successfully.",
+      message: "Role created successfully.",
       data: roleData,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      msg: error.message,
+      message: error.message,
     });
   }
 };

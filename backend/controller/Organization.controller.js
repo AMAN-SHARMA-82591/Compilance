@@ -8,7 +8,7 @@ const UserOrgMap = require("../model/UserOrganizationMapping.model");
 
 const organizationList = async (req, res, next) => {
   try {
-    const userRole = req.user.profile.role;
+    const userRole = req.user.role;
     let orgMap;
     if (userRole === 1) {
       orgMap = await UserOrgMap.find().lean();
@@ -28,7 +28,7 @@ const organizationList = async (req, res, next) => {
     }).lean();
     return res.status(200).json({
       success: true,
-      msg: "Fetched organization list.",
+      message: "Fetched organization list.",
       data: organization,
     });
   } catch (error) {
@@ -42,7 +42,7 @@ const createOrganization = async (req, res, next) => {
     if (isExists) {
       return res.status(400).json({
         success: false,
-        msg: "Organization already exists with this name.",
+        message: "Organization already exists with this name.",
       });
     }
     const orgData = await Organization.create({
@@ -51,7 +51,7 @@ const createOrganization = async (req, res, next) => {
     await UserOrgMap.create({
       userId: req.uid,
       orgId: orgData._id,
-      role: req.user.profile.role,
+      role: req.user.role,
     });
     return res.status(200).json({ success: true, orgData });
   } catch (error) {
@@ -68,14 +68,14 @@ const getOrganization = async (req, res) => {
     if (!organizationData) {
       return res
         .status(400)
-        .json({ success: false, msg: "Organization Not Found" });
+        .json({ success: false, message: "Organization Not Found" });
     }
     return res
       .status(200)
-      .json({ msg: "Fetched organization data.", data: organizationData });
+      .json({ message: "Fetched organization data.", data: organizationData });
   } catch (error) {
     res.status(500).json({
-      msg: "Server Error",
+      message: "Server Error",
       error: error.message,
     });
   }
@@ -90,7 +90,7 @@ const editOrganization = async (req, res) => {
     if (!organization) {
       return res
         .status(404)
-        .json({ success: false, msg: "Organization not found!" });
+        .json({ success: false, message: "Organization not found!" });
     }
     const updateOrganization = await Organization.findOneAndUpdate(
       { _id: id },
@@ -99,10 +99,10 @@ const editOrganization = async (req, res) => {
     ).select("-roles");
     return res
       .status(200)
-      .json({ msg: "Updated organization", data: updateOrganization });
+      .json({ message: "Updated organization", data: updateOrganization });
   } catch (error) {
     res.status(500).json({
-      msg: "Server Error",
+      message: "Server Error",
       error: error.message,
     });
   }
@@ -122,7 +122,7 @@ const deleteOrganization = async (req, res) => {
       session.endSession();
       return res
         .status(404)
-        .json({ success: false, msg: "Organization not found!" });
+        .json({ success: false, message: "Organization not found!" });
     }
 
     const orgMap = await UserOrgMap.find({ orgId: id, role: 0 })
@@ -149,12 +149,12 @@ const deleteOrganization = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, msg: "Organization Deleted.", _id: id });
+      .json({ success: true, message: "Organization Deleted.", _id: id });
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
     res.status(500).json({
-      msg: "Server Error",
+      message: "Server Error",
       error: error.message,
     });
   }

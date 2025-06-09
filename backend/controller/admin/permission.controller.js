@@ -8,7 +8,7 @@ const createPermission = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(200).json({
         success: false,
-        msg: "Errors",
+        message: "Errors",
         errors: errors.array(),
       });
     }
@@ -16,7 +16,7 @@ const createPermission = async (req, res) => {
     if (isExists) {
       return res.status(400).json({
         success: false,
-        msg: "Permission Name already exists.",
+        message: "Permission Name already exists.",
       });
     }
 
@@ -30,13 +30,13 @@ const createPermission = async (req, res) => {
     const newPermission = await permission.save();
     return res.status(200).json({
       success: true,
-      msg: "Permission added Successfully",
+      message: "Permission added Successfully",
       data: newPermission,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      msg: error.message,
+      message: error.message,
     });
   }
 };
@@ -48,7 +48,7 @@ const updatePermission = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(200).json({
         success: false,
-        msg: "Errors",
+        message: "Errors",
         errors: errors.array(),
       });
     }
@@ -56,7 +56,7 @@ const updatePermission = async (req, res) => {
     if (!isExists) {
       return res.status(400).json({
         success: false,
-        msg: "Permission ID Not Found.",
+        message: "Permission ID Not Found.",
       });
     }
     const isNameAssigned = await PermissionModel.findOne({
@@ -66,7 +66,7 @@ const updatePermission = async (req, res) => {
     if (isNameAssigned) {
       return res.status(400).json({
         success: false,
-        msg: "Permission name already assigned to another permission.",
+        message: "Permission name already assigned to another permission.",
       });
     }
 
@@ -85,13 +85,13 @@ const updatePermission = async (req, res) => {
     );
     return res.status(200).json({
       success: true,
-      msg: "Permission added Updated",
+      message: "Permission added Updated",
       data: updatedPermission,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      msg: error.message,
+      message: error.message,
     });
   }
 };
@@ -101,13 +101,13 @@ const getPermission = async (req, res) => {
     const permissions = await PermissionModel.find({});
     return res.status(200).json({
       success: true,
-      msg: "Permissions Fetched Successfully",
+      message: "Permissions Fetched Successfully",
       data: permissions,
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      msg: error.message,
+      message: error.message,
     });
   }
 };
@@ -118,7 +118,7 @@ const deletePermission = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(200).json({
         success: false,
-        msg: "Errors",
+        message: "Errors",
         errors: errors.array(),
       });
     }
@@ -126,12 +126,12 @@ const deletePermission = async (req, res) => {
     await PermissionModel.findByIdAndDelete({ _id: id });
     return res.status(200).json({
       success: true,
-      msg: "Permission Deleted Successfully",
+      message: "Permission Deleted Successfully",
     });
   } catch (error) {
     return res.status(400).json({
       success: false,
-      msg: error.message,
+      message: error.message,
     });
   }
 };
