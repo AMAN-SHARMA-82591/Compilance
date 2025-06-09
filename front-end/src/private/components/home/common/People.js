@@ -6,6 +6,8 @@ import { useNavigate } from "react-router";
 import CustomCard from "./CustomCard";
 import { PeopleSkeleton } from "../../../Common/Skeleton";
 import axiosInstance from "../../../Common/AxiosInstance";
+import { handleApiError } from "../../../Common/ErrorHandler";
+import { toastError } from "../../../Common/ToastContainer";
 
 const styles = () => ({
   peopleMain: {
@@ -29,7 +31,8 @@ function People({ classes }) {
         );
         setPeopleList(response.data?.profileList);
       } catch (error) {
-        console.error("Error fetching profile list:", error);
+        const { message } = handleApiError(error);
+        toastError(message);
       } finally {
         setLoading(false);
       }

@@ -6,6 +6,8 @@ import { useFormik } from "formik";
 import axiosInstance from "../../../Common/AxiosInstance";
 import { useParams } from "react-router";
 import PageHeader from "../../../Common/PageHeader";
+import { handleApiError } from "../../../Common/ErrorHandler";
+import { toastError } from "../../../Common/ToastContainer";
 
 function OrganizationDetails(props) {
   // const [error, setError] = useState(false);
@@ -32,21 +34,31 @@ function OrganizationDetails(props) {
       initialValues: initialValues,
       validationSchema,
       onSubmit: async (values) => {
-        const response = await axiosInstance.patch(
-          `/users/organization/${orgDetails._id}`,
-          values
-        );
-        if (response.data) {
-          setOrgDetails({ ...orgDetails, ...values });
+        try {
+          const response = await axiosInstance.patch(
+            `/users/organization/${orgDetails._id}`,
+            values
+          );
+          if (response.data) {
+            setOrgDetails({ ...orgDetails, ...values });
+          }
+          setEditProfile(false);
+        } catch (error) {
+          const { message } = handleApiError(error);
+          toastError(message);
         }
-        setEditProfile(false);
       },
     });
 
   const fetchData = useCallback(async () => {
-    const response = await axiosInstance.get(`/users/organization/${orgId}`);
-    const { data } = response.data;
-    setOrgDetails(data);
+    try {
+      const response = await axiosInstance.get(`/users/organization/${orgId}`);
+      const { data } = response.data;
+      setOrgDetails(data);
+    } catch (error) {
+      const { message } = handleApiError(error);
+      toastError(message);
+    }
   }, [orgId]);
 
   useEffect(() => {

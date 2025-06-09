@@ -78,8 +78,13 @@ function PeopleDetails() {
     });
 
   const fetchData = useCallback(async () => {
-    const response = await axiosInstance.get(`/users/profile/${peopleId}`);
-    setProfileDetails(response.data);
+    try {
+      const response = await axiosInstance.get(`/users/profile/${peopleId}`);
+      setProfileDetails(response.data);
+    } catch (error) {
+      const { message } = handleApiError(error);
+      toastError(message);
+    }
   }, [peopleId]);
 
   useEffect(() => {
@@ -144,7 +149,8 @@ function PeopleDetails() {
         handleChangeProfileImage();
       }
     } catch (error) {
-      console.error(error);
+      const { message } = handleApiError(error);
+      toastError(message);
     }
   };
 

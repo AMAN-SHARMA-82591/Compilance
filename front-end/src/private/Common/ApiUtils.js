@@ -1,5 +1,7 @@
 import axiosInstance from "./AxiosInstance";
 import { isEmpty } from "lodash";
+import { handleApiError } from "./ErrorHandler";
+import { toastError } from "./ToastContainer";
 
 export const fetchOrgData = async () => {
   try {
@@ -9,7 +11,8 @@ export const fetchOrgData = async () => {
     }
     return [];
   } catch (error) {
-    console.error("Error fetching organization data:", error);
+    const message = handleApiError(error);
+    toastError(message);
     return [];
   }
 };

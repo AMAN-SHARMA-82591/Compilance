@@ -14,6 +14,7 @@ import { ConfirmDialogBox } from "../../Common/DialogBox";
 import { toastError } from "../../Common/ToastContainer";
 import { authAdminRole } from "../../Common/Constants";
 import { useSelector } from "react-redux";
+import { handleApiError } from "../../Common/ErrorHandler";
 
 const validationSchema = Yup.object({
   email: Yup.string().email().required("Email Field is required"),
@@ -46,27 +47,42 @@ function Index() {
       initialValues: initialValues,
       validationSchema,
       onSubmit: async (values) => {
-        await axiosInstance.post("/users/profile", values);
-        setOpenDeleteDialog(false);
-        handleFetchUserProfiles();
-        handleCloseCreateUser();
+        try {
+          await axiosInstance.post("/users/profile", values);
+          setOpenDeleteDialog(false);
+          handleFetchUserProfiles();
+          handleCloseCreateUser();
+        } catch (error) {
+          const { message } = handleApiError(error);
+          toastError(message);
+        }
       },
     }
   );
 
   const handleFetchUserProfiles = useCallback(async () => {
-    const response = await axiosInstance.get("/users/profile");
-    if (!isEmpty(response.data)) setPeopleList(response?.data?.profileList);
+    try {
+      const response = await axiosInstance.get("/users/profile");
+      if (!isEmpty(response.data)) setPeopleList(response?.data?.profileList);
+    } catch (error) {
+      const { message } = handleApiError(error);
+      toastError(message);
+    }
   }, []);
 
   const handleDeletUserProfile = async () => {
     if (deleteProfileId) {
-      const response = await axiosInstance.delete(
-        `/users/profile/${deleteProfileId}`
-      );
-      if (!isEmpty(response.data)) handleFetchUserProfiles();
-      setDeleteProfileId(null);
-      setOpenDeleteDialog(false);
+      try {
+        const response = await axiosInstance.delete(
+          `/users/profile/${deleteProfileId}`
+        );
+        if (!isEmpty(response.data)) handleFetchUserProfiles();
+        setDeleteProfileId(null);
+        setOpenDeleteDialog(false);
+      } catch (error) {
+        const { message } = handleApiError(error);
+        toastError(message);
+      }
     } else {
       toastError("Profile Id not found.");
     }
@@ -89,9 +105,7 @@ function Index() {
     content = peopleList.map((people) => (
       <div
         key={people._id}
-        className={`profile-box ${
-          profileData._id === people._id && "active"
-        }`}
+        className={`profile-box ${profileData._id === people._id && "active"}`}
         onClick={() => navigate(`/people/${people._id}`)}
       >
         {profileData.role !== 0 && !authAdminRole.includes(people.role) && (
