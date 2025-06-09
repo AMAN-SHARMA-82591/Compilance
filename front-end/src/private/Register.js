@@ -128,7 +128,7 @@ function Register({ classes }) {
       })
       .then(async (response) => {
         toastSuccess("New user registered.");
-        localStorage.setItem("token", `Bearer ${response.token}`);
+        localStorage.setItem("uid", response.uid);
         await navigate("/organization");
         window.location.reload();
         setLoading(false);

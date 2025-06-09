@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../private/Common/AxiosInstance";
 
 export const fetchLoggedProfile = createAsyncThunk(
-  "/users/profile/me",
-  async (data) => {
-    const response = await axiosInstance.get("/users/profile/me");
+  "/profile/fetch",
+  async () => {
+    const response = await axiosInstance.get(`/users/profile/me`);
     return response.data;
   }
 );
@@ -41,7 +41,7 @@ const profileSlice = createSlice({
     });
     builder.addCase(fetchLoggedProfile.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.profile = action.payload;
+      state.profile = action.payload.profile;
     });
     builder.addCase(fetchLoggedProfile.rejected, (state, action) => {
       state.isLoading = false;

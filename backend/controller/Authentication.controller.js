@@ -26,7 +26,7 @@ const login = async (req, res, next) => {
         message: "User not found. Please check your email address.",
       });
     }
-    const profile = await Profile.findOne({ userId: user._id }).lean();
+    // const profile = await Profile.findOne({ userId: user._id }).lean();
     // if (profile.image) {
     //   const optimizeImage = cloudinary.url(profile.image, {
     //     fetch_format: "auto",
@@ -39,9 +39,9 @@ const login = async (req, res, next) => {
         .status(401)
         .json({ success: false, message: "Invalid Credentials" });
     }
-    const token = jwt.sign({ profile }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    // const token = jwt.sign({ profile }, process.env.JWT_SECRET, {
+    //   expiresIn: "1d",
+    // });
     const cookiePayload = JSON.stringify({
       id: user._id,
       name: user.name,
@@ -58,7 +58,7 @@ const login = async (req, res, next) => {
     });
     res
       .status(201)
-      .json({ success: true, message: "Login Successfully", token });
+      .json({ success: true, message: "Login Successfully", uid: user._id });
   } catch (error) {
     next(error);
   }

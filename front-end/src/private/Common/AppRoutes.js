@@ -24,7 +24,7 @@ const OrganizationDetails = lazy(() =>
 );
 const NoPageFound = lazy(() => import("./NoPageFound"));
 
-function AppRoutes({ token }) {
+function AppRoutes({ userId }) {
   const profileData = useSelector((state) => state.basicInformation?.profile);
 
   return (
@@ -44,7 +44,7 @@ function AppRoutes({ token }) {
       }
     >
       <Routes>
-        {!token ? (
+        {!userId ? (
           <>
             <Route path="/*" element={<Navigate replace to="/login" />} />
             <Route path="/login" element={<Login />} />
