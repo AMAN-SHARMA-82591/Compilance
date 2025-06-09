@@ -29,9 +29,7 @@ function LeftBar() {
   const [openDialog, setOpenDialog] = useState(false);
   const organizations = useSelector((state) => state.organizationData?.data);
   const profileData = useSelector((state) => state.basicInformation?.profile);
-  const selectedOrg = useSelector(
-    (state) => state.organizationData.selectedOrgId
-  );
+  const selectedOrg = localStorage.getItem("selectedOrgId");
 
   const handleChangeOrganization = async (event) => {
     const orgId = event.target.value;

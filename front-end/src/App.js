@@ -23,8 +23,7 @@ function App() {
       } else {
         dispatch(setData(decodedToken.profile));
         dispatch(fetchOrganizationList());
-        if (selectedOrgId) {
-          localStorage.setItem("selectedOrgId", selectedOrgId);
+        if (selectedOrgId || localStorage.getItem("selectedOrgId")) {
           dispatch(fetchTaskList());
         }
       }

@@ -30,7 +30,6 @@ const TaskSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: [true, "User ID field is required"],
     },
     orgId: {
       type: mongoose.Schema.Types.ObjectId,

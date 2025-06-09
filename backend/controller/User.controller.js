@@ -4,11 +4,12 @@ const User = require("../model/Authentication.model");
 const Profile = require("../model/Profile.model");
 const { createNewUser } = require("./Authentication.controller");
 const { validationResult } = require("express-validator");
-const { authAdminRole } = require("../utils/constants");
 const userOrgMap = require("../model/UserOrganizationMapping.model");
 const cloudinary = require("../utils/cloudinary");
 const streamifier = require("streamifier");
 const fs = require("fs");
+const UserOrganizationMappingModel = require("../model/UserOrganizationMapping.model");
+const TaskModel = require("../model/Task.model");
 
 // learn about exicts() method. This can improve api retrieval performance
 
@@ -197,13 +198,14 @@ const deleteProfile = async (req, res, next) => {
   session.startTransaction();
   try {
     const profileData = await Profile.findById(id)
-      .select("_id, userId, role")
+      .select("_id userId role")
       .lean();
-    // Find the Profile
     if (!profileData) {
       await session.abortTransaction();
       session.endSession();
-      return res.status(404).json({ error: true, msg: "Profile not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Profile not found" });
     }
     const userData = await User.findById(profileData.userId)
       .select("_id")
@@ -211,8 +213,21 @@ const deleteProfile = async (req, res, next) => {
     if (!userData) {
       await session.abortTransaction();
       session.endSession();
-      return res.status(404).json({ error: true, msg: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
+
+    // Updating task
+    await TaskModel.find({
+      userId: { $in: profileData.userId },
+    }).updateMany({ userId: null });
+
+    // Deleting reference to organization
+    await UserOrganizationMappingModel.deleteOne({
+      userId: userData._id,
+      orgId: req.oid,
+    });
 
     //Deleting profile
     await Profile.findByIdAndDelete(id).session(session);

@@ -80,21 +80,23 @@ function TaskField({ classes, data }) {
           <div className="recent-items__popover-content">
             <div className="recent-items__popover-header">
               <div>
-                <Typography variant="subtitle2">June 1, 2020</Typography>
+                <Typography variant="subtitle2">
+                  {new Date(data.createdAt).toDateString()}
+                </Typography>
                 <Typography variant="h6">{data.title}</Typography>
               </div>
               <span className="recent-items__status">{data.status}</span>
             </div>
-            <div className="recent-items__progress">
+            {/* <div className="recent-items__progress">
               <div className="recent-items__progress-header">
                 <Typography variant="subtitle2">Process</Typography>
                 <Typography variant="subtitle2">0%</Typography>
               </div>
               <LinearProgress value={50} variant="determinate" />
-            </div>
+            </div> */}
             <Divider />
             <div className="recent-items__footer">
-              <span className="recent-items__priority">High</span>
+              <span className="recent-items__priority">{data.priority}</span>
               <AvatarGroup max={4} className="recent-items__avatar-group">
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                 <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />

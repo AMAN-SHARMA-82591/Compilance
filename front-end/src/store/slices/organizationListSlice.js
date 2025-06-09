@@ -5,10 +5,6 @@ export const fetchOrganizationList = createAsyncThunk(
   "organization/fetch",
   async () => {
     const response = await axiosInstance.get("/users/organization");
-    if (!localStorage.getItem("selectedOrgId")) {
-      localStorage.setItem("selectedOrgId", response.data.data[0]._id);
-    }
-
     return response.data;
   }
 );
@@ -49,8 +45,13 @@ const organizationListSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchOrganizationList.fulfilled, (state, action) => {
+      const orgData = action.payload.data;
       state.isLoading = false;
-      state.data = action.payload.data;
+      state.data = orgData;
+      if (!localStorage.getItem("selectedOrgId")) {
+        localStorage.setItem("selectedOrgId", orgData[0]._id);
+        state.selectedOrgId = orgData[0]._id;
+      }
     });
     builder.addCase(fetchOrganizationList.rejected, (state, action) => {
       state.isLoading = false;

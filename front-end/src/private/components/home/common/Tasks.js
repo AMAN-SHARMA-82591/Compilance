@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { compose } from "ramda";
 import withStyles from "@mui/styles/withStyles";
 import { Typography } from "@mui/material";
@@ -8,6 +7,7 @@ import "../../../../App.css";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { TaskSkeleton } from "../../../Common/Skeleton";
+import { isEmpty } from "lodash";
 
 const styles = () => ({
   heading: {
@@ -18,18 +18,47 @@ const styles = () => ({
 });
 
 function Tasks() {
-  const { data } = useSelector((state) => state.taskList);
+  const { data, isLoading } = useSelector((state) => state.taskList);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [taskList, setTaskList] = useState([]);
+  let content;
+  const filteredTaskList = data.taskList
+    .filter((task) => task.userId !== null)
+    .slice(0, 4);
 
-  useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setTaskList(data.taskList.slice(0, 4));
-      setLoading(false);
-    }, 1000);
-  }, [data.taskList]);
+  if (isLoading) {
+    content = Array(4)
+      .fill(null)
+      .map((_, i) => (
+        <Grid key={i} size={6}>
+          <TaskSkeleton />
+        </Grid>
+      ));
+  }
+  if (!isEmpty(filteredTaskList)) {
+    content = filteredTaskList.map((task, i) => (
+      <Grid key={i} size={6}>
+        <TaskField data={task} />
+      </Grid>
+    ));
+  } else {
+    content = (
+      <Typography
+        style={{
+          width: "100%",
+          color: "#888",
+          padding: "15px",
+          marginTop: "20px",
+          borderRadius: "8px",
+          fontStyle: "italic",
+          textAlign: "center",
+          background: "rgba(0, 0, 0, 0.05)",
+        }}
+        variant="h6"
+      >
+        No tasks found.
+      </Typography>
+    );
+  }
 
   return (
     <main className="tasks-main">
@@ -38,37 +67,7 @@ function Tasks() {
         <button onClick={() => navigate("/tasks")}>View All</button>
       </div>
       <Grid container spacing={3}>
-        {loading ? (
-          Array(4)
-            .fill(null)
-            .map((_, i) => (
-              <Grid key={i} size={6}>
-                <TaskSkeleton />
-              </Grid>
-            ))
-        ) : taskList.length > 0 ? (
-          taskList.map((task, i) => (
-            <Grid key={i} size={6}>
-              <TaskField data={task} />
-            </Grid>
-          ))
-        ) : (
-          <Typography
-            style={{
-              width: "100%",
-              color: "#888",
-              padding: "15px",
-              marginTop: "20px",
-              borderRadius: "8px",
-              fontStyle: "italic",
-              textAlign: "center",
-              background: "rgba(0, 0, 0, 0.05)",
-            }}
-            variant="h6"
-          >
-            No tasks found.
-          </Typography>
-        )}
+        {content}
       </Grid>
     </main>
   );

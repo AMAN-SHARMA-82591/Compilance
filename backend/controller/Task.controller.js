@@ -103,7 +103,7 @@ const createTask = async (req, res, next) => {
 };
 
 const getTask = async (req, res, next) => {
-  const { uid, oid } = req;
+  const { oid } = req;
   try {
     const {
       params: { id },
@@ -111,9 +111,13 @@ const getTask = async (req, res, next) => {
     const taskData = await Task.findOne({
       _id: id,
       orgId: oid,
-      userId: uid,
     }).lean();
-    res.status(200).json(taskData);
+    if (!taskData) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Task not found" });
+    }
+    res.status(200).json({ success: true, taskData });
   } catch (error) {
     next(error);
   }
@@ -129,13 +133,14 @@ const deleteTask = async (req, res, next) => {
     const taskData = await Task.findOne({
       _id: taskId,
       orgId: oid,
-      userId: uid,
     });
     if (!taskData) {
       res.status(404).json({ message: `Task not found with Id ${taskId}` });
     }
     await taskData.deleteOne();
-    res.status(200).json({ success: true, message: "Task entity deleted." });
+    res
+      .status(200)
+      .json({ success: true, message: "Task entity deleted.", id: taskId });
   } catch (error) {
     next(error);
   }
