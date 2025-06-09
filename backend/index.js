@@ -7,12 +7,15 @@ const taskRouter = require("./Routes/Tasks.routes");
 const connectDB = require("./db/connect");
 const cors = require("cors");
 const dbErrorHandler = require("./middleware/dbErrorHandler");
+const cookieParser = require("cookie-parser");
 const app = express();
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
 
 //To get data in json format!
 app.use(express.json({ extended: false }));
+
+app.use(cookieParser(process.env.JWT_SECRET));
 
 app.use("/uploads", express.static("images"));
 app.use(

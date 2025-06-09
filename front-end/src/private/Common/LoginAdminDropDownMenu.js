@@ -1,12 +1,21 @@
 import { List, ListItem } from "@mui/material";
 import { Link } from "react-router";
 import { getRoleLabel, truncateText } from "./formatHelpers";
+import axiosInstance from "./AxiosInstance";
+import { handleApiError } from "./ErrorHandler";
+import { toastError } from "./ToastContainer";
 
 function LoginAdminDropDownMenu({ handleClosePopover, profileDetails }) {
-  function handleLogout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("selectedOrgId");
-    window.location.reload(false);
+  async function handleLogout() {
+    try {
+      await axiosInstance.post("/auth/logout");
+      localStorage.removeItem("token");
+      localStorage.removeItem("selectedOrgId");
+      window.location.reload(false);
+    } catch (error) {
+      const { message } = handleApiError(error);
+      toastError(message);
+    }
   }
   return (
     <>

@@ -9,7 +9,6 @@ import {
   Avatar,
   Divider,
   IconButton,
-  LinearProgress,
   Popover,
   Typography,
 } from "@mui/material";

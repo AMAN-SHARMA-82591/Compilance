@@ -7,6 +7,8 @@ import "../../../App.css";
 import ProgressOverview from "./in-progress/ProgressOverview";
 import Tasks from "./common/Tasks";
 import axiosInstance from "../../Common/AxiosInstance";
+import { handleApiError } from "../../Common/ErrorHandler";
+import { toastError } from "../../Common/ToastContainer";
 // import PlanMeeting from './common/PlanMeeting'
 
 const styles = makeStyles(() => ({
@@ -43,7 +45,9 @@ function Index() {
         setLoading(false);
       }
     } catch (error) {
+      const { message } = handleApiError(error);
       setLoading(false);
+      toastError(message);
     }
   }, []);
 

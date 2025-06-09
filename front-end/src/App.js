@@ -16,16 +16,11 @@ function App() {
   useEffect(() => {
     if (token) {
       const decodedToken = jwtDecode(token);
-      const currentTime = Date.now() / 1000;
-      if (currentTime > decodedToken.exp) {
-        localStorage.removeItem("token");
-        window.location.reload();
-      } else {
-        dispatch(setData(decodedToken.profile));
-        dispatch(fetchOrganizationList());
-        if (selectedOrgId || localStorage.getItem("selectedOrgId")) {
-          dispatch(fetchTaskList());
-        }
+      dispatch(setData(decodedToken.profile));
+      dispatch(fetchOrganizationList());
+      if (selectedOrgId) {
+        localStorage.setItem("selectedOrgId", selectedOrgId);
+        dispatch(fetchTaskList());
       }
     }
   }, [dispatch, token, selectedOrgId]);

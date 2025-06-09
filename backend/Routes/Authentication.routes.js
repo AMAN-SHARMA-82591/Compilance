@@ -1,5 +1,9 @@
 const express = require("express");
-const { login, register } = require("../controller/Authentication.controller");
+const {
+  login,
+  register,
+  logout,
+} = require("../controller/Authentication.controller");
 const auth = require("../middleware/auth.middleware");
 const organization = require("../middleware/organization.middleware");
 const {
@@ -25,6 +29,7 @@ const router = express.Router();
 // Auth Routes
 router.post("/register", userRegisterValidator, register);
 router.post("/login", userLoginValidator, login);
+router.post("/logout", logout);
 
 // Permission Routes
 router

@@ -24,7 +24,7 @@ const taskList = async (req, res, next) => {
       .lean();
     return res.status(200).json({
       success: true,
-      msg: "Fetched Task List",
+      message: "Fetched Task List",
       taskList,
       length: taskList.length,
     });
@@ -66,7 +66,7 @@ const createTask = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({
       success: false,
-      msg: "Errors",
+      message: "Errors",
       errors: errors.array(),
     });
   }
@@ -76,7 +76,7 @@ const createTask = async (req, res, next) => {
     if (orgId && !mongoose.Types.ObjectId.isValid(orgId)) {
       return res.status(400).json({
         error: true,
-        msg: "Invalid Organization ID",
+        message: "Invalid Organization ID",
       });
     }
 
@@ -86,7 +86,7 @@ const createTask = async (req, res, next) => {
     // if (!organization) {
     //   return res.status(400).json({
     //     error: true,
-    //     msg: "Organization Not Found!",
+    //     message: "Organization Not Found!",
     //   });
     // }
 
@@ -151,7 +151,7 @@ const updateTask = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({
       success: false,
-      msg: "Errors",
+      message: "Errors",
       errors: errors.array(),
     });
   }

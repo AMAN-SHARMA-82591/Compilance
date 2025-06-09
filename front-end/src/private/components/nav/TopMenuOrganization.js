@@ -1,8 +1,6 @@
 import React from "react";
 import { Button } from "@mui/material";
-import withStyles from "@mui/styles/withStyles";
 import { Link } from "react-router";
-import { compose } from "ramda";
 import { useLocation } from "react-router";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 

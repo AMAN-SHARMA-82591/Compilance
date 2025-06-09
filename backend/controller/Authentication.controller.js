@@ -4,6 +4,8 @@ const User = require("../model/Authentication.model");
 const Profile = require("../model/Profile.model");
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
+const { expiryInSeconds } = require("../utils/constants");
+// const cloudinary = require("../utils/cloudinary");
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -24,7 +26,13 @@ const login = async (req, res, next) => {
         message: "User not found. Please check your email address.",
       });
     }
-    const profile = await Profile.findOne({ userId: user._id });
+    const profile = await Profile.findOne({ userId: user._id }).lean();
+    // if (profile.image) {
+    //   const optimizeImage = cloudinary.url(profile.image, {
+    //     fetch_format: "auto",
+    //     quality: "auto:low",
+    //   });
+    // }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res
@@ -33,6 +41,20 @@ const login = async (req, res, next) => {
     }
     const token = jwt.sign({ profile }, process.env.JWT_SECRET, {
       expiresIn: "1d",
+    });
+    const cookiePayload = JSON.stringify({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      expiry: Math.round(Date.now() / 1000 + expiryInSeconds),
+    });
+    res.cookie("token", Buffer.from(cookiePayload).toString("base64url"), {
+      httpOnly: true,
+      maxAge: expiryInSeconds * 1000,
+      sameSite: "None",
+      secure: true,
+      signed: true,
     });
     res
       .status(201)
@@ -113,6 +135,19 @@ const register = async (req, res, next) => {
     const token = jwt.sign({ profile }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
+    const cookiePayload = JSON.stringify({
+      id: profile.userId,
+      name: profile.name,
+      email: profile.email,
+      expiry: Math.round(Date.now() / 1000 + expiryInSeconds),
+    });
+    res.cookie("token", Buffer.from(cookiePayload).toString("base64url"), {
+      httpOnly: true,
+      maxAge: expiryInSeconds * 1000,
+      sameSite: "None",
+      secure: true,
+      signed: true,
+    });
     res.status(201).json({ message: "Registered Successfully", token });
   } catch (error) {
     if (
@@ -125,8 +160,18 @@ const register = async (req, res, next) => {
   }
 };
 
+const logout = async (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "None",
+    secure: true,
+  });
+  return res.status(200).json({ msg: "Logout successful" });
+};
+
 module.exports = {
   login,
+  logout,
   register,
   createNewUser,
 };
