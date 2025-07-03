@@ -8,6 +8,7 @@ import {
   DialogActions,
   DialogContent,
   CircularProgress,
+  LinearProgress,
 } from "@mui/material";
 import { useFormik } from "formik";
 import Grid from "@mui/material/Grid2";
@@ -17,7 +18,10 @@ import axiosInstance from "../../../Common/AxiosInstance";
 import { toastError } from "../../../Common/ToastContainer";
 import { handleApiError } from "../../../Common/ErrorHandler";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLoggedProfile } from "../../../../store/slices/profileSlice";
+import {
+  fetchLoggedProfile,
+  setProfileImage,
+} from "../../../../store/slices/profileSlice";
 
 const validationSchema = Yup.object({
   email: Yup.string().email().required("Email Field is required"),
@@ -39,6 +43,7 @@ function PeopleDetails() {
   const [imagePreview, setImagePreview] = useState(null);
   const [profileDetails, setProfileDetails] = useState(null);
   const [editProfile, setEditProfile] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [profileImageDialog, setProfileImageDialog] = useState(false);
   const { id: peopleId } = useParams();
 
@@ -141,16 +146,24 @@ function PeopleDetails() {
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: (ProgressEvent) => {
+            const percent = Math.round(
+              (ProgressEvent.loaded * 100) / ProgressEvent.total
+            );
+            setUploadProgress(percent);
+          },
         }
       );
       if (response.data) {
         setProfileDetails({ ...profileDetails, image: response.data.image });
-        dispatch(fetchLoggedProfile());
+        dispatch(setProfileImage(response.data.image));
         handleChangeProfileImage();
       }
     } catch (error) {
       const { message } = handleApiError(error);
       toastError(message);
+    } finally {
+      setUploadProgress(0);
     }
   };
 
@@ -219,6 +232,13 @@ function PeopleDetails() {
                     cursor: "pointer",
                   }}
                 />
+                {uploadProgress > 0 && uploadProgress < 100 && (
+                  <LinearProgress
+                    variant="determined"
+                    value={uploadProgress}
+                    style={{ marginBottom: 16 }}
+                  />
+                )}
                 {error && (
                   <p
                     style={{
