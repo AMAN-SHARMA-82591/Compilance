@@ -28,6 +28,9 @@ const profileSlice = createSlice({
     setData: (state, action) => {
       state.profile = action.payload;
     },
+    setProfileImage: (state, action) => {
+      state.profile.image = action.payload;
+    },
     setProfileData: (state, action) => {
       state.profile = action.payload;
     },
@@ -50,5 +53,6 @@ const profileSlice = createSlice({
   },
 });
 
-export const { setData, setProfileData, clearData } = profileSlice.actions;
+export const { setData, setProfileData, clearData, setProfileImage } =
+  profileSlice.actions;
 export const profileReducer = profileSlice.reducer;

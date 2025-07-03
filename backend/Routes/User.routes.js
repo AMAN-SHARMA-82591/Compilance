@@ -49,7 +49,7 @@ router.get("/profile/me", auth, checkOrganization, getUserProfile);
 router
   .route("/profile")
   .get(auth, checkOrganization, profileList)
-  .post(auth, profileValidator, checkOrganization, createProfile);
+  .post(auth, checkRoleAccess, profileValidator, checkOrganization, createProfile);
 router.post("/profile/image/:id", auth, upload, updateProfileImage);
 router
   .route("/profile/:id")
