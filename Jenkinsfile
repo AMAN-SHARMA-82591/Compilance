@@ -14,11 +14,9 @@ pipeline {
                 dir('front-end') {
                     sh "docker build -t compilance-frontend:latest ."
                 }
-                echo("=================front-end complete==================")
                 dir('backend') {
                     sh "docker build -t compilance-backend:latest ."
                 }
-                echo("=================back-end complete==================")
             }
         }
         // stage('Inject .env files') {
@@ -58,7 +56,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh "docker compose up -d"
+                sh "docker compose down && docker compose up -d"
                 // sh "docker run -d -p 3000:3000 compilance-frontend"
                 echo("Docker deploy successful")
             }
