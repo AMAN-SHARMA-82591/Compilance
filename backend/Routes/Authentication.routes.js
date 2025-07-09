@@ -3,6 +3,9 @@ const {
   login,
   register,
   logout,
+  googleLogin,
+  githubLogin,
+  linkedinLogin,
 } = require("../controller/Authentication.controller");
 const auth = require("../middleware/auth.middleware");
 const organization = require("../middleware/organization.middleware");
@@ -29,6 +32,9 @@ const router = express.Router();
 // Auth Routes
 router.post("/register", userRegisterValidator, register);
 router.post("/login", userLoginValidator, login);
+router.post("/login/google", googleLogin);
+router.post("/login/github", githubLogin);
+router.post("/login/linkedin", linkedinLogin);
 router.post("/logout", logout);
 
 // Permission Routes

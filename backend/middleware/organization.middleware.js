@@ -3,9 +3,10 @@ const { authAdminRole } = require("../utils/constants");
 
 const checkOrganization = async function (req, res, next) {
   const { role } = req.user;
-  const orgId = req.headers.orgid;
+  const orgId = req.headers.orgid || null;
   try {
-    if (!orgId && !authAdminRole.includes(role)) {
+    // if (Boolean(orgId) === false && authAdminRole.includes(role)) {
+    if (!Boolean(orgId)) {
       return res.status(401).json({
         message:
           "Organization is not been created. Please create an organization first.",

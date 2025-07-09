@@ -1,10 +1,21 @@
 require("dotenv").config();
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 const User = require("../model/Authentication.model");
 const Profile = require("../model/Profile.model");
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
-const { expiryInSeconds } = require("../utils/constants");
+const { tempPassword, allowedOrigins } = require("../utils/constants");
+const verifyIDToken = require("../service/googleAuthService");
+const { setAuthCookie } = require("../utils/cookieHelpers");
+const {
+  getLinkedInUserData,
+  getLinkedInAccessToken,
+} = require("../service/linkedInAuthService");
+const {
+  getGithubAccessToken,
+  getGithubUserData,
+  getGithubEmailData,
+} = require("../service/githubAuthService");
 // const cloudinary = require("../utils/cloudinary");
 
 const login = async (req, res, next) => {
@@ -39,25 +50,14 @@ const login = async (req, res, next) => {
         .status(401)
         .json({ success: false, message: "Invalid Credentials" });
     }
-    // const token = jwt.sign({ profile }, process.env.JWT_SECRET, {
-    //   expiresIn: "1d",
-    // });
-    const cookiePayload = JSON.stringify({
+    setAuthCookie(res, {
       id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
-      expiry: Math.round(Date.now() / 1000 + expiryInSeconds),
-    });
-    res.cookie("token", Buffer.from(cookiePayload).toString("base64url"), {
-      httpOnly: true,
-      maxAge: expiryInSeconds * 1000,
-      sameSite: "None",
-      secure: true,
-      signed: true,
     });
     res
-      .status(201)
+      .status(200)
       .json({ success: true, message: "Login Successfully", uid: user._id });
   } catch (error) {
     next(error);
@@ -132,23 +132,15 @@ const register = async (req, res, next) => {
         .json({ success: false, message: "User already exists!" });
     }
     const profile = await createNewUser(name, email, password, 2);
-    const token = jwt.sign({ profile }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
-    const cookiePayload = JSON.stringify({
+    setAuthCookie(res, {
       id: profile.userId,
       name: profile.name,
       email: profile.email,
-      expiry: Math.round(Date.now() / 1000 + expiryInSeconds),
+      role: profile.role,
     });
-    res.cookie("token", Buffer.from(cookiePayload).toString("base64url"), {
-      httpOnly: true,
-      maxAge: expiryInSeconds * 1000,
-      sameSite: "None",
-      secure: true,
-      signed: true,
-    });
-    res.status(201).json({ message: "Registered Successfully", token });
+    res
+      .status(201)
+      .json({ message: "Registered Successfully", uid: profile.userId });
   } catch (error) {
     if (
       error.message === "Profile already exists with similar email-address" ||
@@ -160,18 +152,149 @@ const register = async (req, res, next) => {
   }
 };
 
-const logout = async (req, res) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    sameSite: "None",
-    secure: true,
-  });
-  return res.status(200).json({ msg: "Logout successful" });
+const googleLogin = async (req, res, next) => {
+  const { idToken } = req.body;
+  try {
+    const { name, email } = await verifyIDToken(idToken);
+
+    const user = await User.findOne({ email }).lean();
+
+    if (!user) {
+      const profile = await createNewUser(name, email, tempPassword(email), 2);
+      setAuthCookie(res, {
+        id: profile.userId,
+        name: profile.name,
+        email: profile.email,
+        role: profile.role,
+      });
+      return res.status(201).json({
+        success: true,
+        message: "Login Successful",
+        uid: profile.userId,
+      });
+    }
+    setAuthCookie(res, {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
+    return res
+      .status(200)
+      .send({ success: true, message: "Login Successful", uid: user._id });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const githubLogin = async (req, res, next) => {
+  const { code } = req.body;
+  try {
+    const tokenData = await getGithubAccessToken(code);
+    const { name, email } = await getGithubUserData(tokenData);
+
+    let emailAddress = email;
+
+    if (!emailAddress) {
+      emailAddress = await getGithubEmailData(tokenData);
+    }
+    const user = await User.findOne({ email: emailAddress }).lean();
+    if (!user) {
+      const profile = await createNewUser(
+        name,
+        emailAddress,
+        tempPassword(emailAddress),
+        2
+      );
+      setAuthCookie(res, {
+        id: profile.userId,
+        name: profile.name,
+        email: profile.email,
+        role: profile.role,
+      });
+      return res.status(201).json({
+        success: true,
+        message: "Login Successful",
+        uid: profile.userId,
+      });
+    }
+    setAuthCookie(res, {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
+    return res
+      .status(200)
+      .send({ success: true, message: "Login Successful", uid: user._id });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const linkedinLogin = async (req, res, next) => {
+  const { code, redirectUri } = req.body;
+  try {
+    if (!allowedOrigins.includes(redirectUri)) {
+      return res.status(401).json({
+        success: false,
+        message: "You are not allowed to send request",
+      });
+    }
+    const tokenData = await getLinkedInAccessToken(code, redirectUri);
+    const { name, email } = await getLinkedInUserData(tokenData);
+
+    const user = await User.findOne({ email }).lean();
+    if (!user) {
+      const profile = await createNewUser(name, email, tempPassword(email), 2);
+      setAuthCookie(res, {
+        id: profile.userId,
+        name: profile.name,
+        email: profile.email,
+        role: profile.role,
+      });
+      return res.status(201).json({
+        success: true,
+        message: "Login Successful",
+        uid: profile.userId,
+      });
+    }
+
+    setAuthCookie(res, {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
+    return res.status(200).json({
+      success: true,
+      message: "Login Successful",
+      uid: user._id,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const logout = async (req, res, next) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+    });
+    return res.status(200).json({ msg: "Logout successful" });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = {
   login,
   logout,
   register,
+  googleLogin,
+  githubLogin,
+  linkedinLogin,
   createNewUser,
 };

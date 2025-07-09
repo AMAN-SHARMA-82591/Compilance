@@ -13,6 +13,7 @@ import {
 import modernImage from "../images/vecteezy_modern-abstract-background-illustration_34720880.jpg";
 import { toastError, toastSuccess } from "./Common/ToastContainer";
 import { handleApiError } from "./Common/ErrorHandler";
+import OAuthHandler from "./Common/OAuthHandler";
 
 const styles = () => ({
   root: {
@@ -24,6 +25,7 @@ const styles = () => ({
     alignItems: "center",
   },
   paper: {
+    position: "relative",
     display: "flex",
     flexDirection: "row",
     width: "800px",
@@ -36,17 +38,17 @@ const styles = () => ({
   container: {
     flex: 1,
     display: "flex",
+    background: "#fff",
+    padding: "35px 32px",
     flexDirection: "column",
     justifyContent: "center",
-    padding: "48px 32px",
-    background: "#fff",
   },
   typography: {
     color: "#1976d2",
     fontWeight: 700,
-    marginBottom: "16px",
+    marginBottom: "10px",
     textAlign: "center",
-    padding: "20px 0px",
+    padding: "5px 0px",
   },
   textField: {
     "& .MuiOutlinedInput-root": {
@@ -90,7 +92,7 @@ const styles = () => ({
 });
 
 function Login({ classes }) {
-  const baseURL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+  const baseURL = process.env.REACT_APP_BACKEND_URL;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [textInput, setTextInput] = useState({ email: "", password: "" });
@@ -150,6 +152,7 @@ function Login({ classes }) {
   return (
     <div className={classes.root}>
       <Paper classes={{ root: classes.paper }} elevation={6} variant="outlined">
+        <OAuthHandler />
         <form className={classes.container} onSubmit={handleLoginSubmit}>
           <Typography variant="h4" className={classes.typography}>
             Login

@@ -5,6 +5,7 @@ import { authAdminRole } from "../Common/Constants";
 import RequireOrganization from "../Common/RequiredOrganization";
 import { ToastContainer } from "react-toastify";
 import { CircularProgress } from "@mui/material";
+import OAuthSuccess from "./OAuthSuccess.js";
 
 // Lazy loaded components
 const RootPrivate = lazy(() => import("../Root.js"));
@@ -49,6 +50,7 @@ function AppRoutes({ userId }) {
             <Route path="/*" element={<Navigate replace to="/login" />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/oauth-success" element={<OAuthSuccess />} />
           </>
         ) : (
           <Route path="/" element={<RootPrivate />}>

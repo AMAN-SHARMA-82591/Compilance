@@ -44,7 +44,7 @@ router
 
 // User Routes
 // router.get('/profile/me', auth, organization, profile);
-router.get("/profile/me", auth, checkOrganization, getUserProfile);
+router.get("/profile/me", auth, getUserProfile);
 // router.get('/profile', auth, profileList);
 router
   .route("/profile")
