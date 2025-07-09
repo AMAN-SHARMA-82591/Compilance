@@ -42,14 +42,31 @@ function OAuthHandler({ classes }) {
   return (
     <div className={classes.authLogin}>
       <GoogleAuthLogin />
-      <IconButton onClick={loginWithGitHub}>
+      <IconButton
+        onClick={loginWithGitHub}
+        sx={{
+          margin: "0 3px 0 10px",
+          backgroundColor: "white",
+          "&:hover": {
+            backgroundColor: "white",
+          },
+        }}
+      >
         <img
-          style={{ width: 36, height: 36, margin: "0 3px 0 10px" }}
+          style={{ width: 36, height: 36 }}
           src={githubImage}
           alt="github-login"
         />
       </IconButton>
-      <IconButton onClick={loginWithLinkedin}>
+      <IconButton
+        onClick={loginWithLinkedin}
+        sx={{
+          backgroundColor: "white",
+          "&:hover": {
+            backgroundColor: "white",
+          },
+        }}
+      >
         <img
           style={{ width: 36, height: 36 }}
           src={linkedInImage}
