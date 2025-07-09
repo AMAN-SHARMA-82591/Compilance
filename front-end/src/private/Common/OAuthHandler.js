@@ -20,7 +20,7 @@ function OAuthHandler({ classes }) {
   const loginWithGitHub = () => {
     const params = new URLSearchParams({
       client_id: process.env.REACT_APP_GITHUB_CLIENT_ID,
-      redirect_uri: `${process.env.REACT_APP_FRONTEND_URL}/oauth-success?provider=github`,
+      redirect_uri: `${window.location.origin}/oauth-success?provider=github`,
       scope: "read:user user:email",
       prompt: "select_account",
     });
@@ -29,7 +29,7 @@ function OAuthHandler({ classes }) {
 
   const loginWithLinkedin = () => {
     const clientID = process.env.REACT_APP_LINKEDIN_CLIENT_ID;
-    const redirectURI = `${process.env.REACT_APP_FRONTEND_URL}/oauth-success?provider=linkedin`;
+    const redirectURI = `${window.location.origin}/oauth-success?provider=linkedin`;
     const params = new URLSearchParams({
       response_type: "code",
       client_id: clientID,
