@@ -22,7 +22,7 @@ const {
   deletePermission,
 } = require("../controller/admin/permission.controller");
 const { onlyAdminAccess } = require("../middleware/admin.middleware");
-const { createRole, getRoles } = require("../controller/admin/role.controller");
+// const { createRole, getRoles } = require("../controller/admin/role.controller");
 const {
   userLoginValidator,
   userRegisterValidator,
@@ -48,10 +48,10 @@ router
   .route("/admin/permission/:id")
   .delete(auth, onlyAdminAccess, permissionDeleteValidator, deletePermission);
 
-// Role Routes
-router
-  .route("/admin/role")
-  .post(auth, onlyAdminAccess, storeRoleValidator, createRole)
-  .get(auth, onlyAdminAccess, storeRoleValidator, getRoles);
+// Admin Role Routes
+// router
+//   .route("/admin/role")
+//   .post(auth, onlyAdminAccess, storeRoleValidator, createRole)
+//   .get(auth, onlyAdminAccess, storeRoleValidator, getRoles);
 
 module.exports = router;
