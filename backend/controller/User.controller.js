@@ -10,6 +10,7 @@ const streamifier = require("streamifier");
 const fs = require("fs");
 const UserOrganizationMappingModel = require("../model/UserOrganizationMapping.model");
 const TaskModel = require("../model/Task.model");
+const { tempPassword } = require("../utils/constants");
 
 // learn about exicts() method. This can improve api retrieval performance
 
@@ -135,8 +136,13 @@ const createProfile = async (req, res, next) => {
         .status(400)
         .json({ success: false, message: "User already exists." });
     }
-    const username = email.match(/^[^@]+/)[0];
-    const userData = await createNewUser(name, email, username, 0, entity);
+    const userData = await createNewUser(
+      name,
+      email,
+      tempPassword(email),
+      0,
+      entity
+    );
     await userOrgMap.create({
       userId: userData.userId,
       orgId,

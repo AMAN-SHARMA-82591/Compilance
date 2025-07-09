@@ -48,7 +48,7 @@ const organizationListSlice = createSlice({
       const orgData = action.payload.data;
       state.isLoading = false;
       state.data = orgData;
-      if (!localStorage.getItem("selectedOrgId")) {
+      if (orgData.length > 0 && !localStorage.getItem("selectedOrgId")) {
         localStorage.setItem("selectedOrgId", orgData[0]._id);
         state.selectedOrgId = orgData[0]._id;
       }

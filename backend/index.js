@@ -8,9 +8,8 @@ const connectDB = require("./db/connect");
 const cors = require("cors");
 const dbErrorHandler = require("./middleware/dbErrorHandler");
 const cookieParser = require("cookie-parser");
+const { allowedOrigins } = require("./utils/constants");
 const app = express();
-
-const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
 
 //To get data in json format!
 app.use(express.json({ extended: false }));

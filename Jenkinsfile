@@ -20,25 +20,25 @@ pipeline {
                 }
             }
         }
-        // stage('Inject .env files') {
-        //     steps {
-        //         script {
-        //             withCredentials([
-        //                 file(credentialsId: 'compilance-frontend', variable: 'FRONT_ENV'),
-        //                 file(credentialsId: 'compilance-backend', variable: 'BACK_ENV')
-        //             ]) {
-        //                 dir('front-end') {
-        //                     // sh 'chmod u+w .'
-        //                     sh 'cp $FRONT_ENV .env'
-        //                 }
-        //                 dir('backend') {
-        //                     // sh 'chmod u+w .'
-        //                     sh 'cp $BACK_ENV .env'
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Inject .env files') {
+            steps {
+                script {
+                    withCredentials([
+                        file(credentialsId: 'compilance-frontend', variable: 'FRONT_ENV'),
+                        file(credentialsId: 'compilance-backend', variable: 'BACK_ENV')
+                    ]) {
+                        dir('front-end') {
+                            // sh 'chmod u+w .'
+                            sh 'cp $FRONT_ENV .env'
+                        }
+                        dir('backend') {
+                            // sh 'chmod u+w .'
+                            sh 'cp $BACK_ENV .env'
+                        }
+                    }
+                }
+            }
+        }
         stage('Push to docker hub') {
             steps {
                 echo "Pushing image to docker hub"

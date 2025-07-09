@@ -13,6 +13,7 @@ import {
 import modernImage from "../images/vecteezy_modern-abstract-background-illustration_34720880.jpg";
 import { toastError, toastSuccess } from "./Common/ToastContainer";
 import { handleApiError } from "./Common/ErrorHandler";
+import OAuthHandler from "./Common/OAuthHandler";
 
 const styles = () => ({
   root: {
@@ -24,6 +25,7 @@ const styles = () => ({
     alignItems: "center",
   },
   paper: {
+    position: "relative",
     display: "flex",
     flexDirection: "row",
     width: "800px",
@@ -38,7 +40,7 @@ const styles = () => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    padding: "48px 32px",
+    padding: "15px 32px",
     background: "#fff",
   },
   typography: {
@@ -46,7 +48,7 @@ const styles = () => ({
     fontWeight: 700,
     marginBottom: "16px",
     textAlign: "center",
-    padding: "20px 0px",
+    padding: "0 0 10px 0px",
   },
   textField: {
     "& .MuiOutlinedInput-root": {
@@ -168,6 +170,7 @@ function Register({ classes }) {
   return (
     <div className={classes.root}>
       <Paper classes={{ root: classes.paper }} variant="outlined" elevation={6}>
+        <OAuthHandler />
         <form className={classes.container} onSubmit={handleRegisterSubmit}>
           <Typography variant="h4" className={classes.typography}>
             Register

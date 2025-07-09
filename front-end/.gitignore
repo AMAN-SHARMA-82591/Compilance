@@ -5,6 +5,7 @@
 /.pnp
 .env
 .pnp.js
+docker.txt
 
 # testing
 /coverage
